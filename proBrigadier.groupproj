@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{B1359C46-B92F-48FE-BA70-EB95C416EC11}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="prSysGestion.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ConfigGenerador\prConfig.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="prSysGestion">
+        <MSBuild Projects="prSysGestion.dproj"/>
+    </Target>
+    <Target Name="prSysGestion:Clean">
+        <MSBuild Projects="prSysGestion.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="prSysGestion:Make">
+        <MSBuild Projects="prSysGestion.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="prConfig">
+        <MSBuild Projects="ConfigGenerador\prConfig.dproj"/>
+    </Target>
+    <Target Name="prConfig:Clean">
+        <MSBuild Projects="ConfigGenerador\prConfig.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="prConfig:Make">
+        <MSBuild Projects="ConfigGenerador\prConfig.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="prSysGestion;prConfig"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="prSysGestion:Clean;prConfig:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="prSysGestion:Make;prConfig:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

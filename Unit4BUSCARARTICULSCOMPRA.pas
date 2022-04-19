@@ -1,0 +1,113 @@
+unit Unit4BUSCARARTICULSCOMPRA;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
+  Vcl.DBGrids, Vcl.Buttons,UNIT1, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client;
+
+type
+  TBUSCARARTICULSCOMPRA = class(TForm)
+    DBGrid1: TDBGrid;
+    Edit1: TEdit;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    FDQuery1: TFDQuery;
+    DataSource1: TDataSource;
+    Label1: TLabel;
+    procedure BitBtn2Click(Sender: TObject);
+    procedure Edit1KeyPress(Sender: TObject; var Key: Char);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure DBGrid1DblClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  BUSCARARTICULSCOMPRA: TBUSCARARTICULSCOMPRA;
+
+implementation
+
+{$R *.dfm}
+
+uses Unitneuvacompra, Unit4pidecantidadyprecio;
+
+procedure TBUSCARARTICULSCOMPRA.BitBtn1Click(Sender: TObject);
+begin
+if neuvacompra.RxMemoryData1.Active=FALSE then
+BEGIN
+neuvacompra.RxMemoryData1.Close;
+neuvacompra.RxMemoryData1.Open;
+END;
+ pidecantidadyprecio.Edit1.Clear;
+ pidecantidadyprecio.Edit2.Clear;
+ pidecantidadyprecio.Edit3.Clear;
+pidecantidadyprecio.showmodal;
+if pidecantidadyprecio.ModalResult=MROK then
+ BEGIN
+neuvacompra.RxMemoryData1.Append;
+neuvacompra.RxMemoryData1IDARTICULO.Value:=DBGRID1.Fields[4].AsInteger;
+neuvacompra.RxMemoryData1ARTICULO.Value:=TRIM(DBGRID1.Fields[0].ASSTRING);
+neuvacompra.RxMemoryData1CANTIDAD.Value:=strtofloat(pidecantidadyprecio.Edit1.Text);
+neuvacompra.RxMemoryData1COSTOUNIT.Value:=strtofloat(pidecantidadyprecio.Edit2.Text);
+neuvacompra.RxMemoryData1TOTAL.Value:=strtofloat(pidecantidadyprecio.Edit3.Text);
+
+neuvacompra.RxMemoryData1.Post;
+END;
+
+CLOSE;
+end;
+
+procedure TBUSCARARTICULSCOMPRA.BitBtn2Click(Sender: TObject);
+begin
+CLOSE;
+end;
+
+procedure TBUSCARARTICULSCOMPRA.DBGrid1DblClick(Sender: TObject);
+begin
+BitBtn1Click(Sender);
+end;
+
+procedure TBUSCARARTICULSCOMPRA.Edit1KeyPress(Sender: TObject; var Key: Char);
+VAR B:sTRING;
+begin
+if KEY=#13 then
+BEGIN
+      self.FDQuery1.Close;
+    FDQuery1.SQL.Clear;
+    FDQuery1.SQL.Add('SELECT    '+
+   '  A.DESCRIPCION AS ARTICULOS,R.DESCRIPCION AS RUBRO,     '+
+   '  M.DESCRIPCION AS MARCA, P.RAZONSOCIAL AS RAZON  , A.IDARTICULO AS AIDARTI   '+
+   '  FROM    TARTICULOS A    '+
+   '  LEFT JOIN TRUBROS R ON R.IDRUBRO=A.IDRUBRO    '+
+   '  LEFT JOIN TPROVEEDORES P ON P.IDPROVEEDOR=A.IDPROVEEDOR     '+
+   '  LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA    '+
+   '    WHERE A.CODIGOBARRA='+#39+TRIM(EDIT1.Text)+#39);
+   FDQuery1.Open;
+   if FDQUERY1.IsEmpty=TRUE then
+   BEGIN
+   B:=TRIM(EDIT1.Text)+'%';
+    self.FDQuery1.Close;
+    FDQuery1.SQL.Clear;
+    FDQuery1.SQL.Add('SELECT    '+
+   '  A.DESCRIPCION AS ARTICULOS,R.DESCRIPCION AS RUBRO,     '+
+   '  M.DESCRIPCION AS MARCA, P.RAZONSOCIAL AS RAZON     , A.IDARTICULO AS AIDARTI   '+
+   '  FROM    TARTICULOS A    '+
+   '  LEFT JOIN TRUBROS R ON R.IDRUBRO=A.IDRUBRO    '+
+   '  LEFT JOIN TPROVEEDORES P ON P.IDPROVEEDOR=A.IDPROVEEDOR     '+
+   '  LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA    '+
+   '    WHERE A.DESCRIPCION LIKE '+#39+TRIM(B)+#39);
+   FDQuery1.Open;
+
+   END;
+
+END;
+end;
+
+end.

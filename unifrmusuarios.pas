@@ -1,0 +1,181 @@
+unit unifrmusuarios;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Buttons,
+  Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls,unit1, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client,Unit2NUEVOUSUARIO;
+
+type
+  Tfrmusuarios = class(TForm)
+    Panel1: TPanel;
+    DBGrid1: TDBGrid;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
+    FDQuery1: TFDQuery;
+    FDQuery2: TFDQuery;
+    DataSource1: TDataSource;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    function listarutusuarios:boolean;
+  end;
+
+var
+  frmusuarios: Tfrmusuarios;
+
+implementation
+
+{$R *.dfm}
+
+procedure Tfrmusuarios.BitBtn1Click(Sender: TObject);
+begin
+CLOSE;
+end;
+
+procedure Tfrmusuarios.BitBtn2Click(Sender: TObject);
+VAR TIPO:LONGINT;
+begin
+NUEVOUSUARIO.Caption:='Nuevo Usuario';
+NUEVOUSUARIO.Edit1.Clear;
+NUEVOUSUARIO.Edit2.Clear;
+NUEVOUSUARIO.ComboBox1.ItemIndex:=0;
+
+  NUEVOUSUARIO.SHOWMODAL;
+  if NUEVOUSUARIO.ModalResult=MROK then
+  BEGIN
+     if NUEVOUSUARIO.ComboBox1.ItemIndex=0 then
+      TIPO:=2 ELSE
+      TIPO:=1;
+           SELF.FDQuery2.Close;
+     SELF.FDQuery2.SQL.Clear;
+     SELF.FDQuery2.SQL.Add('select * from tusuarios  where codigo='+inttostr(strtoint(NUEVOUSUARIO.Edit2.Text)));
+     SELF.FDQuery2.open;
+     if self.FDQuery2.IsEmpty=false then
+     begin
+        showmessage('Ya existe un usuario con este codigo');
+
+       exit;
+     end;
+
+     FORM1.FDConnection1.StartTransaction;
+     TRY
+     SELF.FDQuery2.Close;
+     SELF.FDQuery2.SQL.Clear;
+     SELF.FDQuery2.SQL.Add('INSERT INTO TUSUARIOS (APENOM,CODIGO,TIPO) VALUES ('+#39+TRIM(NUEVOUSUARIO.Edit1.Text)+#39+','+INTTOSTR(STRTOINT(NUEVOUSUARIO.Edit2.Text))+','+INTTOSTR(TIPO)+')');
+     SELF.FDQuery2.ExecSQL;
+     FORM1.FDConnection1.Commit;
+     SHOWMESSAGE('Se ha guardado correctamente');
+     EXCEPT
+       FORM1.FDConnection1.Rollback;
+         SHOWMESSAGE('Se produjo un error.');
+     END;
+  END;
+  listarutusuarios;
+end;
+
+procedure Tfrmusuarios.BitBtn3Click(Sender: TObject);
+VAR TIPO:LONGINT;
+begin
+NUEVOUSUARIO.Caption:='Modificar Usuario';
+NUEVOUSUARIO.Edit1.Text:=trim(dbgrid1.Fields[1].asstring);
+NUEVOUSUARIO.Edit2.Text:=trim(dbgrid1.Fields[2].asstring);
+NUEVOUSUARIO.Edit3.Text:=trim(dbgrid1.Fields[0].asstring);
+ if trim(dbgrid1.Fields[4].asstring)='1' then
+    NUEVOUSUARIO.ComboBox1.ItemIndex:=1;
+  if trim(dbgrid1.Fields[4].asstring)='2' then
+    NUEVOUSUARIO.ComboBox1.ItemIndex:=0;
+  NUEVOUSUARIO.SHOWMODAL;
+  if NUEVOUSUARIO.ModalResult=MROK then
+  BEGIN
+    if NUEVOUSUARIO.ComboBox1.ItemIndex=0 then
+      TIPO:=2 ELSE
+      TIPO:=1;
+     SELF.FDQuery2.Close;
+     SELF.FDQuery2.SQL.Clear;
+     SELF.FDQuery2.SQL.Add('select * from tusuarios  where codigo='+inttostr(strtoint(NUEVOUSUARIO.Edit2.Text))+' AND idusuario<>'+inttostr(strtoint(NUEVOUSUARIO.Edit3.Text)));
+     SELF.FDQuery2.open;
+     if self.FDQuery2.IsEmpty=false then
+     begin
+        showmessage('Ya existe un usuario con este codigo');
+
+       exit;
+     end;
+
+     FORM1.FDConnection1.StartTransaction;
+     TRY
+     SELF.FDQuery2.Close;
+     SELF.FDQuery2.SQL.Clear;
+     SELF.FDQuery2.SQL.Add('update TUSUARIOS set apenom='+#39+TRIM(NUEVOUSUARIO.Edit1.Text)+#39+
+                          ',  codigo='+INTTOSTR(STRTOINT(NUEVOUSUARIO.Edit2.Text))+
+                          ', TIPO='+INTTOSTR(TIPO)+
+                          ' where idusuario='+inttostr(strtoint(NUEVOUSUARIO.Edit3.Text)));
+     SELF.FDQuery2.ExecSQL;
+     FORM1.FDConnection1.Commit;
+     SHOWMESSAGE('Se ha guardado correctamente');
+
+     EXCEPT
+       FORM1.FDConnection1.Rollback;
+         SHOWMESSAGE('Se produjo un error.');
+     END;
+  END;
+  listarutusuarios
+end;
+
+procedure Tfrmusuarios.BitBtn4Click(Sender: TObject);
+begin
+if Application.MessageBox(pchar('¿Desea eliminar a '+dbgrid1.Fields[1].asstring+'?'), 'Eliminar',
+  MB_ICONQUESTION OR MB_YESNO ) = ID_YES then
+  begin
+ FORM1.FDConnection1.StartTransaction;
+     TRY
+     SELF.FDQuery2.Close;
+     SELF.FDQuery2.SQL.Clear;
+     SELF.FDQuery2.SQL.Add('delete from  TUSUARIOS where idusuario='+inttostr(dbgrid1.Fields[0].asinteger));
+     SELF.FDQuery2.ExecSQL;
+     FORM1.FDConnection1.Commit;
+     SHOWMESSAGE('Se ha eliminado correctamente');
+    ;
+     EXCEPT
+       FORM1.FDConnection1.Rollback;
+         SHOWMESSAGE('Se produjo un error.');
+
+     END;
+ end;
+
+  listarutusuarios;
+end;
+
+procedure Tfrmusuarios.FormShow(Sender: TObject);
+begin
+   listarutusuarios;
+end;
+
+function Tfrmusuarios.listarutusuarios:boolean;
+begin
+self.FDQuery1.Close;
+self.FDQuery1.SQL.Clear;
+self.FDQuery1.SQL.Add('select IDUSUARIO,APENOM,CODIGO,'+
+' CASE TIPO '+
+'  WHEN  1 THEN  ''ADMINISTRADOR''   '+
+ '  WHEN  2 THEN  ''CAJERO'' ' +
+ ' ELSE    '+
+ '''SIN CALIF.'' '+
+ ' END AS ES, TIPO '+
+' from tusuarios WHERE idusuario > 1 order by apenom asc');
+FDQuery1.Open;
+end;
+
+end.

@@ -1,0 +1,33 @@
+object FRMMENSAJE: TFRMMENSAJE
+  Left = 0
+  Top = 0
+  BorderIcons = []
+  BorderStyle = bsNone
+  ClientHeight = 59
+  ClientWidth = 463
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    AlignWithMargins = True
+    Left = 0
+    Top = 12
+    Width = 449
+    Height = 23
+    Alignment = taCenter
+    Caption = 'IMPRIMIENDO...'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+end
