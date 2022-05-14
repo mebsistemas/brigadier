@@ -67,6 +67,8 @@ type
       IDVENDEDOR,tipoivacliente:LONGINT;
       function imprimir(idmovi:longint;ESPARAENAMIL:STRING):STRING;
       function imprimirTICKET(idmovi:longint;ESPARAENAMIL:STRING):STRING;
+      function imprimirTICKET_58(idmovi:longint;ESPARAENAMIL:STRING):STRING;
+
       function imprimirTICKETA4(idmovi:longint;ESPARAENAMIL:STRING):STRING;
      procedure EnviarMensaje( sAdjunto,
    sDestino: string);
@@ -81,7 +83,8 @@ implementation
 
 uses Unit1, UniPideusario, UniFRMDATOSTARJETASpas, UnitFRMMENSAJE,
   UnitbuscarDatosCliente, Unitfrmenviarmail, DISENIOTICKET,
-  UnitPIDECOMENTARIOS4, disenioticketa4, UnitREALIZARDEVOLUCIONES4;
+  UnitPIDECOMENTARIOS4, disenioticketa4, UnitREALIZARDEVOLUCIONES4,
+  UudisenioTicket58;
 
 FUNCTION Tfrmterminar.GUARDAR:BOOLEAN;
 VAR IDMOVI,TIPOMOVIMIENTO,IDCLIENTE,IDMOVIMIENTONC:LONGINT;
@@ -477,7 +480,12 @@ BEGIN
                  FRMMENSAJE.Label1.Caption:='IMPRIMIENDO...';
                  FRMMENSAJE.SHOW;
                  APPLICATION.ProcessMessages;
-                imprimir(strtoint(edit3.Text),'N');
+                 if Trim(form1.TIPOPAPEL)='80' then
+                    imprimir(strtoint(edit3.Text),'N');
+                  if Trim(form1.TIPOPAPEL)='58' then
+                     SHOWMESSAGE('SIN FORMATO 58');
+                   if Trim(form1.TIPOPAPEL)='A4' then
+                      SHOWMESSAGE('SIN FORMATO A4');
               end;
           end;
 
@@ -494,8 +502,14 @@ BEGIN
                      FRMMENSAJE.Label1.Caption:='IMPRIMIENDO...';
                       FRMMENSAJE.SHOW;
                       APPLICATION.ProcessMessages;
-                     // imprimirTICKET(strtoint(edit3.Text),'N');
+                      if Trim(form1.TIPOPAPEL)='80' then
+                      imprimirTICKET(strtoint(edit3.Text),'N');
+
+                      if Trim(form1.TIPOPAPEL)='A4' then
                       imprimirTICKETA4(strtoint(edit3.Text),'R');
+
+                       if Trim(form1.TIPOPAPEL)='58' then
+                          imprimirTICKET_58(strtoint(edit3.Text),'N');
                   END;
                end;
           END;
@@ -515,8 +529,18 @@ BEGIN
                           if  (TIPOMOVIMIENTO<>0)  AND (TIPOMOVIMIENTO<>7) then  //NO ES TICTKET
                                ARCHVOENVIA:=imprimir(strtoint(edit3.Text),'S')
                                ELSE
-                                ARCHVOENVIA:=imprimirTICKET(strtoint(edit3.Text),'S');
+                               begin
+                                    if Trim(form1.TIPOPAPEL)='80' then
+                                      ARCHVOENVIA:=imprimirTICKET(strtoint(edit3.Text),'S');
 
+                                  { if Trim(form1.TIPOPAPEL)='A4' then
+                                      imprimirTICKETA4(strtoint(edit3.Text),'R');
+
+                                   if Trim(form1.TIPOPAPEL)='58' then
+                                     SHOWMESSAGE('SIN FORMATO 558');   }
+
+
+                              end;
                         EnviarMail(ARCHVOENVIA,frmenviarmail.Edit1.Text);
                      END;
                   end;
@@ -892,6 +916,10 @@ begin
 
       END;
       frmpdf.RxMemoryData1.Post;
+
+       frmpdf.QRPQuickrep1.Page.Length:= frmpdf.QRPQuickrep1.Page.Length + 20;
+
+
   Form1.FDQuery3.NEXT;
   END;
 
@@ -1075,6 +1103,10 @@ begin
 
 
       FRMDISENIOTICKET.RxMemoryData1.Post;
+
+        FRMDISENIOTICKET.QRPQuickrep1.Page.Length:= FRMDISENIOTICKET.QRPQuickrep1.Page.Length + 20;
+
+
   Form1.FDQuery3.NEXT;
   END;
 
@@ -1127,6 +1159,186 @@ end;
 
 
 
+function Tfrmterminar.imprimirTICKET_58(idmovi:longint;ESPARAENAMIL:STRING):STRING;
+var posi,codigocliente:longint; COMPROBANTE,LETRA,COD,DNICUIT,TIPODOC,RAZONSOCIAL,IVACLIENTE:sTRING;
+    fechaqr,tipocbte,CODIGO_QR:String;
+                    fechadir:sTRING;
+    NROFAC,  ARCHIVO,DIRFAE:STRING;   Gpdf :TExportar2PDFSyn ;
+    IDFOMAPAO:LONGINT;TIPOMOVIMIENTO:LONGINT;
+begin
+   frmTicket58.QRPQuickrep1.Page.Length:=129;
+
+   posi:=pos('-',trim(label7.Caption));
+   codigocliente:=strtoint(trim(copy(trim(label7.Caption),0,posi-1)));
+
+   Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT  TIPOMOVIMIENTO FROM TMOVIMIENTOS WHERE IDMOVIMIENTO='+INTTOSTR(idmovi));
+  Form1.FDQuery3.Open;
+  TIPOMOVIMIENTO:=Form1.FDQuery3.FieldByName('TIPOMOVIMIENTO').AsInteger;
+
+
+   if codigocliente=0 then
+   begin
+    RAZONSOCIAL:='CONSUMIDOR FINAL';
+    DNICUIT:='DOC (OTRO) 0';
+    IVACLIENTE:='CONSUMIDOR FINAL';
+   end ELSE
+       BEGIN
+          Form1.FDQuery3.Close;
+          Form1.FDQuery3.SQL.Clear;
+          Form1.FDQuery3.SQL.Add('SELECT  * FROM TCLIENTES WHERE IDCLIENTE='+INTTOSTR(codigocliente));
+          Form1.FDQuery3.Open;
+
+          RAZONSOCIAL:=TRIM(Form1.FDQuery3.FieldByName('APENOM').ASSTRING);
+          DNICUIT:=TRIM(Form1.FDQuery3.FieldByName('NRODOC').ASSTRING);
+          IVACLIENTE:=TRIM(Form1.FDQuery3.FieldByName('IVA').ASSTRING);
+          TIPODOC:=TRIM(Form1.FDQuery3.FieldByName('TIPODOC').ASSTRING);
+          if TIPODOC='96' then
+          DNICUIT:='DNI '+DNICUIT;
+          if TIPODOC='80' then
+          DNICUIT:='CUIT '+DNICUIT;
+          if TIPODOC='86' then
+          DNICUIT:='CUIL '+DNICUIT;
+          if TIPODOC='87' then
+          DNICUIT:='CDI '+DNICUIT;
+          if TIPODOC='89' then
+          DNICUIT:='LE '+DNICUIT;
+          if TIPODOC='90' then
+          DNICUIT:='LC '+DNICUIT;
+          if TIPODOC='91' then
+          DNICUIT:='CI '+DNICUIT;
+          if TIPODOC='92' then
+          DNICUIT:='EN TRAMITE '+DNICUIT;
+          if TIPODOC='93' then
+          DNICUIT:='AC. NAC. '+DNICUIT;
+          if TIPODOC='95' then
+          DNICUIT:='CI Bs. As. RN '+DNICUIT;
+          if TIPODOC='99' then
+          DNICUIT:='OTRO DOC '+DNICUIT;
+
+
+
+
+    END;
+
+  {frmpdf.QRLabel24.Caption:=letra;
+  frmpdf.QRLabel25.Caption:=cod;
+  frmpdf.QRLabel26.Caption:=COMPROBANTE;
+   }
+  Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT  * FROM TMOVIMIENTOS WHERE IDMOVIMIENTO='+INTTOSTR(idmovi));
+  Form1.FDQuery3.Open;
+  IDFOMAPAO:=Form1.FDQuery3.FieldByName('IDFORMAPAGO').ASINTEGER;
+  NROFAC:=TRIM(Form1.FDQuery3.FieldByName('NROFACTURA').ASSTRING);
+  frmTicket58.QRLabel27.Caption:=TRIM(Form1.FDQuery3.FieldByName('FECHA').ASSTRING);
+  frmTicket58.QRLabel28.Caption:=TRIM(Form1.FDQuery3.FieldByName('NROFACTURA').ASSTRING);
+
+
+  frmTicket58.QRLabel21.Caption:='$'+FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.FieldByName('TOTAL').ASSTRING)),FFFIXED,8,2);
+
+   fechaqr:=copy(TRIM(Form1.FDQuery3.FieldByName('FECHA').ASSTRING),7,4)+'-'+copy(TRIM(Form1.FDQuery3.FieldByName('FECHA').ASSTRING),4,2)+'-'+copy(TRIM(Form1.FDQuery3.FieldByName('FECHA').ASSTRING),1,2);
+
+
+
+
+
+
+
+
+  frmTicket58.QRLabel9.Caption:='A: '+TRIM(RAZONSOCIAL);
+
+
+
+
+  frmTicket58.QRLabel7.Caption:=TRIM(form1.tconfi.GET_FNOMBRE);
+
+  frmTicket58.RxMemoryData1.Close;
+  frmTicket58.RxMemoryData1.Open;
+  Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT TA.DESCRIPCION, TI.CANTIDAD,TI.PUNI,TI.PTOTAL,'+
+  ' TA.PRECIOVENTA,TI.IVA,TI.POR_IVA FROM TITEM_FACTURA TI,TARTICULOS TA '+
+                         ' WHERE TI.IDARTICULO=TA.IDARTICULO '+
+                         ' AND TI.IDFACTURA='+INTTOSTR(idmovi));
+  Form1.FDQuery3.Open;
+  while NOT FORM1.FDQuery3.EOF do
+  BEGIN
+      frmTicket58.RxMemoryData1.Append;
+       frmTicket58.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF((STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString))/STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString))),FFFIXED,8,2);
+        frmTicket58.RxMemoryData1DESCRIPCION.Value:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+
+         frmTicket58.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+        frmTicket58.RxMemoryData1.Post;
+
+        frmTicket58.RxMemoryData1.Append;
+
+        frmTicket58.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+        frmTicket58.RxMemoryData1.Post;
+       { frmTicket58.RxMemoryData1.Append;
+            frmTicket58.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF((STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString))/STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString))),FFFIXED,8,2);
+            frmTicket58.RxMemoryData1IVA.Value:='';
+            frmTicket58.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+            frmTicket58.RxMemoryData1CANTIDAD.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+            frmTicket58.RxMemoryData1.Post;
+
+         frmTicket58.RxMemoryData1.Append;
+          frmTicket58.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+           frmTicket58.RxMemoryData1.Post;  }
+
+     //  if  frmTicket58.RxMemoryData1.RecordCount > 15 then
+        frmTicket58.QRPQuickrep1.Page.Length:= frmTicket58.QRPQuickrep1.Page.Length + 20;
+
+
+     // frmTicket58.RxMemoryData1.Post;
+  Form1.FDQuery3.NEXT;
+  END;
+
+
+
+   {forma directorios}
+     DIRFAE:=ExtractFilePath(ParamStr(0))+'COMPROBANTES';
+     if not DirectoryExists(DIRFAE+'\')=true then
+     begin
+       CreateDir(DIRFAE);
+     end;
+     DIRFAE:=DIRFAE+'\';
+     fechadir:=fechaqr ;
+     fechadir:=stringreplace(fechadir, '-', '',[rfReplaceAll, rfIgnoreCase]);
+     DIRFAE:=DIRFAE+fechadir;
+     if not DirectoryExists(DIRFAE+'\')=true then
+     begin
+       CreateDir(DIRFAE);
+     end;
+
+      frmTicket58.QRPQuickrep1.Page.Length:= frmTicket58.QRPQuickrep1.Page.Length + 100;
+
+  frmTicket58.QRPQuickrep1.Prepare;
+
+  if ESPARAENAMIL='N' then
+  frmTicket58.QRPQuickrep1.Print;
+
+  ARCHIVO:='TICKET_'+NROFAC+'.pdf';
+
+  frmTicket58.QRPQuickrep1.Prepare;
+  Gpdf := TExportar2PDFSyn.create;
+  Gpdf.rutaPDF := DIRFAE+'\'+trim(ARCHIVO);
+  Gpdf.exportar2PDF(frmTicket58.QRPQuickrep1);
+  Gpdf.Free;
+
+
+  imprimirTICKET_58:=DIRFAE+'\'+trim(ARCHIVO);
+
+
+  if ESPARAENAMIL='N' then
+  BEGIN
+    WHILE frmTicket58.QRPQuickrep1.QRPrinter.IsPrinting=TRUE DO
+    BEGIN
+     APPLICATION.ProcessMessages;
+    END;
+  END;
+end;
 function Tfrmterminar.imprimirTICKETA4(idmovi:longint;ESPARAENAMIL:STRING):STRING;
 var posi,codigocliente:longint; COMPROBANTE,LETRA,COD,DNICUIT,TIPODOC,RAZONSOCIAL,IVACLIENTE:sTRING;
     fechaqr,tipocbte,CODIGO_QR:String;       sumacantidad:real;

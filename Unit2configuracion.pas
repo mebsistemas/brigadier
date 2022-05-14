@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Buttons,unit1,
-  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,   inifiles,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client;
@@ -69,6 +69,10 @@ type
     TabSheet5: TTabSheet;
     BitBtn6: TBitBtn;
     FDQuery1: TFDQuery;
+    GroupBox2: TGroupBox;
+    RadioButton3: TRadioButton;
+    RadioButton4: TRadioButton;
+    RadioButton5: TRadioButton;
     procedure FormShow(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
@@ -101,6 +105,7 @@ EDIT1.Text:=TRIM(seleccioneimpresora.ComboBox1.Text);
 end;
 
 procedure Tconfiguracion.BitBtn2Click(Sender: TObject);
+var  Ini :TIniFile;
 begin
 TRY
 FORM1.tconfi.POST_FNOMBRE:=TRIM(EDIT6.Text);
@@ -123,6 +128,8 @@ FORM1.tconfi.POST_FPASSWORDMAIL:=TRIM(edit5.Text);
       FORM1.tconfi.POST_FSOLOTICKET:='S'
       ELSE
        FORM1.tconfi.POST_FSOLOTICKET:='N' ;
+
+
 
 
      if  self.CheckBox2.Checked then
@@ -151,6 +158,24 @@ FORM1.tconfi.POST_FPASSWORDMAIL:=TRIM(edit5.Text);
     ELSE
        if RADIOBUTTON2.Checked=TRUE then
           FORM1.tconfi.POST_FDIGITOHASTA:='1' ;
+
+
+
+   if self.RadioButton3.Checked=true then
+   FORM1.TIPOPAPEL:='58'
+    else
+           if self.RadioButton4.Checked=true then
+               FORM1.TIPOPAPEL:='80'
+               else
+                if self.RadioButton5.Checked=true then
+                FORM1.TIPOPAPEL:='A4'
+                else
+                  FORM1.TIPOPAPEL:='A4';
+
+
+  Ini := TIniFile.Create(ExtractFilePath(ParamStr(0))+'\config.ini');
+  INI.WriteString('PAPEL', 'TIPO', FORM1.TIPOPAPEL);
+ Ini.Free;
 
 
 FORM1.tconfi.PostDatos(FORM1.PUESTO_PC);
@@ -283,6 +308,7 @@ END ELSE
 end;
 
 procedure Tconfiguracion.FormShow(Sender: TObject);
+var  Ini :TIniFile;
 begin
 edit6.Text:=form1.tconfi.GET_FNOMBRE;
 edit7.Text:=form1.tconfi.GET_FIVA;
@@ -301,6 +327,23 @@ edit3.Text:=form1.tconfi.GET_FSMTP;
 edit4.Text:=form1.tconfi.GET_FUSUARIOMAIL;
 edit5.Text:=form1.tconfi.GET_FPASSWORDMAIL;
 
+ Ini := TIniFile.Create(ExtractFilePath(ParamStr(0))+'\config.ini');
+
+ form1.TIPOPAPEL:=TRIM(INI.ReadString('PAPEL', 'TIPO', 'A4'));
+ Ini.Free;
+
+   if trim(form1.TIPOPAPEL)='58' then
+      self.RadioButton3.Checked:=true
+      else
+           if trim(form1.TIPOPAPEL)='80' then
+            self.RadioButton4.Checked:=true
+            else
+               if trim(form1.TIPOPAPEL)='A4' then
+                self.RadioButton5.Checked:=true
+               else
+                 self.RadioButton5.Checked:=true;
+
+
 if trim(form1.tconfi.GET_FIMPRIME)='S'  then
    self.CheckBox1.Checked:=true
     else
@@ -311,6 +354,12 @@ if trim(form1.tconfi.GET_FIMPRIME)='S'  then
        ELSE
         COMBOBOX2.ItemIndex:=0;
 
+        if form1.demo=true then
+         begin
+           COMBOBOX2.ItemIndex:=1;
+           combobox2.Enabled:=false;
+         end else
+             combobox2.Enabled:=true;
 
 
     if trim(form1.tconfi.GET_FENVIAMAIL)='S'  then

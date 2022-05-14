@@ -114,7 +114,8 @@ uses
   UIMPRIMIRARTICULOS in 'UIMPRIMIRARTICULOS.PAS' {IMPRIMIRARTICULOS},
   UnitimprimeVentasVendedor2 in 'UnitimprimeVentasVendedor2.pas' {imprimeVentasVendedor},
   Unit2listadeprecio in 'Unit2listadeprecio.pas' {listadeprecio},
-  Unit2CONSULTARPRECIO in 'Unit2CONSULTARPRECIO.pas' {CONSULTARPRECIO};
+  Unit2CONSULTARPRECIO in 'Unit2CONSULTARPRECIO.pas' {CONSULTARPRECIO},
+  UudisenioTicket58 in 'UudisenioTicket58.pas' {frmTicket58};
 
 {$R *.res}
 
@@ -213,5 +214,6 @@ begin
   Application.CreateForm(TimprimeVentasVendedor, imprimeVentasVendedor);
   Application.CreateForm(Tlistadeprecio, listadeprecio);
   Application.CreateForm(TCONSULTARPRECIO, CONSULTARPRECIO);
+  Application.CreateForm(TfrmTicket58, frmTicket58);
   Application.Run;
 end.

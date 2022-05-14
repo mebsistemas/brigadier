@@ -462,6 +462,29 @@ object FRMDISENIOTICKET: TFRMDISENIOTICKET
         VerticalAlignment = tlTop
         FontSize = 9
       end
+      object QRLabel1: TQRLabel
+        Left = 9
+        Top = 96
+        Width = 237
+        Height = 17
+        Size.Values = (
+          44.979166666666670000
+          23.812500000000000000
+          254.000000000000000000
+          627.062500000000000000)
+        XLColumn = 0
+        XLNumFormat = nfGeneral
+        ActiveInPreview = False
+        Alignment = taLeftJustify
+        AlignToBand = False
+        Caption = '-----------------------------------------------------------'
+        Color = clWhite
+        Transparent = False
+        ExportAs = exptText
+        WrapStyle = BreakOnSpaces
+        VerticalAlignment = tlTop
+        FontSize = 10
+      end
     end
     object TitleBand1: TQRBand
       Left = 0

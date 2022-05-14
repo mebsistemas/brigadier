@@ -37,6 +37,7 @@ type
     RxMemoryData1TOTAL: TStringField;
     RxMemoryData1CANTIDAD: TStringField;
     QRLabel7: TQRLabel;
+    QRLabel1: TQRLabel;
   private
     { Private declarations }
   public

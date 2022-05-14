@@ -186,6 +186,7 @@ type
     demo:boolean;
         esDevolucion:boolean;
     PUESTO_PC,ESADMINISTRADOR,IDUSUARIOLOGEADO:LONGINT;
+     TIPOPAPEL:STRING;
      function  buscrVencimientos(ida:longint):boolean;
     FUNCTION FACTURAELECTRONICA(CODFACTU:LONGINT):BOOLEAN;
   end;
@@ -1206,10 +1207,11 @@ PANEL11.Visible:=FALSE;
 sumaCantidad:=0;
 LABEL7.Caption:='0';
 EDIT2.TEXT:='0 - CONSUMIDOR FINAL';
- demo:=true;
+
  Ini := TIniFile.Create(ExtractFilePath(ParamStr(0))+'\config.ini');
  PATHBD:=TRIM(Ini.ReadString('BASE', 'PATH', ''));
  PUESTO_PC:=Ini.ReadInteger('PUESTO', 'PC', 1);
+ TIPOPAPEL:=TRIM(INI.ReadString('PAPEL', 'TIPO', 'A4'));
  Ini.Free;
  esDevolucion:=false;
 PANEL9.Caption:='<<<< INGRESE CANTIDAD O ARTICULO';

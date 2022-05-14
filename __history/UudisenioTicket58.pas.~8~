@@ -1,0 +1,51 @@
+unit UudisenioTicket58;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, QRCtrls, QuickRpt, Vcl.ExtCtrls,
+  qrpBaseCtrls, Data.DB, RxMemDS;
+
+type
+  TfrmTicket58 = class(TForm)
+    RxMemoryData1: TRxMemoryData;
+    RxMemoryData1PUNITARIO: TStringField;
+    RxMemoryData1IVA: TStringField;
+    RxMemoryData1TOTAL: TStringField;
+    RxMemoryData1CANTIDAD: TStringField;
+    QRPQuickrep1: TQRPQuickrep;
+    DetailBand1: TQRBand;
+    QRDBText1: TQRDBText;
+    PageHeaderBand1: TQRBand;
+    QRLabel26: TQRLabel;
+    QRLabel27: TQRLabel;
+    QRLabel28: TQRLabel;
+    QRLabel7: TQRLabel;
+    PageFooterBand1: TQRBand;
+    QRLabel17: TQRLabel;
+    QRLabel21: TQRLabel;
+    QRLabel1: TQRLabel;
+    TitleBand1: TQRBand;
+    QRLabel9: TQRLabel;
+    QRShape2: TQRShape;
+    QRLabel10: TQRLabel;
+    QRLabel11: TQRLabel;
+    QRLabel13: TQRLabel;
+    QRLabel6: TQRLabel;
+    RxMemoryData1DESCRIPCION: TStringField;
+    QRDBText2: TQRDBText;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmTicket58: TfrmTicket58;
+
+implementation
+
+{$R *.dfm}
+
+end.
