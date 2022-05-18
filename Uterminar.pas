@@ -68,6 +68,7 @@ type
       function imprimir(idmovi:longint;ESPARAENAMIL:STRING):STRING;
       function imprimirTICKET(idmovi:longint;ESPARAENAMIL:STRING):STRING;
       function imprimirTICKET_58(idmovi:longint;ESPARAENAMIL:STRING):STRING;
+      function imprimirFacturaFormato58(idmovi:longint;ESPARAENAMIL:STRING):STRING;
 
       function imprimirTICKETA4(idmovi:longint;ESPARAENAMIL:STRING):STRING;
      procedure EnviarMensaje( sAdjunto,
@@ -84,7 +85,7 @@ implementation
 uses Unit1, UniPideusario, UniFRMDATOSTARJETASpas, UnitFRMMENSAJE,
   UnitbuscarDatosCliente, Unitfrmenviarmail, DISENIOTICKET,
   UnitPIDECOMENTARIOS4, disenioticketa4, UnitREALIZARDEVOLUCIONES4,
-  UudisenioTicket58;
+  UudisenioTicket58, UImprimeFActura58;
 
 FUNCTION Tfrmterminar.GUARDAR:BOOLEAN;
 VAR IDMOVI,TIPOMOVIMIENTO,IDCLIENTE,IDMOVIMIENTONC:LONGINT;
@@ -483,7 +484,7 @@ BEGIN
                  if Trim(form1.TIPOPAPEL)='80' then
                     imprimir(strtoint(edit3.Text),'N');
                   if Trim(form1.TIPOPAPEL)='58' then
-                     SHOWMESSAGE('SIN FORMATO 58');
+                     imprimirFacturaFormato58(strtoint(edit3.Text),'N');
                    if Trim(form1.TIPOPAPEL)='A4' then
                       SHOWMESSAGE('SIN FORMATO A4');
               end;
@@ -703,6 +704,7 @@ n:=cero+nro;
 
  armanumeroFactura:=PV+'-'+n;
 end;
+
 function Tfrmterminar.imprimir(idmovi:longint;ESPARAENAMIL:STRING):STRING;
 var posi,codigocliente:longint; COMPROBANTE,LETRA,COD,DNICUIT,TIPODOC,RAZONSOCIAL,IVACLIENTE:sTRING;
     fechaqr,tipocbte,CODIGO_QR:String;
@@ -985,6 +987,310 @@ begin
    END;
  END;
 end;
+
+
+
+
+function Tfrmterminar.imprimirFacturaFormato58(idmovi:longint;ESPARAENAMIL:STRING):STRING;
+var posi,codigocliente:longint; COMPROBANTE,LETRA,COD,DNICUIT,TIPODOC,RAZONSOCIAL,IVACLIENTE:sTRING;
+    fechaqr,tipocbte,CODIGO_QR:String;
+                    fechadir:sTRING;
+    NROFAC,  ARCHIVO,DIRFAE:STRING;   Gpdf :TExportar2PDFSyn ;
+    IDFOMAPAO:LONGINT;TIPOMOVIMIENTO:LONGINT;
+begin
+
+   posi:=pos('-',trim(label7.Caption));
+   codigocliente:=strtoint(trim(copy(trim(label7.Caption),0,posi-1)));
+
+   Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT  TIPOMOVIMIENTO FROM TMOVIMIENTOS WHERE IDMOVIMIENTO='+INTTOSTR(idmovi));
+  Form1.FDQuery3.Open;
+  TIPOMOVIMIENTO:=Form1.FDQuery3.FieldByName('TIPOMOVIMIENTO').AsInteger;
+   if TIPOMOVIMIENTO=1 then  //FACTURA A
+   BEGIN
+     letra:='A';
+     cod:='COD 01';
+     COMPROBANTE:='FACTURA';
+     tipocbte:='1';
+   END;
+
+   if TIPOMOVIMIENTO=2 then  //FACTURA B
+   BEGIN
+     letra:='B';
+     cod:='COD 06';
+     COMPROBANTE:='FACTURA';
+     tipocbte:='6';
+   END;
+
+   if TIPOMOVIMIENTO=3 then  //FACTURA C
+   BEGIN
+    { letra:='B';
+     cod:='COD 06';
+     COMPROBANTE:='FACTURA';  }
+   END ;
+
+   if TIPOMOVIMIENTO=4 then  //NOTA CREDITO A
+   BEGIN
+     letra:='A';
+     cod:='COD 03';
+     COMPROBANTE:='NOTA DE CREDITO';
+     tipocbte:='3';
+   END;
+
+   if TIPOMOVIMIENTO=5 then  //NOTA CREDITO B
+   BEGIN
+     letra:='B';
+     cod:='COD 08';
+     COMPROBANTE:='NOTA DE CREDITO';
+     tipocbte:='8';
+   END ;
+
+   if codigocliente=0 then
+   begin
+    RAZONSOCIAL:='CONSUMIDOR FINAL';
+    DNICUIT:='DOC (OTRO) 0';
+    IVACLIENTE:='CONSUMIDOR FINAL';
+   end ELSE
+       BEGIN
+          Form1.FDQuery3.Close;
+          Form1.FDQuery3.SQL.Clear;
+          Form1.FDQuery3.SQL.Add('SELECT  * FROM TCLIENTES WHERE IDCLIENTE='+INTTOSTR(codigocliente));
+          Form1.FDQuery3.Open;
+
+          RAZONSOCIAL:=TRIM(Form1.FDQuery3.FieldByName('APENOM').ASSTRING);
+          DNICUIT:=TRIM(Form1.FDQuery3.FieldByName('NRODOC').ASSTRING);
+          IVACLIENTE:=TRIM(Form1.FDQuery3.FieldByName('IVA').ASSTRING);
+          TIPODOC:=TRIM(Form1.FDQuery3.FieldByName('TIPODOC').ASSTRING);
+          if TIPODOC='96' then
+          DNICUIT:='DNI '+DNICUIT;
+          if TIPODOC='80' then
+          DNICUIT:='CUIT '+DNICUIT;
+          if TIPODOC='86' then
+          DNICUIT:='CUIL '+DNICUIT;
+          if TIPODOC='87' then
+          DNICUIT:='CDI '+DNICUIT;
+          if TIPODOC='89' then
+          DNICUIT:='LE '+DNICUIT;
+          if TIPODOC='90' then
+          DNICUIT:='LC '+DNICUIT;
+          if TIPODOC='91' then
+          DNICUIT:='CI '+DNICUIT;
+          if TIPODOC='92' then
+          DNICUIT:='EN TRAMITE '+DNICUIT;
+          if TIPODOC='93' then
+          DNICUIT:='AC. NAC. '+DNICUIT;
+          if TIPODOC='95' then
+          DNICUIT:='CI Bs. As. RN '+DNICUIT;
+          if TIPODOC='99' then
+          DNICUIT:='OTRO DOC '+DNICUIT;
+
+
+
+
+    END;
+
+  disenioimprimirFactura58.QRLabel24.Caption:=letra;
+  disenioimprimirFactura58.QRLabel25.Caption:=cod;
+  disenioimprimirFactura58.QRLabel26.Caption:=COMPROBANTE;
+
+  Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT  * FROM TMOVIMIENTOS WHERE IDMOVIMIENTO='+INTTOSTR(idmovi));
+  Form1.FDQuery3.Open;
+  IDFOMAPAO:=Form1.FDQuery3.FieldByName('IDFORMAPAGO').ASINTEGER;
+  NROFAC:=armanumeroFactura(TRIM(Form1.FDQuery3.FieldByName('NROFACTURA').ASSTRING));
+  disenioimprimirFactura58.QRLabel27.Caption:=TRIM(Form1.FDQuery3.FieldByName('FECHA').ASSTRING);
+  disenioimprimirFactura58.QRLabel28.Caption:=armanumeroFactura(TRIM(Form1.FDQuery3.FieldByName('NROFACTURA').ASSTRING));
+  disenioimprimirFactura58.QRLabel22.Caption:='CAE:'+TRIM(Form1.FDQuery3.FieldByName('CAE').ASSTRING);
+  disenioimprimirFactura58.QRLabel23.Caption:='FECHA VENC:'+TRIM(Form1.FDQuery3.FieldByName('FECHAVENCE').ASSTRING);
+
+  disenioimprimirFactura58.QRLabel18.Caption:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.FieldByName('SUBTOTAL').ASSTRING)),FFFIXED,8,2);
+  disenioimprimirFactura58.QRLabel21.Caption:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.FieldByName('TOTAL').ASSTRING)),FFFIXED,8,2);
+
+   fechaqr:=copy(TRIM(Form1.FDQuery3.FieldByName('FECHA').ASSTRING),7,4)+'-'+copy(TRIM(Form1.FDQuery3.FieldByName('FECHA').ASSTRING),4,2)+'-'+copy(TRIM(Form1.FDQuery3.FieldByName('FECHA').ASSTRING),1,2);
+
+{qr}
+    CODIGO_QR:='{"ver":1,'+
+             '"fecha":"'+fechaqr+'",'+
+             '"cuit": "'+form1.tconfi.GET_FCUITFACTURA+'",'+
+             '"ptoVta":"'+form1.tconfi.GET_FPUNTOVENTA+'",'+
+             '"tipoCmp":'+tipocbte+','+
+             '"nroCmp":'+TRIM(Form1.FDQuery3.FieldByName('NROFACTURA').ASSTRING)+','+
+             '"importe":'+FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.FieldByName('TOTAL').ASSTRING)),FFFIXED,8,2)+','+
+             '"moneda":"PES",'+
+             '"ctz":1,'+
+             '"tipoDocRec":'+TIPODOC+','+
+             '"nroDocRec":'+stringreplace(DNICUIT, '-', '',[rfReplaceAll, rfIgnoreCase])+','+
+             '"tipoCodAut":"E",'+
+             '"codAut":'+TRIM(Form1.FDQuery3.FieldByName('CAE').ASSTRING)+'}';
+
+ CODIGO_QR:='https://www.afip.gob.ar/fe/qr/?p='+CODIGO_QR;
+   disenioimprimirFactura58.QRQRBarcode1.BarcodeText:=CODIGO_QR;
+
+  Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT  DESCRIPCION FROM TFORMAPAGO WHERE IDFORMAPAGO='+INTTOSTR(IDFOMAPAO));
+  Form1.FDQuery3.Open;
+  disenioimprimirFactura58.QRLabel31.CAPTION:='FORMA DE PAGO:'+TRIM(Form1.FDQuery3.FieldByName('DESCRIPCION').ASSTRING);
+
+  if trim(letra)='B' then
+  begin
+      disenioimprimirFactura58.QRLabel19.Caption:='0.00';
+      disenioimprimirFactura58.QRLabel20.Caption:='0.00';
+  end else begin
+        Form1.FDQuery3.Close;
+        Form1.FDQuery3.SQL.Clear;
+        Form1.FDQuery3.SQL.Add('SELECT  sum(iva) as iv FROM TITEM_FACTURA WHERE IDFACTURA='+INTTOSTR(idmovi)+' and POR_IVA=''10.5'' ');
+        Form1.FDQuery3.Open;
+         if trim(Form1.FDQuery3.FieldByName('iv').ASSTRING)='' then
+          disenioimprimirFactura58.QRLabel20.Caption:='0.00'
+          else
+        disenioimprimirFactura58.QRLabel20.Caption:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.FieldByName('iv').ASSTRING)),FFFIXED,8,2);
+
+        Form1.FDQuery3.Close;
+        Form1.FDQuery3.SQL.Clear;
+        Form1.FDQuery3.SQL.Add('SELECT  sum(iva) as iv FROM TITEM_FACTURA WHERE IDFACTURA='+INTTOSTR(idmovi)+' and POR_IVA=''21'' ');
+        Form1.FDQuery3.Open;
+        if trim(Form1.FDQuery3.FieldByName('iv').ASSTRING)='' then
+          disenioimprimirFactura58.QRLabel19.Caption:='0.00'
+          else
+         disenioimprimirFactura58.QRLabel19.Caption:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.FieldByName('iv').ASSTRING)),FFFIXED,8,2);
+
+  end;
+
+
+  disenioimprimirFactura58.qrrazonsocial.Caption:=TRIM(RAZONSOCIAL);
+  disenioimprimirFactura58.qrcuitdni.Caption:=TRIM(DNICUIT);
+  disenioimprimirFactura58.qrivacliente.Caption:=TRIM(IVACLIENTE);
+
+    disenioimprimirFactura58.QRLabel29.Caption:='';
+    disenioimprimirFactura58.QRLabel30.Caption:='';
+
+  disenioimprimirFactura58.QRLabel1.Caption:='RAZON SOCIAL:'+TRIM(form1.tconfi.GET_FNOMBRE);
+  disenioimprimirFactura58.QRLabel2.Caption:='CUIT:'+TRIM(form1.tconfi.GET_FCUITFACTURA);
+  disenioimprimirFactura58.QRLabel3.Caption:='IVA:'+TRIM(form1.tconfi.GET_FIVA);
+  disenioimprimirFactura58.QRLabel4.Caption:='IIBB:'+TRIM(form1.tconfi.GET_FIIBB);
+  disenioimprimirFactura58.QRLabel5.Caption:='INIC. ACTV.:'+TRIM(form1.tconfi.GET_FECHAINICIO);
+  disenioimprimirFactura58.QRLabel7.Caption:='DOMICILIO:'+TRIM(form1.tconfi.GET_FDOMICILIO);
+
+  disenioimprimirFactura58.RxMemoryData1.Close;
+  disenioimprimirFactura58.RxMemoryData1.Open;
+  Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT TA.DESCRIPCION, TI.CANTIDAD,TI.PUNI,TI.PTOTAL,'+
+  ' TA.PRECIOVENTA,TI.IVA,TI.POR_IVA FROM TITEM_FACTURA TI,TARTICULOS TA '+
+                         ' WHERE TI.IDARTICULO=TA.IDARTICULO '+
+                         ' AND TI.IDFACTURA='+INTTOSTR(idmovi));
+  Form1.FDQuery3.Open;
+  while NOT FORM1.FDQuery3.EOF do
+  BEGIN
+
+
+
+      if trim(letra)='A' then
+      BEGIN
+   {   disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+      disenioimprimirFactura58.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[2].AsString)),FFFIXED,8,2);
+      disenioimprimirFactura58.RxMemoryData1IVA.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString))-STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[2].AsString)),FFFIXED,8,2);
+      disenioimprimirFactura58.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+      disenioimprimirFactura58.RxMemoryData1CANTIDAD.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+      }
+        disenioimprimirFactura58.RxMemoryData1.Append;
+       disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+       disenioimprimirFactura58.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[2].AsString)),FFFIXED,8,2);
+       disenioimprimirFactura58.RxMemoryData1IVA.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString))-STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[2].AsString)),FFFIXED,8,2);
+       disenioimprimirFactura58.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+      // disenioimprimirFactura58.RxMemoryData1CANTIDAD.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+
+       disenioimprimirFactura58.RxMemoryData1.Post;
+
+       disenioimprimirFactura58.RxMemoryData1.Append;
+       disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+       disenioimprimirFactura58.RxMemoryData1.Post;
+      END ELSE BEGIN
+            disenioimprimirFactura58.RxMemoryData1.Append;
+            disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+            disenioimprimirFactura58.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+            disenioimprimirFactura58.RxMemoryData1IVA.Value:='';
+            disenioimprimirFactura58.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+          // disenioimprimirFactura58.RxMemoryData1CANTIDAD.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+            disenioimprimirFactura58.RxMemoryData1.Post;
+           disenioimprimirFactura58.RxMemoryData1.Append;
+           disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+            disenioimprimirFactura58.RxMemoryData1.Post;
+      END;
+     // disenioimprimirFactura58.RxMemoryData1.Post;
+
+       disenioimprimirFactura58.QRPQuickrep1.Page.Length:= disenioimprimirFactura58.QRPQuickrep1.Page.Length + 20;
+
+
+  Form1.FDQuery3.NEXT;
+  END;
+
+
+
+
+
+   {forma directorios}
+     DIRFAE:=ExtractFilePath(ParamStr(0))+'COMPROBANTES';
+     if not DirectoryExists(DIRFAE+'\')=true then
+     begin
+       CreateDir(DIRFAE);
+     end;
+     DIRFAE:=DIRFAE+'\';
+     fechadir:=fechaqr ;
+     fechadir:=stringreplace(fechadir, '-', '',[rfReplaceAll, rfIgnoreCase]);
+     DIRFAE:=DIRFAE+fechadir;
+     if not DirectoryExists(DIRFAE+'\')=true then
+     begin
+       CreateDir(DIRFAE);
+     end;
+
+
+   disenioimprimirFactura58.QRORIGINAL.Caption:='ORIGINAL';
+  disenioimprimirFactura58.QRPQuickrep1.Prepare;
+
+  if ESPARAENAMIL='N' then
+     disenioimprimirFactura58.QRPQuickrep1.Print;
+
+  ARCHIVO:=NROFAC+'.pdf';
+  imprimirFacturaFormato58:=DIRFAE+'\'+trim(ARCHIVO);
+  disenioimprimirFactura58.QRORIGINAL.Caption:='ORIGINAL';
+  disenioimprimirFactura58.QRPQuickrep1.Prepare;
+  Gpdf := TExportar2PDFSyn.create;
+  Gpdf.rutaPDF := DIRFAE+'\'+trim(ARCHIVO);
+  Gpdf.exportar2PDF(disenioimprimirFactura58.QRPQuickrep1);
+  Gpdf.Free;
+
+  disenioimprimirFactura58.QRORIGINAL.Caption:='DUPLICADO';
+  disenioimprimirFactura58.QRPQuickrep1.Prepare;
+
+  ARCHIVO:='D_'+ARCHIVO;
+  Gpdf := TExportar2PDFSyn.create;
+  Gpdf.rutaPDF := DIRFAE+'\'+trim(ARCHIVO);
+  Gpdf.exportar2PDF(disenioimprimirFactura58.QRPQuickrep1);
+  Gpdf.Free;
+
+  disenioimprimirFactura58.QRORIGINAL.Caption:='TRIPLICADO';
+  disenioimprimirFactura58.QRPQuickrep1.Prepare;
+  ARCHIVO:='T_'+ARCHIVO;
+  Gpdf := TExportar2PDFSyn.create;
+  Gpdf.rutaPDF := DIRFAE+'\'+trim(ARCHIVO);
+  Gpdf.exportar2PDF(disenioimprimirFactura58.QRPQuickrep1);
+  Gpdf.Free;
+
+
+
+ if ESPARAENAMIL='N' then
+ BEGIN
+   WHILE disenioimprimirFactura58.QRPQuickrep1.QRPrinter.IsPrinting=TRUE DO
+   BEGIN
+     APPLICATION.ProcessMessages;
+   END;
+ END;
+end;
+
 
 function Tfrmterminar.imprimirTICKET(idmovi:longint;ESPARAENAMIL:STRING):STRING;
 var posi,codigocliente:longint; COMPROBANTE,LETRA,COD,DNICUIT,TIPODOC,RAZONSOCIAL,IVACLIENTE:sTRING;

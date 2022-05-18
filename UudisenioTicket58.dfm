@@ -21,6 +21,7 @@ object frmTicket58: TfrmTicket58
     Width = 218
     Height = 487
     ShowingPreview = False
+    BeforePrint = QRPQuickrep1BeforePrint
     DataSet = RxMemoryData1
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -83,13 +84,13 @@ object frmTicket58: TfrmTicket58
       Left = 0
       Top = 153
       Width = 218
-      Height = 17
+      Height = 13
       AlignToBottom = False
       TransparentBand = False
       ForceNewColumn = False
       ForceNewPage = False
       Size.Values = (
-        44.979166666666670000
+        34.395833333333330000
         576.791666666666700000)
       PreCaluculateBandHeight = False
       KeepOnOnePage = False
@@ -98,9 +99,9 @@ object frmTicket58: TfrmTicket58
         Left = 1
         Top = 1
         Width = 51
-        Height = 14
+        Height = 12
         Size.Values = (
-          37.041666666666670000
+          31.750000000000000000
           2.645833333333333000
           2.645833333333333000
           134.937500000000000000)
@@ -130,9 +131,9 @@ object frmTicket58: TfrmTicket58
         Left = 152
         Top = 1
         Width = 24
-        Height = 14
+        Height = 12
         Size.Values = (
-          37.041666666666670000
+          31.750000000000000000
           402.166666666666700000
           2.645833333333333000
           63.500000000000000000)
@@ -162,9 +163,9 @@ object frmTicket58: TfrmTicket58
         Left = 68
         Top = 1
         Width = 42
-        Height = 14
+        Height = 12
         Size.Values = (
-          37.041666666666670000
+          31.750000000000000000
           179.916666666666700000
           2.645833333333333000
           111.125000000000000000)
@@ -326,7 +327,7 @@ object frmTicket58: TfrmTicket58
     end
     object PageFooterBand1: TQRBand
       Left = 0
-      Top = 170
+      Top = 166
       Width = 218
       Height = 190
       Frame.DrawTop = True

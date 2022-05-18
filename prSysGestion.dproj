@@ -452,6 +452,10 @@
             <Form>frmTicket58</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="UImprimeFActura58.pas">
+            <Form>disenioimprimirFactura58</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

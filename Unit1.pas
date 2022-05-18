@@ -1198,10 +1198,21 @@ end;
 
 procedure TForm1.FormShow(Sender: TObject);
 var m:string;
-    PATHBD:sTRING;
+    PATHBD,FEFINALIZA:sTRING;
   Ini: TIniFile;
 begin
-demo:=false;
+demo:=true;
+
+if demo=true then
+begin
+FEFINALIZA:='01/06/2022';
+ if (date > STRTODATE(FEFINALIZA)) then
+    begin
+     showmessage('VERSION DEMO TERMINADA');
+   APPLICATION.Terminate;
+    end;
+
+end;
 
 PANEL11.Visible:=FALSE;
 sumaCantidad:=0;

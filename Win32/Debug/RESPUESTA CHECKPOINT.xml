@@ -1,0 +1,19 @@
+<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="urn:Organization" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
+   <SOAP-ENV:Body>
+      <ns1:RecepcionVehiculoResponse>
+         <error xsi:type="xsd:string">0</error>
+         <mensaje xsi:type="xsd:string">El vehiculo AAA9874  con numero orden: 000999,  tipo orden: RT1 y Repeticion: 1 confirmado correctamente en sistema Applus del Ecuador</mensaje>
+      </ns1:RecepcionVehiculoResponse>
+   </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+
+
+
+<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="urn:Organization" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
+   <SOAP-ENV:Body>
+      <ns1:RecepcionVehiculoResponse>
+         <error xsi:type="xsd:string">0</error>
+         <mensaje xsi:type="xsd:string">El vehiculo AAA9874  con numero orden: 000999,  tipo orden: RT1 y Repeticion: 1 confirmado correctamente en sistema Applus del Ecuador</mensaje>
+      </ns1:RecepcionVehiculoResponse>
+   </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

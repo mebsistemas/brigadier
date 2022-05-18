@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, QRCtrls, QuickRpt, Vcl.ExtCtrls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, QRCtrls, QuickRpt, Vcl.ExtCtrls,printers,
   qrpBaseCtrls, Data.DB, RxMemDS;
 
 type
@@ -37,6 +37,8 @@ type
     QRDBText2: TQRDBText;
     QRDBText3: TQRDBText;
     QRLabel2: TQRLabel;
+    procedure QRPQuickrep1BeforePrint(Sender: TCustomQuickRep;
+      var PrintReport: Boolean);
   private
     { Private declarations }
   public
@@ -49,5 +51,15 @@ var
 implementation
 
 {$R *.dfm}
+
+uses Unit1;
+
+procedure TfrmTicket58.QRPQuickrep1BeforePrint(Sender: TCustomQuickRep;
+  var PrintReport: Boolean);
+begin
+ QRPQuickrep1.PrinterSettings.PrinterIndex:=Printer.Printers.IndexOf(trim(FORM1.tconfi.GET_FIMPRESORA));
+ QRPQuickrep1.Page.LeftMargin := 1;
+ QRPQuickrep1.Page.TopMargin := 1;
+end;
 
 end.
