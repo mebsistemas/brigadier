@@ -60,6 +60,7 @@ implementation
 procedure TfrmDisenioTicketA4.QRPQuickrep1BeforePrint(Sender: TCustomQuickRep;
   var PrintReport: Boolean);
 begin
+
 QRPQuickrep1.PrinterSettings.PrinterIndex:=Printer.Printers.IndexOf(trim(form1.tconfi.GET_FIMPRESORA));
 end;
 

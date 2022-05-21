@@ -201,6 +201,9 @@ type
      TIPOPAPEL:STRING;
      function  buscrVencimientos(ida:longint):boolean;
     FUNCTION FACTURAELECTRONICA(CODFACTU:LONGINT):BOOLEAN;
+    function imrprimeCierrexA4:boolean;
+    function imrprimeCierrex58:boolean;
+     function imrprimeCierrex80:boolean;
   end;
 
 var
@@ -223,7 +226,8 @@ uses Uterminar, UnifrmBuscarARticulos, UnifrmabmArticulos, UnPRPRECIOVARIABLE,
   Unit4buscarcliente, UnitcomisionesVendedores4, Unit4verventas,  UnitfrmConsultarPrecioDescrip,
   Unit4ventaporvendedor, Unitbuscaryverfacturas4, UnilistarClientesDeudorest4,
   UnitREALIZARDEVOLUCIONES4, Unit2FRMDEVOLCUIONESTOTT, Unit2listadeprecio,
-  Unit2CONSULTARPRECIO, UnifrmActualizaPrecioporProveedor;
+  Unit2CONSULTARPRECIO, UnifrmActualizaPrecioporProveedor, ufimformex80,
+  Ufrmcierrex58mm2;
 
 procedure TForm1.ABMVendedores1Click(Sender: TObject);
 begin
@@ -738,6 +742,30 @@ SHOWMESSAGE('NO ERES ADMINISTRADOR');
 EXIT;
 END;
 
+
+
+   if Trim(form1.TIPOPAPEL)='A4' then
+      imrprimeCierrexA4;
+
+    if Trim(form1.TIPOPAPEL)='80' then
+      imrprimeCierrex80;
+
+      if Trim(form1.TIPOPAPEL)='58' then
+       imrprimeCierrex58;
+
+end;
+
+function TForm1.imrprimeCierrexA4:boolean;
+var fecha,archivoEmail,hora:string;    totalventa,totalnc:real;
+ Gpdf : TExportar2PDFSyn;
+begin
+if FORM1.ESADMINISTRADOR=2 then
+BEGIN
+SHOWMESSAGE('NO ERES ADMINISTRADOR');
+EXIT;
+END;
+   if Trim(form1.TIPOPAPEL)='A4' then
+
 FDQuery2.Close;
    FDQuery2.SQL.Clear;
    FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
@@ -895,6 +923,356 @@ cierrex.QRPQuickrep1.Prepare;
 cierrex.QRPQuickrep1.Print
 else   }
 cierrex.QRPQuickrep1.Preview;
+
+end;
+
+
+function TForm1.imrprimeCierrex80:boolean;
+var fecha,archivoEmail,hora:string;    totalventa,totalnc:real;
+ Gpdf : TExportar2PDFSyn;
+begin
+if FORM1.ESADMINISTRADOR=2 then
+BEGIN
+SHOWMESSAGE('NO ERES ADMINISTRADOR');
+EXIT;
+END;
+
+
+FDQuery2.Close;
+   FDQuery2.SQL.Clear;
+   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   FDQuery2.Open;
+
+
+   fecha:= FDQuery2.FieldByName('fecha').AsString;
+   if trim(fecha)='' then
+    FRMFECHA.DateTimePicker1.DateTime:=now
+    else
+   FRMFECHA.DateTimePicker1.DateTime:=STRTODATE(fecha);
+  FRMFECHA.showmodal;
+  if FRMFECHA.ModalResult=mrcancel then
+     exit;
+
+     fecha:= trim(datetostr(FRMFECHA.DateTimePicker1.DateTime));
+
+     totalventa:=0;
+     totalnc:=0;
+  { FDQuery2.Close;
+   FDQuery2.SQL.Clear;
+   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   FDQuery2.Open;
+   fecha:= FDQuery2.FieldByName('fecha').AsString;  }
+ frminformex80.RxMemoryData1.Close;
+ frminformex80.RxMemoryData1.Open;
+self.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where  tipomovimiento in (0,1,2,3) and fecha='+#39+trim(fecha)+#39);  //' and cierre=0'
+self.FDQuery2.Open;
+frminformex80.QRLabel2.Caption:='FECHA: '+FECHA;
+if trim(self.FDQuery2.FieldByName('F').asstring)='' then
+   totalventa:=0
+   else
+totalventa:=self.FDQuery2.FieldByName('F').asfloat;
+
+
+//ncself.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where  tipomovimiento in (4,5,6,7) and fecha='+#39+trim(fecha)+#39);  //' and cierre=0'
+self.FDQuery2.Open;
+if trim(self.FDQuery2.FieldByName('F').asstring)='' then
+   totalnc:=0
+   else
+totalnc:=self.FDQuery2.FieldByName('F').asfloat;
+
+frminformex80.QRLabel5.Caption:='TOTAL :$ '+floattostr(totalventa-totalnc) ;
+
+self.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select COUNT(*) AS F from tmovimientos where fecha='+#39+trim(fecha)+#39);
+self.FDQuery2.Open;
+frminformex80.QRLabel4.Caption:='CANT : '+self.FDQuery2.FieldByName('F').AsString ;
+
+
+//forma pago
+frminformex80.RxMemoryData1.Append;
+frminformex80.RxMemoryData1forma.Value:='--- POR FORMAS DE PAGOS ----';
+frminformex80.RxMemoryData1.Post;
+
+ self.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select TF.DESCRIPCION, COUNT(TM.IDMOVIMIENTO) AS F,SUM(TM.TOTAL) AS S from tmovimientos TM  ,TFORMAPAGO TF  '+
+' where TM.fecha='+#39+trim(fecha)+#39+'  AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  AND TM.TIPOMOVIMIENTO IN (0,1,2,3)'+
+' GROUP BY  TF.IDFORMAPAGO   order by   TF.DESCRIPCION asc');
+self.FDQuery2.Open;
+while not self.FDQuery2.Eof do
+begin
+    frminformex80.RxMemoryData1.Append;
+    frminformex80.RxMemoryData1forma.Value:=trim(FDQuery2.Fields[0].asstring);
+    frminformex80.RxMemoryData1cantidad.Value:=trim(FDQuery2.Fields[1].asstring);
+    frminformex80.RxMemoryData1total.Value:=trim(FDQuery2.Fields[2].asstring);
+    frminformex80.RxMemoryData1.Post;
+
+    frminformex80.QRPQuickrep1.Page.Length:=frminformex80.QRPQuickrep1.Page.Length + 20;
+self.FDQuery2.Next;
+end;
+
+
+
+ ///POR COMPROBANTES
+ ///
+ ///
+ ///
+ ///
+ ///
+ frminformex80.RxMemoryData1.Append;
+frminformex80.RxMemoryData1forma.Value:='----- POR COMPROBANTES VENTAS -----';
+frminformex80.RxMemoryData1.Post;
+ self.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select CASE TM.TIPOMOVIMIENTO  '+
+' WHEN 0 THEN ''TICKET'' '+
+' WHEN 1 THEN ''FACT A''  '+
+' WHEN 2 THEN ''FACT B''  '+
+' WHEN 3 THEN ''FACT C''  '+
+' ELSE ''DESCONOCIDO'' END AS TIPO   '+
+' , TF.DESCRIPCION, COUNT(TM.IDMOVIMIENTO) AS F,SUM(TM.TOTAL) AS S    '+
+' from tmovimientos TM  ,TFORMAPAGO TF    '+
+' where TM.fecha='+#39+trim(fecha)+#39+' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  AND TM.TIPOMOVIMIENTO IN (0,1,2,3) '+
+' GROUP BY TM.TIPOMOVIMIENTO, TF.IDFORMAPAGO   order  BY TM.TIPOMOVIMIENTO,  TF.DESCRIPCION asc');
+self.FDQuery2.Open;
+while not self.FDQuery2.Eof do
+begin
+    frminformex80.RxMemoryData1.Append;
+    frminformex80.RxMemoryData1forma.Value:=trim(FDQuery2.Fields[0].asstring)+'  '+trim(FDQuery2.Fields[1].asstring);
+    frminformex80.RxMemoryData1cantidad.Value:=trim(FDQuery2.Fields[2].asstring);
+    frminformex80.RxMemoryData1total.Value:=trim(FDQuery2.Fields[3].asstring);
+    frminformex80.RxMemoryData1.Post;
+     frminformex80.QRPQuickrep1.Page.Length:=frminformex80.QRPQuickrep1.Page.Length + 20;
+self.FDQuery2.Next;
+end;
+
+frminformex80.RxMemoryData1.Append;
+frminformex80.RxMemoryData1forma.Value:='';
+frminformex80.RxMemoryData1.Post;
+frminformex80.RxMemoryData1.Append;
+frminformex80.RxMemoryData1forma.Value:='----- POR NOTAS DE CREDITOS -----';
+frminformex80.RxMemoryData1.Post;
+ self.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select CASE TM.TIPOMOVIMIENTO  '+
+' WHEN 4 THEN ''NC TICKET'' '+
+' WHEN 5 THEN ''NC FACT A''  '+
+' WHEN 6 THEN ''NC FACT B''  '+
+' WHEN 7 THEN ''NC FACT C''  '+
+' ELSE ''DESCONOCIDO'' END AS TIPO   '+
+' , TF.DESCRIPCION, COUNT(TM.IDMOVIMIENTO) AS F,SUM(TM.TOTAL) AS S    '+
+' from tmovimientos TM  ,TFORMAPAGO TF    '+
+' where TM.fecha='+#39+trim(fecha)+#39+' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  AND TM.TIPOMOVIMIENTO IN (4,5,6,7) '+
+' GROUP BY TM.TIPOMOVIMIENTO, TF.IDFORMAPAGO   order  BY TM.TIPOMOVIMIENTO,  TF.DESCRIPCION asc');
+self.FDQuery2.Open;
+while not self.FDQuery2.Eof do
+begin
+    frminformex80.RxMemoryData1.Append;
+    frminformex80.RxMemoryData1forma.Value:=trim(FDQuery2.Fields[0].asstring)+'  '+trim(FDQuery2.Fields[1].asstring);
+    frminformex80.RxMemoryData1cantidad.Value:=trim(FDQuery2.Fields[2].asstring);
+    frminformex80.RxMemoryData1total.Value:=trim(FDQuery2.Fields[3].asstring);
+    frminformex80.RxMemoryData1.Post;
+     frminformex80.QRPQuickrep1.Page.Length:=frminformex80.QRPQuickrep1.Page.Length + 20;
+self.FDQuery2.Next;
+end;
+
+      frminformex80.QRPQuickrep1.Page.Length:= frminformex80.QRPQuickrep1.Page.Length + 20;
+frminformex80.QRPQuickrep1.Prepare;
+  hora:=timetostr(time);
+ hora:=StringReplace (hora, ':', '_',[rfReplaceAll, rfIgnoreCase]);
+ fecha:=StringReplace (fecha, '/', '',[rfReplaceAll, rfIgnoreCase]);
+ archivoEmail := ExtractFilePath(ParamStr(0))+'\INFORMES\informeX_dia_'+fecha+'_hora_'+hora+'.pdf';
+
+;
+    Gpdf := TExportar2PDFSyn.Create;
+    Gpdf.rutaPDF := archivoEmail;
+    Gpdf.Exportar2PDF(frminformex80.QRPQuickrep1);
+    Gpdf.free;
+
+
+{if form1.demo=false then
+cierrex.QRPQuickrep1.Print
+else   }
+frminformex80.QRPQuickrep1.Print;
+
+end;
+
+function TForm1.imrprimeCierrex58:boolean;
+var fecha,archivoEmail,hora:string;    totalventa,totalnc:real;
+ Gpdf : TExportar2PDFSyn;
+begin
+if FORM1.ESADMINISTRADOR=2 then
+BEGIN
+SHOWMESSAGE('NO ERES ADMINISTRADOR');
+EXIT;
+END;
+
+
+FDQuery2.Close;
+   FDQuery2.SQL.Clear;
+   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   FDQuery2.Open;
+
+
+   fecha:= FDQuery2.FieldByName('fecha').AsString;
+   if trim(fecha)='' then
+    FRMFECHA.DateTimePicker1.DateTime:=now
+    else
+   FRMFECHA.DateTimePicker1.DateTime:=STRTODATE(fecha);
+  FRMFECHA.showmodal;
+  if FRMFECHA.ModalResult=mrcancel then
+     exit;
+
+     fecha:= trim(datetostr(FRMFECHA.DateTimePicker1.DateTime));
+
+     totalventa:=0;
+     totalnc:=0;
+  { FDQuery2.Close;
+   FDQuery2.SQL.Clear;
+   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   FDQuery2.Open;
+   fecha:= FDQuery2.FieldByName('fecha').AsString;  }
+ frmcierrex58mm.RxMemoryData1.Close;
+ frmcierrex58mm.RxMemoryData1.Open;
+self.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where  tipomovimiento in (0,1,2,3) and fecha='+#39+trim(fecha)+#39);  //' and cierre=0'
+self.FDQuery2.Open;
+frmcierrex58mm.QRLabel2.Caption:='FECHA: '+FECHA;
+if trim(self.FDQuery2.FieldByName('F').asstring)='' then
+   totalventa:=0
+   else
+totalventa:=self.FDQuery2.FieldByName('F').asfloat;
+
+
+//ncself.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where  tipomovimiento in (4,5,6,7) and fecha='+#39+trim(fecha)+#39);  //' and cierre=0'
+self.FDQuery2.Open;
+if trim(self.FDQuery2.FieldByName('F').asstring)='' then
+   totalnc:=0
+   else
+totalnc:=self.FDQuery2.FieldByName('F').asfloat;
+
+frmcierrex58mm.QRLabel5.Caption:='TOTAL :$ '+floattostr(totalventa-totalnc) ;
+
+self.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select COUNT(*) AS F from tmovimientos where fecha='+#39+trim(fecha)+#39);
+self.FDQuery2.Open;
+frmcierrex58mm.QRLabel4.Caption:='CANT : '+self.FDQuery2.FieldByName('F').AsString ;
+
+
+//forma pago
+frmcierrex58mm.RxMemoryData1.Append;
+frmcierrex58mm.RxMemoryData1forma.Value:='--- POR FORMAS DE PAGOS ----';
+frmcierrex58mm.RxMemoryData1.Post;
+
+ self.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select TF.DESCRIPCION, COUNT(TM.IDMOVIMIENTO) AS F,SUM(TM.TOTAL) AS S from tmovimientos TM  ,TFORMAPAGO TF  '+
+' where TM.fecha='+#39+trim(fecha)+#39+'  AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  AND TM.TIPOMOVIMIENTO IN (0,1,2,3)'+
+' GROUP BY  TF.IDFORMAPAGO   order by   TF.DESCRIPCION asc');
+self.FDQuery2.Open;
+while not self.FDQuery2.Eof do
+begin
+    frmcierrex58mm.RxMemoryData1.Append;
+    frmcierrex58mm.RxMemoryData1forma.Value:=trim(FDQuery2.Fields[0].asstring);
+    frmcierrex58mm.RxMemoryData1cantidad.Value:=trim(FDQuery2.Fields[1].asstring);
+    frmcierrex58mm.RxMemoryData1total.Value:=trim(FDQuery2.Fields[2].asstring);
+    frmcierrex58mm.RxMemoryData1.Post;
+        frmcierrex58mm.QRPQuickrep1.Page.Length:= frmcierrex58mm.QRPQuickrep1.Page.Length + 20;
+self.FDQuery2.Next;
+end;
+
+
+
+ ///POR COMPROBANTES
+ ///
+ ///
+ ///
+ ///
+ ///
+ frmcierrex58mm.RxMemoryData1.Append;
+frmcierrex58mm.RxMemoryData1forma.Value:='----- POR COMPROBANTES VENTAS -----';
+frmcierrex58mm.RxMemoryData1.Post;
+ self.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select CASE TM.TIPOMOVIMIENTO  '+
+' WHEN 0 THEN ''TICKET'' '+
+' WHEN 1 THEN ''FACT A''  '+
+' WHEN 2 THEN ''FACT B''  '+
+' WHEN 3 THEN ''FACT C''  '+
+' ELSE ''DESCONOCIDO'' END AS TIPO   '+
+' , TF.DESCRIPCION, COUNT(TM.IDMOVIMIENTO) AS F,SUM(TM.TOTAL) AS S    '+
+' from tmovimientos TM  ,TFORMAPAGO TF    '+
+' where TM.fecha='+#39+trim(fecha)+#39+' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  AND TM.TIPOMOVIMIENTO IN (0,1,2,3) '+
+' GROUP BY TM.TIPOMOVIMIENTO, TF.IDFORMAPAGO   order  BY TM.TIPOMOVIMIENTO,  TF.DESCRIPCION asc');
+self.FDQuery2.Open;
+while not self.FDQuery2.Eof do
+begin
+    frmcierrex58mm.RxMemoryData1.Append;
+    frmcierrex58mm.RxMemoryData1forma.Value:=trim(FDQuery2.Fields[0].asstring)+'  '+trim(FDQuery2.Fields[1].asstring);
+    frmcierrex58mm.RxMemoryData1cantidad.Value:=trim(FDQuery2.Fields[2].asstring);
+    frmcierrex58mm.RxMemoryData1total.Value:=trim(FDQuery2.Fields[3].asstring);
+    frmcierrex58mm.RxMemoryData1.Post;
+        frmcierrex58mm.QRPQuickrep1.Page.Length:= frmcierrex58mm.QRPQuickrep1.Page.Length + 20;
+self.FDQuery2.Next;
+end;
+
+frmcierrex58mm.RxMemoryData1.Append;
+frmcierrex58mm.RxMemoryData1forma.Value:='';
+frmcierrex58mm.RxMemoryData1.Post;
+frmcierrex58mm.RxMemoryData1.Append;
+frmcierrex58mm.RxMemoryData1forma.Value:='----- POR NOTAS DE CREDITOS -----';
+frmcierrex58mm.RxMemoryData1.Post;
+ self.FDQuery2.Close;
+self.FDQuery2.SQL.Clear;
+self.FDQuery2.SQL.Add('select CASE TM.TIPOMOVIMIENTO  '+
+' WHEN 4 THEN ''NC TICKET'' '+
+' WHEN 5 THEN ''NC FACT A''  '+
+' WHEN 6 THEN ''NC FACT B''  '+
+' WHEN 7 THEN ''NC FACT C''  '+
+' ELSE ''DESCONOCIDO'' END AS TIPO   '+
+' , TF.DESCRIPCION, COUNT(TM.IDMOVIMIENTO) AS F,SUM(TM.TOTAL) AS S    '+
+' from tmovimientos TM  ,TFORMAPAGO TF    '+
+' where TM.fecha='+#39+trim(fecha)+#39+' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  AND TM.TIPOMOVIMIENTO IN (4,5,6,7) '+
+' GROUP BY TM.TIPOMOVIMIENTO, TF.IDFORMAPAGO   order  BY TM.TIPOMOVIMIENTO,  TF.DESCRIPCION asc');
+self.FDQuery2.Open;
+while not self.FDQuery2.Eof do
+begin
+    frmcierrex58mm.RxMemoryData1.Append;
+    frmcierrex58mm.RxMemoryData1forma.Value:=trim(FDQuery2.Fields[0].asstring)+'  '+trim(FDQuery2.Fields[1].asstring);
+    frmcierrex58mm.RxMemoryData1cantidad.Value:=trim(FDQuery2.Fields[2].asstring);
+    frmcierrex58mm.RxMemoryData1total.Value:=trim(FDQuery2.Fields[3].asstring);
+    frmcierrex58mm.RxMemoryData1.Post;
+    frmcierrex58mm.QRPQuickrep1.Page.Length:= frmcierrex58mm.QRPQuickrep1.Page.Length + 20;
+self.FDQuery2.Next;
+end;
+
+    frmcierrex58mm.QRPQuickrep1.Page.Length:= frmcierrex58mm.QRPQuickrep1.Page.Length + 20;
+frmcierrex58mm.QRPQuickrep1.Prepare;
+  hora:=timetostr(time);
+ hora:=StringReplace (hora, ':', '_',[rfReplaceAll, rfIgnoreCase]);
+ fecha:=StringReplace (fecha, '/', '',[rfReplaceAll, rfIgnoreCase]);
+ archivoEmail := ExtractFilePath(ParamStr(0))+'\INFORMES\informeX_dia_'+fecha+'_hora_'+hora+'.pdf';
+
+;
+    Gpdf := TExportar2PDFSyn.Create;
+    Gpdf.rutaPDF := archivoEmail;
+    Gpdf.Exportar2PDF(frmcierrex58mm.QRPQuickrep1);
+    Gpdf.free;
+
+
+{if form1.demo=false then
+cierrex.QRPQuickrep1.Print
+else   }
+frmcierrex58mm.QRPQuickrep1.Print;
 
 end;
 
@@ -1685,6 +2063,8 @@ end;
 
 procedure TForm1.PorProveedor1Click(Sender: TObject);
 begin
+frmActualizaPrecioporProveedor.RxMemoryData1.Close;
+frmActualizaPrecioporProveedor.RxMemoryData1.Open;
 frmActualizaPrecioporProveedor.Edit1.Clear;
 frmActualizaPrecioporProveedor.FDQuery1.Close;
 frmActualizaPrecioporProveedor.showmodal;

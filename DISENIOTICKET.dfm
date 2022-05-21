@@ -2,7 +2,7 @@ object FRMDISENIOTICKET: TFRMDISENIOTICKET
   Left = 0
   Top = 0
   Caption = 'FRMDISENIOTICKET'
-  ClientHeight = 429
+  ClientHeight = 441
   ClientWidth = 553
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,11 +16,12 @@ object FRMDISENIOTICKET: TFRMDISENIOTICKET
   TextHeight = 13
   object QRPQuickrep1: TQRPQuickrep
     AlignWithMargins = True
-    Left = 8
-    Top = -20
+    Left = 32
+    Top = 0
     Width = 266
-    Height = 761
+    Height = 285
     ShowingPreview = False
+    BeforePrint = QRPQuickrep1BeforePrint
     DataSet = RxMemoryData1
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -42,7 +43,7 @@ object FRMDISENIOTICKET: TFRMDISENIOTICKET
     Page.Continuous = False
     Page.Values = (
       100.000000000000000000
-      2013.479166666667000000
+      754.062500000000000000
       10.000000000000000000
       703.791666666666700000
       0.000000000000000000
@@ -257,7 +258,7 @@ object FRMDISENIOTICKET: TFRMDISENIOTICKET
     end
     object PageHeaderBand1: TQRBand
       Left = 0
-      Top = 4
+      Top = 1
       Width = 266
       Height = 77
       Frame.DrawBottom = True
@@ -390,16 +391,16 @@ object FRMDISENIOTICKET: TFRMDISENIOTICKET
     end
     object PageFooterBand1: TQRBand
       Left = 0
-      Top = 159
+      Top = 165
       Width = 266
-      Height = 303
+      Height = 297
       Frame.DrawTop = True
       AlignToBottom = False
       TransparentBand = False
       ForceNewColumn = False
       ForceNewPage = False
       Size.Values = (
-        801.687500000000000000
+        785.812500000000000000
         703.791666666666700000)
       PreCaluculateBandHeight = False
       KeepOnOnePage = False

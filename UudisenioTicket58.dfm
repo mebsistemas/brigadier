@@ -16,10 +16,10 @@ object frmTicket58: TfrmTicket58
   TextHeight = 13
   object QRPQuickrep1: TQRPQuickrep
     AlignWithMargins = True
-    Left = 8
-    Top = 8
+    Left = 0
+    Top = 0
     Width = 218
-    Height = 487
+    Height = 409
     ShowingPreview = False
     BeforePrint = QRPQuickrep1BeforePrint
     DataSet = RxMemoryData1
@@ -43,7 +43,7 @@ object frmTicket58: TfrmTicket58
     Page.Continuous = False
     Page.Values = (
       100.000000000000000000
-      1288.520833333333000000
+      1082.145833333333000000
       10.000000000000000000
       576.791666666666700000
       0.000000000000000000

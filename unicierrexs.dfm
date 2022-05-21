@@ -19,7 +19,7 @@ object cierrex: Tcierrex
     Left = 8
     Top = 8
     Width = 794
-    Height = 1244
+    Height = 1123
     ShowingPreview = False
     DataSet = RxMemoryData1
     Font.Charset = DEFAULT_CHARSET
@@ -465,8 +465,8 @@ object cierrex: Tcierrex
   end
   object RxMemoryData1: TRxMemoryData
     FieldDefs = <>
-    Left = 334
-    Top = 206
+    Left = 350
+    Top = 310
     object RxMemoryData1cantidad: TStringField
       FieldName = 'cantidad'
     end

@@ -118,7 +118,10 @@ uses
   UudisenioTicket58 in 'UudisenioTicket58.pas' {frmTicket58},
   UImprimeFActura58 in 'UImprimeFActura58.pas' {disenioimprimirFactura58},
   UnitfrmConsultarPrecioDescrip in 'UnitfrmConsultarPrecioDescrip.pas' {frmConsultarPrecioDescrip},
-  UnifrmActualizaPrecioporProveedor in 'UnifrmActualizaPrecioporProveedor.pas' {frmActualizaPrecioporProveedor};
+  UnifrmActualizaPrecioporProveedor in 'UnifrmActualizaPrecioporProveedor.pas' {frmActualizaPrecioporProveedor},
+  UnitfrmActualizaindivualARticulo in 'UnitfrmActualizaindivualARticulo.pas' {frmActualizaindivualARticulo},
+  ufimformex80 in 'ufimformex80.pas' {frminformex80},
+  Ufrmcierrex58mm2 in 'Ufrmcierrex58mm2.pas' {frmcierrex58mm};
 
 {$R *.res}
 
@@ -221,5 +224,8 @@ begin
   Application.CreateForm(TdisenioimprimirFactura58, disenioimprimirFactura58);
   Application.CreateForm(TfrmConsultarPrecioDescrip, frmConsultarPrecioDescrip);
   Application.CreateForm(TfrmActualizaPrecioporProveedor, frmActualizaPrecioporProveedor);
+  Application.CreateForm(TfrmActualizaindivualARticulo, frmActualizaindivualARticulo);
+  Application.CreateForm(Tfrminformex80, frminformex80);
+  Application.CreateForm(Tfrmcierrex58mm, frmcierrex58mm);
   Application.Run;
 end.

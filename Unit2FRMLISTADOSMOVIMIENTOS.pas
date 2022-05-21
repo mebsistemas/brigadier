@@ -41,7 +41,7 @@ implementation
 
 {$R *.dfm}
 
-uses Uterminar;
+uses Uterminar, UnitFRMMENSAJE;
 
 procedure TFRMLISTADOSMOVIMIENTOS.BitBtn1Click(Sender: TObject);
 begin
@@ -65,7 +65,7 @@ fecha:=DATETOSTR(self.DateTimePicker1.DateTime);
   '  When 7 then ''NC TICKET''  '+
  '  ELSE  ''ERROR''  '+
  '  END AS FACTU,  '+
- '  TM.NROFACTURA AS NRO ,TF.DESCRIPCION  AS FORMAPAGO  '+
+ '  TM.NROFACTURA AS NRO ,TF.DESCRIPCION  AS FORMAPAGO, tm.TIPOMOVIMIENTO as tmTIPOMOVIMIENTO  '+
  'FROM tmovimientos  tm , tclientes tc , TFORMAPAGO TF  '+
 ' where tm.IDCLIENTE=tc.IDCLIENTE  '+
 ' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  '+
@@ -164,7 +164,33 @@ end;
 
 procedure TFRMLISTADOSMOVIMIENTOS.REIMPRIMIR1Click(Sender: TObject);
 begin
-frmterminar.imprimir(DBGRID1.Fields[0].ASINTEGER,'N');
+   FRMMENSAJE.Label1.Caption:='IMPRIMIENDO...';
+   FRMMENSAJE.SHOW;
+                      APPLICATION.ProcessMessages;
+if (self.DataSource1.DataSet.FieldByName('tmTIPOMOVIMIENTO').AsInteger<>0) and (self.DataSource1.DataSet.FieldByName('tmTIPOMOVIMIENTO').AsInteger<>7) then
+begin
+    if Trim(form1.TIPOPAPEL)='80' then
+       frmterminar.imprimir(DBGRID1.Fields[0].ASINTEGER,'N');
+     if Trim(form1.TIPOPAPEL)='58' then
+        frmterminar.imprimirFacturaFormato58(DBGRID1.Fields[0].ASINTEGER,'N');
+     if Trim(form1.TIPOPAPEL)='A4' then
+        SHOWMESSAGE('SIN FORMATO A4');
+end
+else
+ begin
+
+      if Trim(form1.TIPOPAPEL)='80' then
+          frmterminar.imprimirTICKET(DBGRID1.Fields[0].ASINTEGER,'N');
+
+      if Trim(form1.TIPOPAPEL)='A4' then
+          frmterminar.imprimirTICKETA4(DBGRID1.Fields[0].ASINTEGER,'R');
+
+       if Trim(form1.TIPOPAPEL)='58' then
+           frmterminar.imprimirTICKET_58(DBGRID1.Fields[0].ASINTEGER,'N');
+
+ end;
+  FRMMENSAJE.close;
+
 end;
 
 end.

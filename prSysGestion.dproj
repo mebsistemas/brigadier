@@ -464,6 +464,18 @@
             <Form>frmActualizaPrecioporProveedor</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="UnitfrmActualizaindivualARticulo.pas">
+            <Form>frmActualizaindivualARticulo</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="ufimformex80.pas">
+            <Form>frminformex80</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Ufrmcierrex58mm2.pas">
+            <Form>frmcierrex58mm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

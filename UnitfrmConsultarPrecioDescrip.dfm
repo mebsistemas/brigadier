@@ -180,6 +180,7 @@ object frmConsultarPrecioDescrip: TfrmConsultarPrecioDescrip
       Width = 528
       Height = 39
       Align = alLeft
+      CharCase = ecUpperCase
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -29
@@ -187,7 +188,7 @@ object frmConsultarPrecioDescrip: TfrmConsultarPrecioDescrip
       Font.Style = []
       ParentFont = False
       TabOrder = 1
-      Text = 'Edit1'
+      Text = 'EDIT1'
       OnKeyPress = Edit1KeyPress
       ExplicitHeight = 43
     end
