@@ -5,17 +5,17 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.DBCtrls,
-  Vcl.Buttons;
+  Vcl.Buttons, Data.DB, Vcl.Grids, Vcl.DBGrids;
 
 type
   Tlistadeprecio = class(TForm)
     Panel1: TPanel;
-    Label1: TLabel;
-    Label2: TLabel;
-    DBLookupComboBox1: TDBLookupComboBox;
-    Label3: TLabel;
-    DBLookupComboBox2: TDBLookupComboBox;
+    Panel2: TPanel;
+    DBGrid1: TDBGrid;
     BitBtn1: TBitBtn;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    procedure BitBtn1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -28,5 +28,10 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure Tlistadeprecio.BitBtn1Click(Sender: TObject);
+begin
+close;
+end;
 
 end.

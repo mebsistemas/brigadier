@@ -456,6 +456,14 @@
             <Form>disenioimprimirFactura58</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="UnitfrmConsultarPrecioDescrip.pas">
+            <Form>frmConsultarPrecioDescrip</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="UnifrmActualizaPrecioporProveedor.pas">
+            <Form>frmActualizaPrecioporProveedor</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

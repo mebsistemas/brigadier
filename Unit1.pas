@@ -124,6 +124,16 @@ type
     FDQuery6: TFDQuery;
     FDQuery7: TFDQuery;
     Panel11: TPanel;
+    Panel12: TPanel;
+    Label8: TLabel;
+    DBLookupComboBox2: TDBLookupComboBox;
+    fdQueryListaPrecio: TFDQuery;
+    DataSource2: TDataSource;
+    AdministrarListasdePrecios1: TMenuItem;
+    ImprimirListasdePrecios1: TMenuItem;
+    BitBtn5: TBitBtn;
+    ActualizarPrecios1: TMenuItem;
+    PorProveedor1: TMenuItem;
     procedure SpeedButton1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
@@ -170,8 +180,10 @@ type
     procedure ListadodeClientesDeudores1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
-    procedure ListadePrecio1Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
+    procedure AdministrarListasdePrecios1Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
+    procedure PorProveedor1Click(Sender: TObject);
   private
     { Private declarations }
     cantidad:string;
@@ -208,10 +220,10 @@ uses Uterminar, UnifrmBuscarARticulos, UnifrmabmArticulos, UnPRPRECIOVARIABLE,
   Unit4fromtarjetas, Unifmdescuentost4, Unitinventario4, Unit4frmingresologeo,
   UnitMESYANIO, Unit4FRMFECHASDESDEYHASTAS, Unitfrrubromasvendido4,
   Unit4FRMBUSCAFACTPARANC, UniFRMIVAVENTAt4, Unit4altavendedores,
-  Unit4buscarcliente, UnitcomisionesVendedores4, Unit4verventas,
+  Unit4buscarcliente, UnitcomisionesVendedores4, Unit4verventas,  UnitfrmConsultarPrecioDescrip,
   Unit4ventaporvendedor, Unitbuscaryverfacturas4, UnilistarClientesDeudorest4,
   UnitREALIZARDEVOLUCIONES4, Unit2FRMDEVOLCUIONESTOTT, Unit2listadeprecio,
-  Unit2CONSULTARPRECIO;
+  Unit2CONSULTARPRECIO, UnifrmActualizaPrecioporProveedor;
 
 procedure TForm1.ABMVendedores1Click(Sender: TObject);
 begin
@@ -238,6 +250,11 @@ end;
 procedure TForm1.Acercade1Click(Sender: TObject);
 begin
 acercade.showmodal;
+end;
+
+procedure TForm1.AdministrarListasdePrecios1Click(Sender: TObject);
+begin
+listadeprecio.showmodal;
 end;
 
 procedure TForm1.AnlisisdeRentabilidad1Click(Sender: TObject);
@@ -417,6 +434,18 @@ CONSULTARPRECIO.Label3.Caption:='';
 CONSULTARPRECIO.Label4.Caption:='';
 CONSULTARPRECIO.Edit1.Clear;
 CONSULTARPRECIO.SHOWMODAL;
+end;
+
+procedure TForm1.BitBtn5Click(Sender: TObject);
+begin
+frmConsultarPrecioDescrip.Edit1.Clear;
+frmConsultarPrecioDescrip.FDQuery1.Close;
+frmConsultarPrecioDescrip.ShowModal;
+if frmConsultarPrecioDescrip.ModalResult=MROK then
+BEGIN
+EDIT1.SetFocus;
+EDIT1.Text:=TRIM(frmConsultarPrecioDescrip.DataSource1.DataSet.FieldByName('CODIGOBARRA').AsString);
+end;
 end;
 
 procedure TForm1.buscar1Click(Sender: TObject);
@@ -1256,6 +1285,12 @@ application.Terminate;
 end;
 
 
+{SELF.fdQueryListaPrecio.Close;
+SELF.fdQueryListaPrecio.SQL.Clear;
+SELF.fdQueryListaPrecio.SQL.Add('SELECT IDLISTA, NOMBRE FROM TLISTADEPRECIOS ORDER BY IDLISTA ASC');
+SELF.fdQueryListaPrecio.OpeN;
+SELF.DBLookupComboBox2.KeyValue:=1; }
+
 SELF.FDVENDEDOR.Close;
 SELF.FDVENDEDOR.SQL.Clear;
 SELF.FDVENDEDOR.SQL.Add('SELECT IDVENDEDOR, NOMBRE FROM TVENDEDORES ORDER BY NOMBRE ASC');
@@ -1503,11 +1538,6 @@ SQL:='SELECT TM.TIPOMOVIMIENTO AS TMTIPOMOVIMIENTO,TC.IDCLIENTE AS TCIDCLIENTE,'
 END;
 end;
 
-procedure TForm1.ListadePrecio1Click(Sender: TObject);
-begin
-//listadeprecio.showmodal;
-end;
-
 procedure TForm1.ListadodeClientesDeudores1Click(Sender: TObject);
 var sql:string;
 begin
@@ -1651,6 +1681,13 @@ BEGIN
 SHOWMESSAGE('NO ERES ADMINISTRADOR');
 EXIT;
 END;
+end;
+
+procedure TForm1.PorProveedor1Click(Sender: TObject);
+begin
+frmActualizaPrecioporProveedor.Edit1.Clear;
+frmActualizaPrecioporProveedor.FDQuery1.Close;
+frmActualizaPrecioporProveedor.showmodal;
 end;
 
 procedure TForm1.Proveedores2Click(Sender: TObject);

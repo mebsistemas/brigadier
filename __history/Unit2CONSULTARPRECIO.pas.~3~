@@ -1,0 +1,84 @@
+unit Unit2CONSULTARPRECIO;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,UNIT1;
+
+type
+  TCONSULTARPRECIO = class(TForm)
+    Label1: TLabel;
+    Edit1: TEdit;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    procedure BitBtn2Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure Edit1KeyPress(Sender: TObject; var Key: Char);
+    procedure BitBtn3Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  CONSULTARPRECIO: TCONSULTARPRECIO;
+
+implementation
+
+{$R *.dfm}
+
+procedure TCONSULTARPRECIO.BitBtn1Click(Sender: TObject);
+begin
+LABEL2.Caption:='';
+LABEL3.Caption:='';
+LABEL4.Caption:='';
+
+if TRIM(EDIT1.Text)='' then
+   EXIT;
+
+  FORM1.FDQuery6.Close;
+  FORM1.FDQuery6.SQL.Clear;
+  FORM1.FDQuery6.SQL.Add('SELECT * FROM TARTICULOS WHERE CODIGOBARRA='+#39+TRIM(EDIT1.Text)+#39);
+  FORM1.FDQuery6.Open;
+  if FORM1.FDQuery6.RecordCount > 0  then
+  BEGIN
+     LABEL2.Caption:=TRIM(FORM1.FDQuery6.FieldByName('DESCRIPCION').AsString);
+     LABEL3.Caption:='PRECIO VENTA: $'+TRIM(FORM1.FDQuery6.FieldByName('PRECIOVENTA').AsString);
+     LABEL4.Caption:='STOCK: '+TRIM(FORM1.FDQuery6.FieldByName('STOCK').AsString);
+
+  END ELSE
+  BEGIN
+    SHOWMESSAGE('NO SE ENCONTRO ARTICULO');
+    EDIT1.Clear;
+    EDIT1.SetFocus;
+  END;
+end;
+
+procedure TCONSULTARPRECIO.BitBtn2Click(Sender: TObject);
+begin
+CLOSE;
+end;
+
+procedure TCONSULTARPRECIO.BitBtn3Click(Sender: TObject);
+begin
+CconsultaprecioPorDescripcion
+end;
+
+procedure TCONSULTARPRECIO.Edit1KeyPress(Sender: TObject; var Key: Char);
+begin
+if KEY=#13 then
+  BitBtn1Click(Sender);
+end;
+
+procedure TCONSULTARPRECIO.FormShow(Sender: TObject);
+begin
+EDIT1.Clear;
+end;
+
+end.

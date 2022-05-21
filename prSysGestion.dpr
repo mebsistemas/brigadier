@@ -116,7 +116,9 @@ uses
   Unit2listadeprecio in 'Unit2listadeprecio.pas' {listadeprecio},
   Unit2CONSULTARPRECIO in 'Unit2CONSULTARPRECIO.pas' {CONSULTARPRECIO},
   UudisenioTicket58 in 'UudisenioTicket58.pas' {frmTicket58},
-  UImprimeFActura58 in 'UImprimeFActura58.pas' {disenioimprimirFactura58};
+  UImprimeFActura58 in 'UImprimeFActura58.pas' {disenioimprimirFactura58},
+  UnitfrmConsultarPrecioDescrip in 'UnitfrmConsultarPrecioDescrip.pas' {frmConsultarPrecioDescrip},
+  UnifrmActualizaPrecioporProveedor in 'UnifrmActualizaPrecioporProveedor.pas' {frmActualizaPrecioporProveedor};
 
 {$R *.res}
 
@@ -217,5 +219,7 @@ begin
   Application.CreateForm(TCONSULTARPRECIO, CONSULTARPRECIO);
   Application.CreateForm(TfrmTicket58, frmTicket58);
   Application.CreateForm(TdisenioimprimirFactura58, disenioimprimirFactura58);
+  Application.CreateForm(TfrmConsultarPrecioDescrip, frmConsultarPrecioDescrip);
+  Application.CreateForm(TfrmActualizaPrecioporProveedor, frmActualizaPrecioporProveedor);
   Application.Run;
 end.

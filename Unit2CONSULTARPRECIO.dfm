@@ -4,7 +4,7 @@ object CONSULTARPRECIO: TCONSULTARPRECIO
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'CONSULTAR PRECIO'
-  ClientHeight = 242
+  ClientHeight = 254
   ClientWidth = 600
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -31,7 +31,7 @@ object CONSULTARPRECIO: TCONSULTARPRECIO
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 24
+    Left = 16
     Top = 88
     Width = 51
     Height = 18
@@ -44,7 +44,7 @@ object CONSULTARPRECIO: TCONSULTARPRECIO
     ParentFont = False
   end
   object Label3: TLabel
-    Left = 24
+    Left = 16
     Top = 128
     Width = 51
     Height = 18
@@ -57,7 +57,7 @@ object CONSULTARPRECIO: TCONSULTARPRECIO
     ParentFont = False
   end
   object Label4: TLabel
-    Left = 24
+    Left = 16
     Top = 176
     Width = 51
     Height = 18
@@ -81,7 +81,6 @@ object CONSULTARPRECIO: TCONSULTARPRECIO
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    Text = 'Edit1'
     OnKeyPress = Edit1KeyPress
   end
   object BitBtn1: TBitBtn
@@ -224,7 +223,7 @@ object CONSULTARPRECIO: TCONSULTARPRECIO
     OnClick = BitBtn1Click
   end
   object BitBtn2: TBitBtn
-    Left = 456
+    Left = 448
     Top = 192
     Width = 113
     Height = 39
