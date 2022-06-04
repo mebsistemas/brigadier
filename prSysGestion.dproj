@@ -476,6 +476,10 @@
             <Form>frmcierrex58mm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Udiseniocierrecaja58.pas">
+            <Form>frmdiseniocierreCaja58</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

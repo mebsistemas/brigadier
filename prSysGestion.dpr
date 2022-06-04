@@ -121,7 +121,8 @@ uses
   UnifrmActualizaPrecioporProveedor in 'UnifrmActualizaPrecioporProveedor.pas' {frmActualizaPrecioporProveedor},
   UnitfrmActualizaindivualARticulo in 'UnitfrmActualizaindivualARticulo.pas' {frmActualizaindivualARticulo},
   ufimformex80 in 'ufimformex80.pas' {frminformex80},
-  Ufrmcierrex58mm2 in 'Ufrmcierrex58mm2.pas' {frmcierrex58mm};
+  Ufrmcierrex58mm2 in 'Ufrmcierrex58mm2.pas' {frmcierrex58mm},
+  Udiseniocierrecaja58 in 'Udiseniocierrecaja58.pas' {frmdiseniocierreCaja58};
 
 {$R *.res}
 
@@ -227,5 +228,6 @@ begin
   Application.CreateForm(TfrmActualizaindivualARticulo, frmActualizaindivualARticulo);
   Application.CreateForm(Tfrminformex80, frminformex80);
   Application.CreateForm(Tfrmcierrex58mm, frmcierrex58mm);
+  Application.CreateForm(TfrmdiseniocierreCaja58, frmdiseniocierreCaja58);
   Application.Run;
 end.

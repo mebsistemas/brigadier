@@ -22,7 +22,7 @@ object configuracion: Tconfiguracion
     Top = 0
     Width = 628
     Height = 312
-    ActivePage = TabSheet1
+    ActivePage = TabSheet4
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -12
@@ -796,9 +796,7 @@ object configuracion: Tconfiguracion
         Width = 79
         Height = 22
         Style = csDropDownList
-        ItemIndex = 2
         TabOrder = 0
-        Text = '2'
         Items.Strings = (
           '0'
           '1'
@@ -808,7 +806,8 @@ object configuracion: Tconfiguracion
           '5'
           '6'
           '8'
-          '9')
+          '9'
+          '$')
       end
       object ComboBox4: TComboBox
         Left = 128

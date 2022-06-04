@@ -34,7 +34,7 @@ implementation
 
 {$R *.dfm}
 
-uses Unit1, Unidiseniocierrecaja;
+uses Unit1, Unidiseniocierrecaja, Udiseniocierrecaja58;
 
 procedure TFRMCIERRECAJA.BitBtn1Click(Sender: TObject);
 var cambio,salidas,efe,td,tc,ingresado,saldo,MP,CC,ENCAJA,PAGOSCUENTACORRIENTES,
@@ -534,7 +534,7 @@ form1.FDQuery2.SQL.Clear;
 form1.FDQuery2.SQL.Add('select apenom from tusuarios where idusuario='+inttostr(form1.IDUSUARIOLOGEADO));
 form1.FDQuery2.Open;
 
-frmdiseniocierrecaja.QRLabel1.Caption:='CIERRE DE CAJA: '+trim(form1.FDQuery2.FieldByName('apenom').AsString);
+frmdiseniocierreCaja58.QRLabel1.Caption:='CIERRE DE CAJA: '+trim(form1.FDQuery2.FieldByName('apenom').AsString);
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
@@ -554,16 +554,16 @@ if TRIM(form1.FDQuery2.FieldByName('F').ASSTRING)='' then
   ELSE
 TOTALNC:=form1.FDQuery2.FieldByName('F').ASFLOAT;
 
-frmdiseniocierrecaja.QRLabel5.Caption:='TOTAL :$ '+FLOATTOSTR(TOTALFACTUIRAS -TOTALNC) ;
+frmdiseniocierreCaja58.QRLabel5.Caption:='TOTAL :$ '+FLOATTOSTR(TOTALFACTUIRAS -TOTALNC) ;
 
- frmdiseniocierrecaja.RxMemoryData1.Close;
-frmdiseniocierrecaja.RxMemoryData1.OPEN;
-   frmdiseniocierrecaja.RxMemoryData1.Append;
-   frmdiseniocierrecaja.RxMemoryData1FORMA.Value:='--- VENTAS ----';
-   frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';
-    frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1.Post;
-
+ frmdiseniocierreCaja58.RxMemoryData1.Close;
+frmdiseniocierreCaja58.RxMemoryData1.OPEN;
+   frmdiseniocierreCaja58.RxMemoryData1.Append;
+   frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:='--- VENTAS ----';
+   frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:='';
+    frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1.Post;
+   frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
 
 
 form1.FDQuery2.Close;
@@ -576,27 +576,28 @@ form1.FDQuery2.SQL.Add('select TF.DESCRIPCION, SUM(TM.TOTAL) AS S  '+
 form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
 BEGIN
-     frmdiseniocierrecaja.RxMemoryData1.Append;
-      frmdiseniocierrecaja.RxMemoryData1FORMA.Value:=TRIM(FORM1.FDQuery2.Fields[0].ASSTRING);
-      frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';
-      frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:=TRIM(FORM1.FDQuery2.Fields[1].ASSTRING);
-     frmdiseniocierrecaja.RxMemoryData1.Post;
+     frmdiseniocierreCaja58.RxMemoryData1.Append;
+      frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:='';//TRIM(FORM1.FDQuery2.Fields[0].ASSTRING);
+      frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:=TRIM(FORM1.FDQuery2.Fields[0].ASSTRING);
+      frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='$'+TRIM(FORM1.FDQuery2.Fields[1].ASSTRING);
+     frmdiseniocierreCaja58.RxMemoryData1.Post;
+     frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
   FORM1.FDQuery2.Next;
 END;
 
-     frmdiseniocierrecaja.RxMemoryData1.Append;
-   frmdiseniocierrecaja.RxMemoryData1FORMA.Value:='' ;
-   frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';
-    frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1.Post;
+     frmdiseniocierreCaja58.RxMemoryData1.Append;
+   frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:='' ;
+   frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:='';
+    frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1.Post;
+   frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
 
-
-   frmdiseniocierrecaja.RxMemoryData1.Append;
-   frmdiseniocierrecaja.RxMemoryData1FORMA.Value:='--- NC DEVOLUCIONES ----';
-   frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';
-    frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1.Post;
-
+   frmdiseniocierreCaja58.RxMemoryData1.Append;
+   frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:='--- NC DEVOLUCIONES ----';
+   frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:='';
+    frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1.Post;
+      frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
 form1.FDQuery2.SQL.Add('select TF.DESCRIPCION, SUM(TM.TOTAL) AS S  '+
@@ -607,28 +608,28 @@ form1.FDQuery2.SQL.Add('select TF.DESCRIPCION, SUM(TM.TOTAL) AS S  '+
 form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
 BEGIN
-     frmdiseniocierrecaja.RxMemoryData1.Append;
-      frmdiseniocierrecaja.RxMemoryData1FORMA.Value:=TRIM(FORM1.FDQuery2.Fields[0].ASSTRING);
-      frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';
-      frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:=TRIM(FORM1.FDQuery2.Fields[1].ASSTRING);
-     frmdiseniocierrecaja.RxMemoryData1.Post;
+     frmdiseniocierreCaja58.RxMemoryData1.Append;
+      frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:='';//TRIM(FORM1.FDQuery2.Fields[0].ASSTRING);
+      frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:=TRIM(FORM1.FDQuery2.Fields[0].ASSTRING);
+      frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:=TRIM(FORM1.FDQuery2.Fields[1].ASSTRING);
+   frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
   FORM1.FDQuery2.Next;
 END;
 
 
 
-    frmdiseniocierrecaja.RxMemoryData1.Append;
-   frmdiseniocierrecaja.RxMemoryData1FORMA.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';
-    frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1.Post;
-
-   frmdiseniocierrecaja.RxMemoryData1.Append;
-   frmdiseniocierrecaja.RxMemoryData1FORMA.Value:='---ARTICULOS DEVUELTOS ----';
-   frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';
-    frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1.Post;
-
+    frmdiseniocierreCaja58.RxMemoryData1.Append;
+   frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:='';
+    frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1.Post;
+      frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
+   frmdiseniocierreCaja58.RxMemoryData1.Append;
+   frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:='---ARTICULOS DEVUELTOS ----';
+   frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:='';
+    frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1.Post;
+     frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
 form1.FDQuery2.SQL.Add('SELECT TD.ARTICULO,TD.CANTIDAD,TD.COMENTARIO  '+
@@ -640,26 +641,29 @@ form1.FDQuery2.SQL.Add('SELECT TD.ARTICULO,TD.CANTIDAD,TD.COMENTARIO  '+
  form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
 BEGIN
-     frmdiseniocierrecaja.RxMemoryData1.Append;
-      frmdiseniocierrecaja.RxMemoryData1FORMA.Value:=TRIM(FORM1.FDQuery2.Fields[0].ASSTRING);
-      frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:=TRIM(FORM1.FDQuery2.Fields[1].ASSTRING);
-      frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:=TRIM(FORM1.FDQuery2.Fields[2].ASSTRING);
-     frmdiseniocierrecaja.RxMemoryData1.Post;
+     frmdiseniocierreCaja58.RxMemoryData1.Append;
+      frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:=TRIM(FORM1.FDQuery2.Fields[0].ASSTRING);
+      frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:=TRIM(FORM1.FDQuery2.Fields[1].ASSTRING);
+      frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='';//TRIM(FORM1.FDQuery2.Fields[2].ASSTRING);
+     frmdiseniocierreCaja58.RxMemoryData1.Post;
+
+          frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
   FORM1.FDQuery2.Next;
 END;
 
 //COBROS CC
-    frmdiseniocierrecaja.RxMemoryData1.Append;
-   frmdiseniocierrecaja.RxMemoryData1FORMA.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';
-    frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1.Post;
-   frmdiseniocierrecaja.RxMemoryData1.Append;
-   frmdiseniocierrecaja.RxMemoryData1FORMA.Value:='---COBROS CUENTA CORRIENTES CLIENTES ----';
-   frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';
-    frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1.Post;
-
+    frmdiseniocierreCaja58.RxMemoryData1.Append;
+   frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:='';
+    frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1.Post;
+      frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
+   frmdiseniocierreCaja58.RxMemoryData1.Append;
+   frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:='---COBROS CUENTA CORRIENTES CLIENTES ----';
+   frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:='';
+    frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1.Post;
+     frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
 form1.FDQuery2.SQL.Add('SELECT TP.TOTAL,TC.APENOM ,TF.DESCRIPCION '+
@@ -671,27 +675,31 @@ form1.FDQuery2.SQL.Add('SELECT TP.TOTAL,TC.APENOM ,TF.DESCRIPCION '+
  form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
 BEGIN
-     frmdiseniocierrecaja.RxMemoryData1.Append;
-      frmdiseniocierrecaja.RxMemoryData1FORMA.Value:=TRIM(FORM1.FDQuery2.Fields[1].ASSTRING);
-      frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:=TRIM(FORM1.FDQuery2.Fields[0].ASSTRING);
-      frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:=TRIM(FORM1.FDQuery2.Fields[2].ASSTRING);
-     frmdiseniocierrecaja.RxMemoryData1.Post;
+     frmdiseniocierreCaja58.RxMemoryData1.Append;
+      frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:=TRIM(FORM1.FDQuery2.Fields[1].ASSTRING);
+      frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:='$'+TRIM(FORM1.FDQuery2.Fields[2].ASSTRING);
+      frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:=TRIM(FORM1.FDQuery2.Fields[0].ASSTRING);
+     frmdiseniocierreCaja58.RxMemoryData1.Post;
+
+            frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
   FORM1.FDQuery2.Next;
 END;
 
 
 //articulos vendidos
 
-    frmdiseniocierrecaja.RxMemoryData1.Append;
-   frmdiseniocierrecaja.RxMemoryData1FORMA.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';
-    frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1.Post;
-   frmdiseniocierrecaja.RxMemoryData1.Append;
-   frmdiseniocierrecaja.RxMemoryData1FORMA.Value:='---ARTICULOS VENDIDOS ----';
-   frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';
-    frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:='';
-   frmdiseniocierrecaja.RxMemoryData1.Post;
+    frmdiseniocierreCaja58.RxMemoryData1.Append;
+   frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:='';
+    frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1.Post;
+      frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
+   frmdiseniocierreCaja58.RxMemoryData1.Append;
+   frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:='---ARTICULOS VENDIDOS ----';
+   frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:='';
+    frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='';
+   frmdiseniocierreCaja58.RxMemoryData1.Post;
+      frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
   form1.FDQuery2.Close;
     form1.FDQuery2.SQL.Clear;
     form1.FDQuery2.SQL.Add(' SELECT   '+
@@ -710,11 +718,12 @@ END;
     form1.FDQuery2.Open;
    while NOT FORM1.FDQuery2.Eof do
 BEGIN
-     frmdiseniocierrecaja.RxMemoryData1.Append;
-      frmdiseniocierrecaja.RxMemoryData1FORMA.Value:=TRIM(FORM1.FDQuery2.Fields[0].ASSTRING)+'-'+TRIM(FORM1.FDQuery2.Fields[4].ASSTRING);
-      frmdiseniocierrecaja.RxMemoryData1CANTIDAD.Value:='';//TRIM(FORM1.FDQuery2.Fields[3].ASSTRING);
-      frmdiseniocierrecaja.RxMemoryData1TOTAL.Value:='CANT: '+TRIM(FORM1.FDQuery2.Fields[3].ASSTRING)+'       $'+TRIM(FORM1.FDQuery2.Fields[5].ASSTRING);
-     frmdiseniocierrecaja.RxMemoryData1.Post;
+     frmdiseniocierreCaja58.RxMemoryData1.Append;
+      frmdiseniocierreCaja58.RxMemoryData1FORMA.Value:=TRIM(FORM1.FDQuery2.Fields[0].ASSTRING)+'-'+TRIM(FORM1.FDQuery2.Fields[4].ASSTRING);
+      frmdiseniocierreCaja58.RxMemoryData1CANTIDAD.Value:='CANT: '+TRIM(FORM1.FDQuery2.Fields[3].ASSTRING)+'       $'+TRIM(FORM1.FDQuery2.Fields[5].ASSTRING);//TRIM(FORM1.FDQuery2.Fields[3].ASSTRING);
+      frmdiseniocierreCaja58.RxMemoryData1TOTAL.Value:='';
+     frmdiseniocierreCaja58.RxMemoryData1.Post;
+          frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
   FORM1.FDQuery2.Next;
 END;
 
@@ -840,21 +849,21 @@ PAGOSCUENTACORRIENTES:=0
 else
 PAGOSCUENTACORRIENTES:=form1.FDQuery2.fieldbyname('TOTA').asfloat;
 
+  frmdiseniocierreCaja58.QRLABEL11.Caption:='IMPRESION: '+DATETOSTR(DATE);
 
 
-
-frmdiseniocierrecaja.QRLabel4.Caption:='DINERO DEL CAJERO :$ '+FLOATTOSTR(ingresado) ;
-frmdiseniocierrecaja.QRLabel10.Caption:='CAMBIO :$ '+FLOATTOSTR(cambio) ;
-frmdiseniocierrecaja.QRLabel12.Caption:='SALIDAS DE CAJA :$ '+FLOATTOSTR(salidas) ;
-frmdiseniocierrecaja.QRLabel18.Caption:='INGRESOS DE CAJA :$ '+FLOATTOSTR(INGRESOACAJA) ;
-frmdiseniocierrecaja.QRLabel18.Caption:='COBROS EN EFECT. C/C CLIENTES :$ '+FLOATTOSTR(PAGOSCUENTACORRIENTES) ;
+frmdiseniocierreCaja58.QRLabel4.Caption:='DINERO DEL CAJERO :$ '+FLOATTOSTR(ingresado) ;
+frmdiseniocierreCaja58.QRLabel10.Caption:='CAMBIO :$ '+FLOATTOSTR(cambio) ;
+frmdiseniocierreCaja58.QRLabel12.Caption:='SALIDAS DE CAJA :$ '+FLOATTOSTR(salidas) ;
+frmdiseniocierreCaja58.QRLabel18.Caption:='INGRESOS DE CAJA :$ '+FLOATTOSTR(INGRESOACAJA) ;
+frmdiseniocierreCaja58.QRLabel18.Caption:='COBROS EN EFECT. C/C CLIENTES :$ '+FLOATTOSTR(PAGOSCUENTACORRIENTES) ;
 
 efe:=efe - NCEFE;
 
 ENCAJA:=CAMBIO +  INGRESOACAJA +  efe + PAGOSCUENTACORRIENTES;
 ENCAJA:=ENCAJA - SALIDAS;
 SALDO:=ENCAJA;
-frmdiseniocierrecaja.QRLabel14.Caption:='EFECT. EN CAJA:$ '+FLOATTOSTR(ENCAJA) ;
+frmdiseniocierreCaja58.QRLabel14.Caption:='EFECT. EN CAJA:$ '+FLOATTOSTR(ENCAJA) ;
 
 if saldo > ingresado then
 begin
@@ -878,10 +887,10 @@ end ELSE BEGIN
         END;
 
 
-        frmdiseniocierrecaja.QRLabel17.Caption:='SALDO:$ '+FLOATTOSTR(saldo) +' '+MENSA;
+        frmdiseniocierreCaja58.QRLabel17.Caption:='SALDO:$ '+FLOATTOSTR(saldo) +' '+MENSA;
 
-frmdiseniocierrecaja.QRLabel2.Caption:='FECHA : '+FE+'  '+TIMETOSTR(TIME);
-frmdiseniocierrecaja.QRPQuickrep1.Prepare;
+frmdiseniocierreCaja58.QRLabel2.Caption:='FECHA : '+FE+'  '+TIMETOSTR(TIME);
+frmdiseniocierreCaja58.QRPQuickrep1.Prepare;
 
 {if form1.demo=false then
 frmdiseniocierrecaja.QRPQuickrep1.Print
@@ -893,10 +902,10 @@ else  }
  archivoEmail := ExtractFilePath(ParamStr(0))+'\INFORMES\cierreCaja_dia_'+fecha+'_hora_'+hora+'.pdf';
     Gpdf := TExportar2PDFSyn.Create;
     Gpdf.rutaPDF := archivoEmail;
-    Gpdf.Exportar2PDF(frmdiseniocierrecaja.QRPQuickrep1);
+    Gpdf.Exportar2PDF(frmdiseniocierreCaja58.QRPQuickrep1);
     Gpdf.free;
 
-frmdiseniocierrecaja.QRPQuickrep1.Preview;
+frmdiseniocierreCaja58.QRPQuickrep1.Print;
 
  try
 form1.FDQuery2.Close;

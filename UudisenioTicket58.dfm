@@ -471,13 +471,13 @@ object frmTicket58: TfrmTicket58
       object QRLabel9: TQRLabel
         Left = 8
         Top = 3
-        Width = 40
+        Width = 35
         Height = 17
         Size.Values = (
           44.979166666666670000
           21.166666666666670000
           7.937500000000000000
-          105.833333333333300000)
+          92.604166666666670000)
         XLColumn = 0
         XLNumFormat = nfGeneral
         ActiveInPreview = False
@@ -487,7 +487,7 @@ object frmTicket58: TfrmTicket58
         Color = clWhite
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -13
+        Font.Height = -11
         Font.Name = 'Calibri'
         Font.Style = [fsBold]
         ParentFont = False
@@ -495,7 +495,7 @@ object frmTicket58: TfrmTicket58
         ExportAs = exptText
         WrapStyle = BreakOnSpaces
         VerticalAlignment = tlTop
-        FontSize = 10
+        FontSize = 8
       end
       object QRShape2: TQRShape
         Left = 8

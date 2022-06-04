@@ -100,7 +100,6 @@ type
     Panel7: TPanel;
     Edit1: TEdit;
     Panel9: TPanel;
-    Label3: TLabel;
     Panel10: TPanel;
     Label4: TLabel;
     Label5: TLabel;
@@ -1407,6 +1406,16 @@ if key in ['0','1','2','3','4','5','6','7','8','9','+','.','*',#8,#13] then
     else
      edit1.readonly:=true;
 
+     if key=#27 then
+    begin
+           ES_ENVASADO:=false;
+          edit1.Clear;
+         edit1.SetFocus;
+         cantidad:='1';
+         busca:='';
+         esPorPrecio:=falsE;
+          PANEL9.Caption:='<<<< INGRESE CANTIDAD O ARTICULO';
+    end;
 
 if key=#13 then
 begin
@@ -1558,7 +1567,10 @@ td:=tdecimales.Create;
          edit1.Clear;
          edit1.SetFocus;
          cantidad:='1';
+         esPorPrecio:=false;
           PANEL9.Caption:='<<<< INGRESE CANTIDAD O ARTICULO';
+          busca:='';
+            ES_ENVASADO:=false;
       end;
   end;
 td.Free;
@@ -1608,11 +1620,11 @@ var m:string;
     PATHBD,FEFINALIZA:sTRING;
   Ini: TIniFile;
 begin
-demo:=true;
+demo:=false;
 
 if demo=true then
 begin
-FEFINALIZA:='01/06/2022';
+FEFINALIZA:='01/07/2022';
  if (date > STRTODATE(FEFINALIZA)) then
     begin
      showmessage('VERSION DEMO TERMINADA');
