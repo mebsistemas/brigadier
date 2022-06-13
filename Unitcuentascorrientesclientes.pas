@@ -68,7 +68,7 @@ SQL:='SELECT sum(tm.total),sum(tm.pago) '+
 ' AND TM.TOTAL<>TM.PAGO  '+
 ' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
 ' AND CODNC IS NULL   '+
-' AND TM.TIPOMOVIMIENTO IN (0,1,2,3) ORDER BY TM.IDMOVIMIENTO ASC ';
+' AND TM.TIPOMOVIMIENTO IN (0,1,2,3,4,5,6,7) ORDER BY TM.IDMOVIMIENTO ASC ';
  self.FDQuery1.Close;
  self.FDQuery1.SQL.Clear;
  self.FDQuery1.SQL.Add(SQL);
@@ -97,6 +97,10 @@ SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
 ' WHEN 1 THEN ''FACTURA A'' '+
 ' WHEN 2 THEN ''FACTURA B'' '+
 ' WHEN 3 THEN ''FACTURA C'' '+
+' WHEN 4 THEN ''NC A'' '+
+' WHEN 5 THEN ''NC B'' '+
+' WHEN 6 THEN ''NC C'' '+
+' WHEN 7 THEN ''NC TKT'' '+
 ' ELSE    '+
 ' ''ERROR'' '+
 ' END  AS TICK , (tm.total - tm.pago) as saldo '+
@@ -106,7 +110,7 @@ SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
 ' AND TM.TOTAL<>TM.PAGO  '+
 ' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
 ' AND CODNC IS NULL   '+
-' AND TM.TIPOMOVIMIENTO IN (0,1,2,3) ORDER BY TM.IDMOVIMIENTO ASC ';
+' AND TM.TIPOMOVIMIENTO IN (0,1,2,3,4,5,6,7) ORDER BY TM.IDMOVIMIENTO ASC ';
  self.FDQuery1.Close;
  self.FDQuery1.SQL.Clear;
  self.FDQuery1.SQL.Add(SQL);
@@ -172,7 +176,7 @@ SQL:='SELECT sum(tm.total),sum(tm.pago) '+
 ' AND TM.TOTAL<>TM.PAGO  '+
 ' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
 ' AND CODNC IS NULL   '+
-' AND TM.TIPOMOVIMIENTO IN (0,1,2,3) ORDER BY TM.IDMOVIMIENTO ASC ';
+' AND TM.TIPOMOVIMIENTO IN  (0,1,2,3,4,5,6,7)  ORDER BY TM.IDMOVIMIENTO ASC ';
  self.FDQuery1.Close;
  self.FDQuery1.SQL.Clear;
  self.FDQuery1.SQL.Add(SQL);
@@ -196,10 +200,14 @@ LABEL1.Caption:='SALDO  $'+FLOATTOSTR(S);
 SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
 ' TM.TOTAL as tmtotal,TM.PAGO as tmpago,TM.NROFACTURA as tmnro,TC.APENOM as tmcliente,'+
 ' CASE TM.TIPOMOVIMIENTO  '+
-' WHEN 0 THEN ''TICKET''  '+
+ ' WHEN 0 THEN ''TICKET''  '+
 ' WHEN 1 THEN ''FACTURA A'' '+
 ' WHEN 2 THEN ''FACTURA B'' '+
 ' WHEN 3 THEN ''FACTURA C'' '+
+' WHEN 4 THEN ''NC A'' '+
+' WHEN 5 THEN ''NC B'' '+
+' WHEN 6 THEN ''NC C'' '+
+' WHEN 7 THEN ''NC TKT'' '+
 ' ELSE    '+
 ' ''ERROR'' '+
 ' END  AS TICK , (tm.total - tm.pago) as saldo '+
@@ -209,7 +217,7 @@ SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
 ' AND TM.TOTAL<>TM.PAGO  '+
 ' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
 ' AND CODNC IS NULL   '+
-' AND TM.TIPOMOVIMIENTO IN (0,1,2,3) ORDER BY TM.IDMOVIMIENTO ASC ';
+' AND TM.TIPOMOVIMIENTO IN  (0,1,2,3,4,5,6,7)  ORDER BY TM.IDMOVIMIENTO ASC ';
  self.FDQuery1.Close;
  self.FDQuery1.SQL.Clear;
  self.FDQuery1.SQL.Add(SQL);
@@ -243,6 +251,10 @@ SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
 ' WHEN 1 THEN ''FACTURA A'' '+
 ' WHEN 2 THEN ''FACTURA B'' '+
 ' WHEN 3 THEN ''FACTURA C'' '+
+' WHEN 4 THEN ''NC A'' '+
+' WHEN 5 THEN ''NC B'' '+
+' WHEN 6 THEN ''NC C'' '+
+' WHEN 7 THEN ''NC TKT'' '+
 ' ELSE    '+
 ' ''ERROR'' '+
 ' END  AS TICK , (tm.total - tm.pago) as saldo '+
@@ -252,7 +264,7 @@ SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
 ' AND TM.TOTAL<>TM.PAGO  '+
 ' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
 ' AND CODNC IS NULL   '+
-' AND TM.TIPOMOVIMIENTO IN (0,1,2,3) ORDER BY TM.IDMOVIMIENTO ASC ';
+' AND TM.TIPOMOVIMIENTO IN  (0,1,2,3,4,5,6,7)  ORDER BY TM.IDMOVIMIENTO ASC ';
  self.FDQuery1.Close;
  self.FDQuery1.SQL.Clear;
  self.FDQuery1.SQL.Add(SQL);

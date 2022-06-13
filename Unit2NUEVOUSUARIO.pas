@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.CheckLst;
 
 type
   TNUEVOUSUARIO = class(TForm)
@@ -18,6 +18,8 @@ type
     Edit3: TEdit;
     Label3: TLabel;
     ComboBox1: TComboBox;
+    CheckListBox1: TCheckListBox;
+    Label4: TLabel;
     procedure BitBtn1Click(Sender: TObject);
     procedure Edit2KeyPress(Sender: TObject; var Key: Char);
   private

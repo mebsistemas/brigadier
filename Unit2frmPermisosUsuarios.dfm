@@ -1,0 +1,92 @@
+object frmPermisosUsuarios: TfrmPermisosUsuarios
+  Left = 0
+  Top = 0
+  Align = alBottom
+  BorderIcons = []
+  BorderStyle = bsSingle
+  Caption = 'PERMISOS'
+  ClientHeight = 489
+  ClientWidth = 511
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 448
+    Width = 511
+    Height = 41
+    Align = alBottom
+    TabOrder = 0
+    ExplicitLeft = 168
+    ExplicitTop = 192
+    ExplicitWidth = 185
+    object BitBtn1: TBitBtn
+      Left = 1
+      Top = 1
+      Width = 160
+      Height = 39
+      Align = alLeft
+      Caption = 'APLICAR CAMBIOS'
+      TabOrder = 0
+    end
+    object BitBtn2: TBitBtn
+      Left = 392
+      Top = 1
+      Width = 118
+      Height = 39
+      Align = alRight
+      Caption = 'SALIR'
+      TabOrder = 1
+      OnClick = BitBtn2Click
+    end
+  end
+  object CheckListBox1: TCheckListBox
+    Left = 0
+    Top = 0
+    Width = 511
+    Height = 448
+    Align = alClient
+    ItemHeight = 13
+    Items.Strings = (
+      '1001 | NUEVO ARTICULO'
+      '1002 | MODIFICAR ARTICULO'
+      '1003 | INFO COSTOS'
+      '1004 | VENCIMIENTOS'
+      '2001 | ACTUALIZAR PRECIOS POR PROVEEDOR'
+      '4001 | AGREGAR STOCK'
+      '4002 | ELIMINAR STOCK'
+      '5000 | INVENTARIO'
+      '6000 | BUSCAR Y VER FACTURAS'
+      '7001 | LISTAR ARTICULOS VENDIDOS'
+      '7002 | LISTAR RUBRO MAS VENDIDO'
+      '7003 | LISTAR ARTICULOS EN REPOSICI'#211'N'
+      '7004 | ANALISIS DE RENTABILIDAD'
+      '7005 | LISTADOS DE COMPRAS'
+      '7006 | LISTAR VENTAS POR FECHA'
+      '7007 | LISTADO DE VENTAS POR VENDEDOR'
+      '8001 | LIBRO IVA VENTA'
+      '8002 | LIBRO IVA COMPRA'
+      '9000 | PROVEEDORES'
+      '10000 | COMPRAS'
+      '11000 | MARCAS'
+      '12001 | APERTURA DE CAJA'
+      '12002 | SALIDAS DE CAJA'
+      '12003 | INGRESOS A CAJA'
+      '12004 | INFORMES X'
+      '12005 | CIERRE DE CAJA'
+      '12006 | LISTADOS DE MOVIMIENTOS'
+      '13001 | FICHERO DE CLIENTES'
+      '13002 | CUENTA CORRIENTE DE CLIENTES'
+      '13003 | LISTADO DE CUENTA CORRIENTE DE CLIENTES'
+      '20001 | A.B.M. VENDEDORES'
+      '20002 | COMISIONES VENDEDORES')
+    TabOrder = 1
+    ExplicitHeight = 348
+  end
+end

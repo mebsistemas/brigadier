@@ -93,6 +93,13 @@ uses Unit1, UniFRMNUEVOARTICULO, Unit3INFOCOSTOS, Unit4ABMVENCIMIENTOS,
 
 procedure TfrmABMARticulos.BitBtn10Click(Sender: TObject);
 begin
+if FORM1.revisaPermisoTAG(BitBtn10.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
+
 ABMVENCIMIENTOS.SHOWMODAL;
 end;
 
@@ -104,6 +111,13 @@ end;
 
 procedure TfrmABMARticulos.BitBtn1Click(Sender: TObject);
 begin
+if FORM1.revisaPermisoTAG(BitBtn1.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
+
 FRMNUEVOARTICULO.Caption:='NUEVO ARTICULO';
 FRMNUEVOARTICULO.Edit1.Clear;
 FRMNUEVOARTICULO.Edit2.Clear;
@@ -356,6 +370,13 @@ end;
 
 procedure TfrmABMARticulos.BitBtn6Click(Sender: TObject);
 begin
+if FORM1.revisaPermisoTAG(BitBtn6.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
+
 DBGrid1DblClick(Sender);
 end;
 
@@ -376,6 +397,13 @@ end;
 
 procedure TfrmABMARticulos.BitBtn9Click(Sender: TObject);
 begin
+if FORM1.revisaPermisoTAG(BitBtn9.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
+
 INFOCOSTOS.FDQuery1.Close;
 INFOCOSTOS.FDQuery1.SQL.Clear;
 infocostos.FDQuery1.Sql.Add('select  '+
@@ -391,6 +419,13 @@ end;
 procedure TfrmABMARticulos.DBGrid1DblClick(Sender: TObject);
 VAR IDAR:LONGINT;
 begin
+if FORM1.revisaPermisoTAG(BitBtn6.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
+
 IDAR:=dbgrid1.Fields[0].asINTEGER;
 FRMNUEVOARTICULO.FDQuery2.Close;
 FRMNUEVOARTICULO.FDQuery2.SQL.Clear;

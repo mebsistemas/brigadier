@@ -122,7 +122,8 @@ uses
   UnitfrmActualizaindivualARticulo in 'UnitfrmActualizaindivualARticulo.pas' {frmActualizaindivualARticulo},
   ufimformex80 in 'ufimformex80.pas' {frminformex80},
   Ufrmcierrex58mm2 in 'Ufrmcierrex58mm2.pas' {frmcierrex58mm},
-  Udiseniocierrecaja58 in 'Udiseniocierrecaja58.pas' {frmdiseniocierreCaja58};
+  Udiseniocierrecaja58 in 'Udiseniocierrecaja58.pas' {frmdiseniocierreCaja58},
+  Unit2frmPermisosUsuarios in 'Unit2frmPermisosUsuarios.pas' {frmPermisosUsuarios};
 
 {$R *.res}
 
@@ -229,5 +230,6 @@ begin
   Application.CreateForm(Tfrminformex80, frminformex80);
   Application.CreateForm(Tfrmcierrex58mm, frmcierrex58mm);
   Application.CreateForm(TfrmdiseniocierreCaja58, frmdiseniocierreCaja58);
+  Application.CreateForm(TfrmPermisosUsuarios, frmPermisosUsuarios);
   Application.Run;
 end.

@@ -206,6 +206,7 @@ object frmABMARticulos: TfrmABMARticulos
       end>
   end
   object BitBtn1: TBitBtn
+    Tag = 1001
     Left = 8
     Top = 450
     Width = 193
@@ -1199,6 +1200,7 @@ object frmABMARticulos: TfrmABMARticulos
     end
   end
   object BitBtn6: TBitBtn
+    Tag = 1002
     Left = 207
     Top = 450
     Width = 186
@@ -1491,6 +1493,7 @@ object frmABMARticulos: TfrmABMARticulos
     OnClick = BitBtn7Click
   end
   object BitBtn9: TBitBtn
+    Tag = 1003
     Left = 586
     Top = 450
     Width = 135
@@ -1637,6 +1640,7 @@ object frmABMARticulos: TfrmABMARticulos
     OnClick = BitBtn9Click
   end
   object BitBtn10: TBitBtn
+    Tag = 1004
     Left = 746
     Top = 450
     Width = 135

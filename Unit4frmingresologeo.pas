@@ -33,6 +33,7 @@ implementation
 {$R *.dfm}
 
 procedure Tfrmingresologeo.Edit1KeyPress(Sender: TObject; var Key: Char);
+VAR I:LONGINT;
 begin
  if KEY IN ['0','1','2','3','4','5','6','7','8','9',#13,#8] then
  EDIT1.ReadOnly:=FALSE
@@ -52,6 +53,29 @@ if trim(edit1.Text)='' then
    begin
    FORM1.ESADMINISTRADOR:=FDQuery1.FieldByName('TIPO').AsInteger;
    form1.IDUSUARIOLOGEADO:=FDQuery1.FieldByName('IDUSUARIO').AsInteger;
+   FORM1.Panel13.Caption:='USUARIO: '+TRIM(FDQuery1.FieldByName('APENOM').AsSTRING);
+     self.FDQuery1.Close;
+     self.FDQuery1.SQL.Clear;
+     self.FDQuery1.SQL.Add('select * from TPERMISOS_USUARIOS  where IDUSUARIO='+inttostr(strtoint(edit1.Text)));
+     self.FDQuery1.Open;
+     if FDQuery1.RecordCount > 0 then
+      BEGIN
+         I:=0;
+         SetLength( FORM1.PERMISOS, FDQuery1.RecordCount );
+         while NOT FDQuery1.Eof do
+         BEGIN
+
+              FORM1.PERMISOS[I] := FDQuery1.FieldByName('TAG').AsInteger;
+             INC(I);
+           FDQuery1.Next;
+         END;
+
+
+      END;
+
+
+
+
      modalresult:=mrok;
    end else begin
      showmessage('USUARIO INCORRECTO');

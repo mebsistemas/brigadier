@@ -505,11 +505,6 @@ object frmusuarios: Tfrmusuarios
         Alignment = taRightJustify
         Expanded = False
         FieldName = 'codigo'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
         Title.Alignment = taCenter
         Title.Caption = 'CODIGO'
         Title.Font.Charset = DEFAULT_CHARSET
@@ -523,11 +518,6 @@ object frmusuarios: Tfrmusuarios
         Alignment = taCenter
         Expanded = False
         FieldName = 'ES'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
         Title.Alignment = taCenter
         Title.Caption = 'ROL'
         Title.Font.Charset = DEFAULT_CHARSET

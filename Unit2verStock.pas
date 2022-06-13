@@ -23,6 +23,7 @@ type
     FDQuery1: TFDQuery;
     BitBtn3: TBitBtn;
     BitBtn4: TBitBtn;
+    BitBtn5: TBitBtn;
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure DBGrid1DblClick(Sender: TObject);
@@ -43,7 +44,7 @@ implementation
 
 {$R *.dfm}
 
-uses Unit2cargarStock, UnitIMPRIMIRSTOCKCARGA2;
+uses Unit2cargarStock, UnitIMPRIMIRSTOCKCARGA2, UnifrmBuscarARticulos;
 
 procedure TverStock.BitBtn1Click(Sender: TObject);
 var BUSCA,CODIGO_BARRA:string;  barra_hasta:longint;
@@ -79,11 +80,13 @@ end;
 
 procedure TverStock.BitBtn3Click(Sender: TObject);
 begin
-if FORM1.ESADMINISTRADOR=2 then
-BEGIN
-SHOWMESSAGE('NO ERES ADMINISTRADOR');
-EXIT;
-END ;
+
+   if FORM1.revisaPermisoTAG(BitBtn3.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
 
 if SELF.FDQuery1.IsEmpty=TRUE then
   EXIT;
@@ -95,11 +98,14 @@ end;
 
 procedure TverStock.BitBtn4Click(Sender: TObject);
 begin
-if FORM1.ESADMINISTRADOR=2 then
-BEGIN
-SHOWMESSAGE('NO ERES ADMINISTRADOR');
-EXIT;
-END ;
+   if FORM1.revisaPermisoTAG(BitBtn4.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
+
+
 
 if SELF.FDQuery1.IsEmpty=TRUE then
   EXIT;
@@ -111,7 +117,13 @@ end;
 
 procedure TverStock.BitBtn5Click(Sender: TObject);
 begin
-IMPRIMIRSTOCKCARGA.SHOWMODAL;
+frmBuscarARticulos.Edit1.Clear;
+frmBuscarARticulos.showmodal;
+if frmBuscarARticulos.ModalResult=MROK then
+BEGIN
+  Edit1.Text:=TRIM(frmBuscarARticulos.DBGRID1.Fields[0].ASSTRING);
+  BitBtn1Click(Sender);
+END;
 end;
 
 procedure TverStock.DBGrid1DblClick(Sender: TObject);

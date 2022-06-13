@@ -5,18 +5,20 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
-  Vcl.DBGrids;
+  Vcl.DBGrids, Vcl.Buttons;
 
 type
   TfrmBuscarARticulos = class(TForm)
     DBGrid1: TDBGrid;
     Edit1: TEdit;
     DataSource1: TDataSource;
+    BitBtn1: TBitBtn;
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormShow(Sender: TObject);
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
     procedure DBGrid1KeyPress(Sender: TObject; var Key: Char);
     procedure DBGrid1DblClick(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -32,13 +34,15 @@ implementation
 
 uses Unit1;
 
+procedure TfrmBuscarARticulos.BitBtn1Click(Sender: TObject);
+begin
+MODALRESULT:=MRCANCEL;
+end;
+
 procedure TfrmBuscarARticulos.DBGrid1DblClick(Sender: TObject);
 begin
-  FORM1.Edit1.Text:=TRIM(DBGRID1.Fields[0].ASSTRING);
- // FORM1.SpeedButton4Click(Sender);
- FORM1.Edit1.SetFocus;
-  FORM1.PANEL9.Caption:='<<<< INGRESE CANTIDAD O ARTICULO';
-  CLOSE;
+ModalResult:=MROK;
+
 end;
 
 procedure TfrmBuscarARticulos.DBGrid1KeyPress(Sender: TObject; var Key: Char);

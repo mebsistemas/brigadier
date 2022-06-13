@@ -1574,6 +1574,26 @@ object Form1: TForm1
           TabOrder = 4
           OnClick = BitBtn5Click
         end
+        object Panel13: TPanel
+          Left = 1
+          Top = 395
+          Width = 234
+          Height = 41
+          Align = alBottom
+          Caption = 'USUARIO'
+          Color = clMaroon
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWhite
+          Font.Height = -12
+          Font.Name = 'Tahoma'
+          Font.Style = [fsBold]
+          ParentBackground = False
+          ParentFont = False
+          TabOrder = 5
+          ExplicitLeft = 16
+          ExplicitTop = 392
+          ExplicitWidth = 185
+        end
       end
     end
   end
@@ -1602,17 +1622,21 @@ object Form1: TForm1
     object Men1: TMenuItem
       Caption = 'Men'#250
       object Articulos1: TMenuItem
+        Tag = 1000
         Caption = 'Articulos'
         OnClick = Articulos1Click
       end
       object ActualizarPrecios1: TMenuItem
+        Tag = 2000
         Caption = 'Actualizar Precios'
         object PorProveedor1: TMenuItem
+          Tag = 2001
           Caption = 'Por Proveedor'
           OnClick = PorProveedor1Click
         end
       end
       object ListadePrecio1: TMenuItem
+        Tag = 3000
         Caption = 'Lista de Precio'
         Visible = False
         object AdministrarListasdePrecios1: TMenuItem
@@ -1624,10 +1648,12 @@ object Form1: TForm1
         end
       end
       object Stock1: TMenuItem
+        Tag = 4000
         Caption = 'Stock'
         OnClick = Stock1Click
       end
       object Inventario1: TMenuItem
+        Tag = 5000
         Caption = 'Inventario'
         OnClick = Inventario1Click
       end
@@ -1635,6 +1661,7 @@ object Form1: TForm1
         Caption = '-'
       end
       object BuscaryVerFacturas1: TMenuItem
+        Tag = 6000
         Caption = 'Buscar y Ver Facturas'
         OnClick = BuscaryVerFacturas1Click
       end
@@ -1642,16 +1669,20 @@ object Form1: TForm1
         Caption = '-'
       end
       object Estadsticas1: TMenuItem
+        Tag = 7000
         Caption = 'Estad'#237'sticas'
         object ListarArtculosVendidos1: TMenuItem
+          Tag = 7001
           Caption = 'Listar Art'#237'culos Vendidos'
           OnClick = ListarArtculosVendidos1Click
         end
         object ListarRubromsVendido1: TMenuItem
+          Tag = 7002
           Caption = 'Listar Rubro m'#225's Vendido'
           OnClick = ListarRubromsVendido1Click
         end
         object ListarArtculosenReposicin1: TMenuItem
+          Tag = 7003
           Caption = 'Listar Art'#237'culos en Reposici'#243'n'
           OnClick = ListarArtculosenReposicin1Click
         end
@@ -1659,6 +1690,7 @@ object Form1: TForm1
           Caption = '-'
         end
         object AnlisisdeRentabilidad1: TMenuItem
+          Tag = 7004
           Caption = 'An'#225'lisis de Rentabilidad'
           OnClick = AnlisisdeRentabilidad1Click
         end
@@ -1666,14 +1698,17 @@ object Form1: TForm1
           Caption = '-'
         end
         object ListadosdeCompras1: TMenuItem
+          Tag = 7005
           Caption = 'Listados de Compras'
           OnClick = ListadosdeCompras1Click
         end
         object ListarVentasporfecha1: TMenuItem
+          Tag = 7006
           Caption = 'Listar Ventas por fecha'
           OnClick = ListarVentasporfecha1Click
         end
         object ListadodeVentasporVen1: TMenuItem
+          Tag = 7007
           Caption = 'Listado de Ventas por Vendedor'
           OnClick = ListadodeVentasporVen1Click
         end
@@ -1682,12 +1717,15 @@ object Form1: TForm1
         Caption = '-'
       end
       object Contable1: TMenuItem
+        Tag = 8000
         Caption = 'Contable'
         object LibrosIVAVenta1: TMenuItem
+          Tag = 8001
           Caption = 'Libros IVA Venta'
           OnClick = LibrosIVAVenta1Click
         end
         object LibroIVACompra1: TMenuItem
+          Tag = 8002
           Caption = 'Libro IVA Compra'
           OnClick = LibroIVACompra1Click
         end
@@ -1696,14 +1734,17 @@ object Form1: TForm1
         Caption = '-'
       end
       object Proveedores2: TMenuItem
+        Tag = 9000
         Caption = 'Proveedores'
         OnClick = Proveedores2Click
       end
       object Compras1: TMenuItem
+        Tag = 10000
         Caption = 'Compras'
         OnClick = Compras1Click
       end
       object Marcas1: TMenuItem
+        Tag = 11000
         Caption = 'Marcas'
         Visible = False
         OnClick = Marcas1Click
@@ -1712,24 +1753,30 @@ object Form1: TForm1
         Caption = '-'
       end
       object Caja1: TMenuItem
+        Tag = 12000
         Caption = 'Caja'
         object AperturadeCaja1: TMenuItem
+          Tag = 12001
           Caption = 'Apertura de Caja'
           OnClick = AperturadeCaja1Click
         end
         object SalidasdeCaja1: TMenuItem
+          Tag = 12002
           Caption = 'Salidas de Caja'
           OnClick = SalidasdeCaja1Click
         end
         object IngresosaCaja1: TMenuItem
+          Tag = 12003
           Caption = 'Ingresos a Caja'
           OnClick = IngresosaCaja1Click
         end
         object CierreX1: TMenuItem
+          Tag = 12004
           Caption = 'Informe X'
           OnClick = CierreX1Click
         end
         object CierreZ1: TMenuItem
+          Tag = 12005
           Caption = 'Cierre de Caja'
           OnClick = CierreZ1Click
         end
@@ -1737,21 +1784,26 @@ object Form1: TForm1
           Caption = '-'
         end
         object ListadodeMovimientos1: TMenuItem
+          Tag = 12006
           Caption = 'Listado de Movimientos'
           OnClick = ListadodeMovimientos1Click
         end
       end
       object Clientes1: TMenuItem
+        Tag = 13000
         Caption = 'Clientes'
         object FicherodeClientes1: TMenuItem
+          Tag = 13001
           Caption = 'Fichero de Clientes'
           OnClick = FicherodeClientes1Click
         end
         object CuentaCorrientes1: TMenuItem
+          Tag = 13002
           Caption = 'Cuenta Corrientes '
           OnClick = CuentaCorrientes1Click
         end
         object ListadodeClientesDeudores1: TMenuItem
+          Tag = 13003
           Caption = 'Listado de Clientes Deudores'
           OnClick = ListadodeClientesDeudores1Click
         end
@@ -1781,12 +1833,15 @@ object Form1: TForm1
       end
     end
     object Vendedores1: TMenuItem
+      Tag = 20000
       Caption = 'Vendedores'
       object ABMVendedores1: TMenuItem
+        Tag = 20001
         Caption = 'A.B.M. Vendedores'
         OnClick = ABMVendedores1Click
       end
       object Comisiones1: TMenuItem
+        Tag = 20002
         Caption = 'Comisiones'
         OnClick = Comisiones1Click
       end

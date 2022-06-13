@@ -46,12 +46,15 @@ CLOSE;
 end;
 
 procedure Tfrmusuarios.BitBtn2Click(Sender: TObject);
-VAR TIPO:LONGINT;
+VAR TIPO,I,TAG,POSI:LONGINT;
 begin
 NUEVOUSUARIO.Caption:='Nuevo Usuario';
 NUEVOUSUARIO.Edit1.Clear;
 NUEVOUSUARIO.Edit2.Clear;
 NUEVOUSUARIO.ComboBox1.ItemIndex:=0;
+for I := 0 to NUEVOUSUARIO.CheckListBox1.Items.Count - 1 do
+    NUEVOUSUARIO.CheckListBox1.Checked[I]:=FALSE;
+
 
   NUEVOUSUARIO.SHOWMODAL;
   if NUEVOUSUARIO.ModalResult=MROK then
@@ -76,6 +79,25 @@ NUEVOUSUARIO.ComboBox1.ItemIndex:=0;
      SELF.FDQuery2.SQL.Clear;
      SELF.FDQuery2.SQL.Add('INSERT INTO TUSUARIOS (APENOM,CODIGO,TIPO) VALUES ('+#39+TRIM(NUEVOUSUARIO.Edit1.Text)+#39+','+INTTOSTR(STRTOINT(NUEVOUSUARIO.Edit2.Text))+','+INTTOSTR(TIPO)+')');
      SELF.FDQuery2.ExecSQL;
+
+     for I := 0 to NUEVOUSUARIO.CheckListBox1.Items.Count - 1 do
+       BEGIN
+            if NUEVOUSUARIO.CheckListBox1.Checked[I]=TRUE then
+            BEGIN
+               POSI:=POS('|',TRIM(NUEVOUSUARIO.CheckListBox1.Items[I]));
+               TAG:=STRTOINT(TRIM(COPY(TRIM(NUEVOUSUARIO.CheckListBox1.Items[I]),0,POSI-1)));
+               SELF.FDQuery2.Close;
+               SELF.FDQuery2.SQL.Clear;
+               SELF.FDQuery2.SQL.Add('INSERT INTO TPERMISOS_USUARIOS (IDUSUARIO,TAG,IDLIST) VALUES ('+INTTOSTR(STRTOINT(NUEVOUSUARIO.Edit2.Text))+','+INTTOSTR(TAG)+','+INTTOSTR(I)+')');
+               SELF.FDQuery2.ExecSQL;
+
+
+            END;
+
+
+       END;
+
+
      FORM1.FDConnection1.Commit;
      SHOWMESSAGE('Se ha guardado correctamente');
      EXCEPT
@@ -87,7 +109,7 @@ NUEVOUSUARIO.ComboBox1.ItemIndex:=0;
 end;
 
 procedure Tfrmusuarios.BitBtn3Click(Sender: TObject);
-VAR TIPO:LONGINT;
+VAR TIPO,I:LONGINT;
 begin
 NUEVOUSUARIO.Caption:='Modificar Usuario';
 NUEVOUSUARIO.Edit1.Text:=trim(dbgrid1.Fields[1].asstring);
@@ -97,6 +119,27 @@ NUEVOUSUARIO.Edit3.Text:=trim(dbgrid1.Fields[0].asstring);
     NUEVOUSUARIO.ComboBox1.ItemIndex:=1;
   if trim(dbgrid1.Fields[4].asstring)='2' then
     NUEVOUSUARIO.ComboBox1.ItemIndex:=0;
+
+
+    for I:= 0 to NUEVOUSUARIO.CheckListBox1.Items.Count - 1 do
+       NUEVOUSUARIO.CheckListBox1.Checked[I]:=FALSE;
+
+
+     SELF.FDQuery2.Close;
+     SELF.FDQuery2.SQL.Clear;
+     SELF.FDQuery2.SQL.Add('select * from TPERMISOS_USUARIOS  where IDUSUARIO='+inttostr(strtoint(NUEVOUSUARIO.Edit2.Text)));
+     SELF.FDQuery2.open;
+     while NOT SELF.FDQuery2.Eof do
+     BEGIN
+          I:= SELF.FDQuery2.FieldByName('IDLIST').AsInteger;
+         NUEVOUSUARIO.CheckListBox1.Checked[I]:=TRUE;
+
+
+
+      SELF.FDQuery2.Next;
+     END;
+
+
   NUEVOUSUARIO.SHOWMODAL;
   if NUEVOUSUARIO.ModalResult=MROK then
   BEGIN

@@ -4,8 +4,8 @@ object NUEVOUSUARIO: TNUEVOUSUARIO
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Nuevo Usuario'
-  ClientHeight = 191
-  ClientWidth = 399
+  ClientHeight = 657
+  ClientWidth = 385
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,6 +16,19 @@ object NUEVOUSUARIO: TNUEVOUSUARIO
   Position = poDesktopCenter
   PixelsPerInch = 96
   TextHeight = 13
+  object Label4: TLabel
+    Left = 12
+    Top = 129
+    Width = 65
+    Height = 16
+    Caption = 'PERMISOS'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
   object GroupBox1: TGroupBox
     Left = 8
     Top = 8
@@ -88,8 +101,8 @@ object NUEVOUSUARIO: TNUEVOUSUARIO
     end
   end
   object BitBtn1: TBitBtn
-    Left = 104
-    Top = 138
+    Left = 59
+    Top = 597
     Width = 121
     Height = 39
     Caption = 'GUARDAR'
@@ -235,8 +248,8 @@ object NUEVOUSUARIO: TNUEVOUSUARIO
     OnClick = BitBtn1Click
   end
   object BitBtn2: TBitBtn
-    Left = 296
-    Top = 138
+    Left = 251
+    Top = 597
     Width = 95
     Height = 39
     Caption = 'SALIR'
@@ -379,5 +392,46 @@ object NUEVOUSUARIO: TNUEVOUSUARIO
     ModalResult = 2
     ParentFont = False
     TabOrder = 2
+  end
+  object CheckListBox1: TCheckListBox
+    Left = 8
+    Top = 153
+    Width = 338
+    Height = 438
+    ItemHeight = 13
+    Items.Strings = (
+      '1001 | NUEVO ARTICULO'
+      '1002 | MODIFICAR ARTICULO'
+      '1003 | INFO COSTOS'
+      '1004 | VENCIMIENTOS'
+      '2001 | ACTUALIZAR PRECIOS POR PROVEEDOR'
+      '4001 | AGREGAR STOCK'
+      '4002 | ELIMINAR STOCK'
+      '5000 | INVENTARIO'
+      '6000 | BUSCAR Y VER FACTURAS'
+      '7001 | LISTAR ARTICULOS VENDIDOS'
+      '7002 | LISTAR RUBRO MAS VENDIDO'
+      '7003 | LISTAR ARTICULOS EN REPOSICI'#211'N'
+      '7004 | ANALISIS DE RENTABILIDAD'
+      '7005 | LISTADOS DE COMPRAS'
+      '7006 | LISTAR VENTAS POR FECHA'
+      '7007 | LISTADO DE VENTAS POR VENDEDOR'
+      '8001 | LIBRO IVA VENTA'
+      '8002 | LIBRO IVA COMPRA'
+      '9000 | PROVEEDORES'
+      '10000 | COMPRAS'
+      '11000 | MARCAS'
+      '12001 | APERTURA DE CAJA'
+      '12002 | SALIDAS DE CAJA'
+      '12003 | INGRESOS A CAJA'
+      '12004 | INFORMES X'
+      '12005 | CIERRE DE CAJA'
+      '12006 | LISTADOS DE MOVIMIENTOS'
+      '13001 | FICHERO DE CLIENTES'
+      '13002 | CUENTA CORRIENTE DE CLIENTES'
+      '13003 | LISTADO DE CUENTA CORRIENTE DE CLIENTES'
+      '20001 | A.B.M. VENDEDORES'
+      '20002 | COMISIONES VENDEDORES')
+    TabOrder = 3
   end
 end

@@ -1,0 +1,30 @@
+object frmPermisosUsuarios: TfrmPermisosUsuarios
+  Left = 0
+  Top = 0
+  Align = alBottom
+  BorderIcons = []
+  BorderStyle = bsSingle
+  Caption = 'PERMISOS'
+  ClientHeight = 389
+  ClientWidth = 511
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 348
+    Width = 511
+    Height = 41
+    Align = alBottom
+    TabOrder = 0
+    ExplicitLeft = 168
+    ExplicitTop = 192
+    ExplicitWidth = 185
+  end
+end
