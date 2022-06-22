@@ -322,7 +322,7 @@ BEGIN
 END ELSE
         BEGIN
            sinpermiso:=true;
-            for i := 0 to High(permisos)-1 do
+            for i := 0 to High(permisos) do
             begin
                if permisos[i]=nro then
                    sinpermiso:=false;

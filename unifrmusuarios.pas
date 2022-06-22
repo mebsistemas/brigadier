@@ -21,6 +21,7 @@ type
     FDQuery1: TFDQuery;
     FDQuery2: TFDQuery;
     DataSource1: TDataSource;
+    FDQuery3: TFDQuery;
     procedure BitBtn1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
@@ -86,10 +87,10 @@ for I := 0 to NUEVOUSUARIO.CheckListBox1.Items.Count - 1 do
             BEGIN
                POSI:=POS('|',TRIM(NUEVOUSUARIO.CheckListBox1.Items[I]));
                TAG:=STRTOINT(TRIM(COPY(TRIM(NUEVOUSUARIO.CheckListBox1.Items[I]),0,POSI-1)));
-               SELF.FDQuery2.Close;
-               SELF.FDQuery2.SQL.Clear;
-               SELF.FDQuery2.SQL.Add('INSERT INTO TPERMISOS_USUARIOS (IDUSUARIO,TAG,IDLIST) VALUES ('+INTTOSTR(STRTOINT(NUEVOUSUARIO.Edit2.Text))+','+INTTOSTR(TAG)+','+INTTOSTR(I)+')');
-               SELF.FDQuery2.ExecSQL;
+               SELF.FDQuery3.Close;
+               SELF.FDQuery3.SQL.Clear;
+               SELF.FDQuery3.SQL.Add('INSERT INTO TPERMISOS_USUARIOS (IDUSUARIO,TAG,IDLIST) VALUES ('+INTTOSTR(STRTOINT(NUEVOUSUARIO.Edit2.Text))+','+INTTOSTR(TAG)+','+INTTOSTR(I)+')');
+               SELF.FDQuery3.ExecSQL;
 
 
             END;
@@ -109,7 +110,7 @@ for I := 0 to NUEVOUSUARIO.CheckListBox1.Items.Count - 1 do
 end;
 
 procedure Tfrmusuarios.BitBtn3Click(Sender: TObject);
-VAR TIPO,I:LONGINT;
+VAR TIPO,I:LONGINT;   POSI:LONGINT;
 begin
 NUEVOUSUARIO.Caption:='Modificar Usuario';
 NUEVOUSUARIO.Edit1.Text:=trim(dbgrid1.Fields[1].asstring);
@@ -166,6 +167,8 @@ NUEVOUSUARIO.Edit3.Text:=trim(dbgrid1.Fields[0].asstring);
                           ', TIPO='+INTTOSTR(TIPO)+
                           ' where idusuario='+inttostr(strtoint(NUEVOUSUARIO.Edit3.Text)));
      SELF.FDQuery2.ExecSQL;
+
+
      FORM1.FDConnection1.Commit;
      SHOWMESSAGE('Se ha guardado correctamente');
 
@@ -174,6 +177,46 @@ NUEVOUSUARIO.Edit3.Text:=trim(dbgrid1.Fields[0].asstring);
          SHOWMESSAGE('Se produjo un error.');
      END;
   END;
+
+       FORM1.FDConnection1.StartTransaction;
+     TRY
+       SELF.FDQuery3.Close;
+       SELF.FDQuery3.SQL.Clear;
+       SELF.FDQuery3.SQL.Add('DELETE from TPERMISOS_USUARIOS  where  IDUSUARIO='+inttostr(strtoint(NUEVOUSUARIO.Edit2.Text)));
+       SELF.FDQuery3.ExecSQL;
+      FORM1.FDConnection1.Commit;
+
+
+     EXCEPT
+       FORM1.FDConnection1.Rollback;
+         SHOWMESSAGE('Se produjo un error DELETE from TPERMISOS_USUARIOS .');
+     END;
+       FORM1.FDConnection1.StartTransaction;
+     TRY
+       for I := 0 to NUEVOUSUARIO.CheckListBox1.Items.Count - 1 do
+       BEGIN
+            if NUEVOUSUARIO.CheckListBox1.Checked[I]=TRUE then
+            BEGIN
+               POSI:=POS('|',TRIM(NUEVOUSUARIO.CheckListBox1.Items[I]));
+               TAG:=STRTOINT(TRIM(COPY(TRIM(NUEVOUSUARIO.CheckListBox1.Items[I]),0,POSI-1)));
+               SELF.FDQuery3.Close;
+               SELF.FDQuery3.SQL.Clear;
+               SELF.FDQuery3.SQL.Add('INSERT INTO TPERMISOS_USUARIOS (IDUSUARIO,TAG,IDLIST) VALUES ('+INTTOSTR(STRTOINT(NUEVOUSUARIO.Edit2.Text))+','+INTTOSTR(TAG)+','+INTTOSTR(I)+')');
+               SELF.FDQuery3.ExecSQL;
+
+
+            END;
+
+
+       END;
+       FORM1.FDConnection1.Commit;
+
+
+     EXCEPT
+       FORM1.FDConnection1.Rollback;
+         SHOWMESSAGE('Se produjo un error INSERT INTO TPERMISOS_USUARIOS.');
+     END;
+
   listarutusuarios
 end;
 

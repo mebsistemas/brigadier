@@ -1590,9 +1590,6 @@ object Form1: TForm1
           ParentBackground = False
           ParentFont = False
           TabOrder = 5
-          ExplicitLeft = 16
-          ExplicitTop = 392
-          ExplicitWidth = 185
         end
       end
     end
