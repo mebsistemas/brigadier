@@ -77,9 +77,9 @@ form1.FDConnection1.StartTransaction;
 try
 frmsalidacaja.FDQuery2.Close;
 frmsalidacaja.FDQuery2.SQL.Clear;
-frmsalidacaja.FDQuery2.SQL.Add('insert into tsalidas (fecha,proveedor,nrofactura,importe,detalle,CIERRE) '+
+frmsalidacaja.FDQuery2.SQL.Add('insert into tsalidas (fecha,proveedor,nrofactura,importe,detalle,CIERRE,PC) '+
 ' values ('+#39+trim(edit1.Text)+#39+','+#39+trim(edit2.Text)+#39+','
-+#39+trim(edit3.Text)+#39+','+#39+trim(edit4.Text)+#39+','+#39+trim(self.RichEdit1.Text)+#39+',0)');
++#39+trim(edit3.Text)+#39+','+#39+trim(edit4.Text)+#39+','+#39+trim(self.RichEdit1.Text)+#39+',0,'+INTTOSTR(FORM1.PUESTO_PC)+')');
 frmsalidacaja.FDQuery2.ExecSQL;
 
 form1.FDConnection1.Commit;
@@ -107,13 +107,13 @@ end;
 
    frmsalidacaja.FDQuery1.Close;
    frmsalidacaja.FDQuery1.SQL.Clear;
-   frmsalidacaja.FDQuery1.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   frmsalidacaja.FDQuery1.SQL.Add('SELECT * FROM TCAJA WHERE estado=1  AND PC='+INTTOSTR(FORM1.PUESTO_PC)+' order by idcaja desc');
    frmsalidacaja.FDQuery1.Open;
    fecha:= frmsalidacaja.FDQuery1.FieldByName('fecha').AsString;
 
  frmsalidacaja.FDQuery1.Close;
  frmsalidacaja.FDQuery1.SQL.Clear;
- frmsalidacaja.FDQuery1.SQL.Add('select * from tsalidas where fecha='+#39+trim(fecha)+#39+' AND CIERRE=0');
+ frmsalidacaja.FDQuery1.SQL.Add('select * from tsalidas where fecha='+#39+trim(fecha)+#39+' AND CIERRE=0 AND PC='+INTTOSTR(FORM1.PUESTO_PC));
  frmsalidacaja.FDQuery1.Open;
  if sale=true then
     close;

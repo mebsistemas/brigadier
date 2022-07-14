@@ -82,7 +82,7 @@ object frmTicket58: TfrmTicket58
     PrepareAutomatically = False
     object DetailBand1: TQRBand
       Left = 0
-      Top = 153
+      Top = 161
       Width = 218
       Height = 13
       AlignToBottom = False
@@ -196,14 +196,14 @@ object frmTicket58: TfrmTicket58
       Left = 0
       Top = 4
       Width = 218
-      Height = 77
+      Height = 85
       Frame.DrawBottom = True
       AlignToBottom = False
       TransparentBand = False
       ForceNewColumn = False
       ForceNewPage = False
       Size.Values = (
-        203.729166666666700000
+        224.895833333333300000
         576.791666666666700000)
       PreCaluculateBandHeight = False
       KeepOnOnePage = False
@@ -267,14 +267,14 @@ object frmTicket58: TfrmTicket58
         FontSize = 9
       end
       object QRLabel28: TQRLabel
-        Left = 75
-        Top = 47
+        Left = 49
+        Top = 64
         Width = 77
         Height = 15
         Size.Values = (
           39.687500000000000000
-          198.437500000000000000
-          124.354166666666700000
+          129.645833333333300000
+          169.333333333333300000
           203.729166666666700000)
         XLColumn = 0
         XLNumFormat = nfGeneral
@@ -327,7 +327,7 @@ object frmTicket58: TfrmTicket58
     end
     object PageFooterBand1: TQRBand
       Left = 0
-      Top = 166
+      Top = 174
       Width = 218
       Height = 190
       Frame.DrawTop = True
@@ -454,7 +454,7 @@ object frmTicket58: TfrmTicket58
     end
     object TitleBand1: TQRBand
       Left = 0
-      Top = 81
+      Top = 89
       Width = 218
       Height = 72
       Frame.DrawTop = True

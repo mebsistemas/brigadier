@@ -12,7 +12,6 @@ uses
 
 type
   TFRMLISTADOSMOVIMIENTOS = class(TForm)
-    DBGrid1: TDBGrid;
     DataSource1: TDataSource;
     FDQuery1: TFDQuery;
     DateTimePicker1: TDateTimePicker;
@@ -22,6 +21,29 @@ type
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
     FDQuery2: TFDQuery;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    DBGrid1: TDBGrid;
+    TabSheet2: TTabSheet;
+    TabSheet3: TTabSheet;
+    TabSheet4: TTabSheet;
+    TabSheet5: TTabSheet;
+    DBGrid2: TDBGrid;
+    DataSource2: TDataSource;
+    FDQuery3: TFDQuery;
+    DBGrid3: TDBGrid;
+    DataSource3: TDataSource;
+    FDQuery4: TFDQuery;
+    DBGrid4: TDBGrid;
+    DataSource4: TDataSource;
+    FDQuery5: TFDQuery;
+    DBGrid5: TDBGrid;
+    DataSource5: TDataSource;
+    FDQuery6: TFDQuery;
+    TabSheet6: TTabSheet;
+    DBGrid6: TDBGrid;
+    DataSource6: TDataSource;
+    FDQuery7: TFDQuery;
     procedure Button1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure REIMPRIMIR1Click(Sender: TObject);
@@ -65,10 +87,19 @@ fecha:=DATETOSTR(self.DateTimePicker1.DateTime);
   '  When 7 then ''NC TICKET''  '+
  '  ELSE  ''ERROR''  '+
  '  END AS FACTU,  '+
- '  TM.NROFACTURA AS NRO ,TF.DESCRIPCION  AS FORMAPAGO, tm.TIPOMOVIMIENTO as tmTIPOMOVIMIENTO  '+
- 'FROM tmovimientos  tm , tclientes tc , TFORMAPAGO TF  '+
-' where tm.IDCLIENTE=tc.IDCLIENTE  '+
-' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  '+
+ '  TM.NROFACTURA AS NRO , tm.TIPOMOVIMIENTO as tmTIPOMOVIMIENTO,  '+
+ ' case tm.IDFORMAPAGO  '+
+ '  when 0 then ''MIXTO''    '+
+ '  when 1 then ''EFECTIVO'' '+
+ '  When 2 then ''TARJETA DEBITO'' '+
+ '  When 3 then ''TARJETA CREDITO'' '+
+ '  When 4 then ''BILLETERA''   '+
+ '  When 5 then ''CUNETA CORRIENTE''  '+
+ '  When 6 then ''MERCADO PAGO''  '+
+ '  ELSE  ''ERROR''  '+
+ '  END AS FORMA  '+
+ 'FROM tmovimientos  tm , tclientes tc   '+
+' where tm.IDCLIENTE=tc.IDCLIENTE   AND TM.PC='+INTTOSTR(FORM1.PUESTO_PC)+
  ' AND TM.fecha='+#39+trim(fecha)+#39+
 'order by tm.IDMOVIMIENTO DESC';
 
@@ -77,6 +108,139 @@ fecha:=DATETOSTR(self.DateTimePicker1.DateTime);
  SELF.FDQuery1.SQL.Add(SQL);
  SELF.FDQuery1.Open;
 
+
+
+
+ SQL:='select tm.IDMOVIMIENTO AS TMDIMOVIMIENTO, '+
+ ' TM.FECHA AS  TMFECHA, TC.apenom  AS TCCLIENTE, TF.importe AS TMTOTAL,   '+
+' case tm.TIPOMOVIMIENTO  '+
+ '  when 0 then ''TICKET''    '+
+ '  when 1 then ''FACTURA A'' '+
+ '  When 2 then ''FACTURA B'' '+
+ '  When 3 then ''FACTURA C'' '+
+ '  When 4 then ''NOTA CREDITO A''   '+
+ '  When 5 then ''NOTA CREDITO B''  '+
+ '  When 6 then ''NOTA CREDITO C''  '+
+  '  When 7 then ''NC TICKET''  '+
+ '  ELSE  ''ERROR''  '+
+ '  END AS FACTU,  '+
+ '  TM.NROFACTURA AS NRO , tm.TIPOMOVIMIENTO as tmTIPOMOVIMIENTO  '+
+ 'FROM tmovimientos  tm , tclientes tc ,TFORMAPAGOS_FACTURAS TF  '+
+' where tm.IDCLIENTE=tc.IDCLIENTE   AND TM.PC='+INTTOSTR(FORM1.PUESTO_PC)+
+ ' AND TM.IDMOVIMIENTO=TF.IDMOVIMIENTO AND TF.IDFORMA=1 '+
+ ' AND TM.fecha='+#39+trim(fecha)+#39+
+'order by tm.IDMOVIMIENTO DESC';
+
+ SELF.FDQuery3.Close;
+ SELF.FDQuery3.SQL.Clear;
+ SELF.FDQuery3.SQL.Add(SQL);
+ SELF.FDQuery3.Open;
+
+
+
+ SQL:='select tm.IDMOVIMIENTO AS TMDIMOVIMIENTO, '+
+ ' TM.FECHA AS  TMFECHA, TC.apenom  AS TCCLIENTE, TF.importe AS TMTOTAL,   '+
+' case tm.TIPOMOVIMIENTO  '+
+ '  when 0 then ''TICKET''    '+
+ '  when 1 then ''FACTURA A'' '+
+ '  When 2 then ''FACTURA B'' '+
+ '  When 3 then ''FACTURA C'' '+
+ '  When 4 then ''NOTA CREDITO A''   '+
+ '  When 5 then ''NOTA CREDITO B''  '+
+ '  When 6 then ''NOTA CREDITO C''  '+
+  '  When 7 then ''NC TICKET''  '+
+ '  ELSE  ''ERROR''  '+
+ '  END AS FACTU,  '+
+ '  TM.NROFACTURA AS NRO , tm.TIPOMOVIMIENTO as tmTIPOMOVIMIENTO  '+
+ 'FROM tmovimientos  tm , tclientes tc ,TFORMAPAGOS_FACTURAS TF  '+
+' where tm.IDCLIENTE=tc.IDCLIENTE   AND TM.PC='+INTTOSTR(FORM1.PUESTO_PC)+
+ ' AND TM.IDMOVIMIENTO=TF.IDMOVIMIENTO AND TF.IDFORMA=3 '+
+ ' AND TM.fecha='+#39+trim(fecha)+#39+
+'order by tm.IDMOVIMIENTO DESC';
+
+ SELF.FDQuery4.Close;
+ SELF.FDQuery4.SQL.Clear;
+ SELF.FDQuery4.SQL.Add(SQL);
+ SELF.FDQuery4.Open;
+
+
+
+
+ SQL:='select tm.IDMOVIMIENTO AS TMDIMOVIMIENTO, '+
+ ' TM.FECHA AS  TMFECHA, TC.apenom  AS TCCLIENTE, TF.importe AS TMTOTAL,   '+
+' case tm.TIPOMOVIMIENTO  '+
+ '  when 0 then ''TICKET''    '+
+ '  when 1 then ''FACTURA A'' '+
+ '  When 2 then ''FACTURA B'' '+
+ '  When 3 then ''FACTURA C'' '+
+ '  When 4 then ''NOTA CREDITO A''   '+
+ '  When 5 then ''NOTA CREDITO B''  '+
+ '  When 6 then ''NOTA CREDITO C''  '+
+  '  When 7 then ''NC TICKET''  '+
+ '  ELSE  ''ERROR''  '+
+ '  END AS FACTU,  '+
+ '  TM.NROFACTURA AS NRO , tm.TIPOMOVIMIENTO as tmTIPOMOVIMIENTO  '+
+ 'FROM tmovimientos  tm , tclientes tc ,TFORMAPAGOS_FACTURAS TF  '+
+' where tm.IDCLIENTE=tc.IDCLIENTE   AND TM.PC='+INTTOSTR(FORM1.PUESTO_PC)+
+ ' AND TM.IDMOVIMIENTO=TF.IDMOVIMIENTO AND TF.IDFORMA=2 '+
+ ' AND TM.fecha='+#39+trim(fecha)+#39+
+'order by tm.IDMOVIMIENTO DESC';
+
+ SELF.FDQuery5.Close;
+ SELF.FDQuery5.SQL.Clear;
+ SELF.FDQuery5.SQL.Add(SQL);
+ SELF.FDQuery5.Open;
+
+  SQL:='select tm.IDMOVIMIENTO AS TMDIMOVIMIENTO, '+
+ ' TM.FECHA AS  TMFECHA, TC.apenom  AS TCCLIENTE, TF.importe AS TMTOTAL,   '+
+' case tm.TIPOMOVIMIENTO  '+
+ '  when 0 then ''TICKET''    '+
+ '  when 1 then ''FACTURA A'' '+
+ '  When 2 then ''FACTURA B'' '+
+ '  When 3 then ''FACTURA C'' '+
+ '  When 4 then ''NOTA CREDITO A''   '+
+ '  When 5 then ''NOTA CREDITO B''  '+
+ '  When 6 then ''NOTA CREDITO C''  '+
+  '  When 7 then ''NC TICKET''  '+
+ '  ELSE  ''ERROR''  '+
+ '  END AS FACTU,  '+
+ '  TM.NROFACTURA AS NRO , tm.TIPOMOVIMIENTO as tmTIPOMOVIMIENTO  '+
+ 'FROM tmovimientos  tm , tclientes tc ,TFORMAPAGOS_FACTURAS TF  '+
+' where tm.IDCLIENTE=tc.IDCLIENTE   AND TM.PC='+INTTOSTR(FORM1.PUESTO_PC)+
+ ' AND TM.IDMOVIMIENTO=TF.IDMOVIMIENTO AND TF.IDFORMA=5 '+
+ ' AND TM.fecha='+#39+trim(fecha)+#39+
+'order by tm.IDMOVIMIENTO DESC';
+
+ SELF.FDQuery6.Close;
+ SELF.FDQuery6.SQL.Clear;
+ SELF.FDQuery6.SQL.Add(SQL);
+ SELF.FDQuery6.Open;
+
+
+   SQL:='select tm.IDMOVIMIENTO AS TMDIMOVIMIENTO, '+
+ ' TM.FECHA AS  TMFECHA, TC.apenom  AS TCCLIENTE, TF.importe AS TMTOTAL,   '+
+' case tm.TIPOMOVIMIENTO  '+
+ '  when 0 then ''TICKET''    '+
+ '  when 1 then ''FACTURA A'' '+
+ '  When 2 then ''FACTURA B'' '+
+ '  When 3 then ''FACTURA C'' '+
+ '  When 4 then ''NOTA CREDITO A''   '+
+ '  When 5 then ''NOTA CREDITO B''  '+
+ '  When 6 then ''NOTA CREDITO C''  '+
+  '  When 7 then ''NC TICKET''  '+
+ '  ELSE  ''ERROR''  '+
+ '  END AS FACTU,  '+
+ '  TM.NROFACTURA AS NRO , tm.TIPOMOVIMIENTO as tmTIPOMOVIMIENTO  '+
+ 'FROM tmovimientos  tm , tclientes tc ,TFORMAPAGOS_FACTURAS TF  '+
+' where tm.IDCLIENTE=tc.IDCLIENTE   AND TM.PC='+INTTOSTR(FORM1.PUESTO_PC)+
+ ' AND TM.IDMOVIMIENTO=TF.IDMOVIMIENTO AND TF.IDFORMA=6 '+
+ ' AND TM.fecha='+#39+trim(fecha)+#39+
+'order by tm.IDMOVIMIENTO DESC';
+
+ SELF.FDQuery7.Close;
+ SELF.FDQuery7.SQL.Clear;
+ SELF.FDQuery7.SQL.Add(SQL);
+ SELF.FDQuery7.Open;
 
 end;
 
@@ -150,14 +314,17 @@ end;
 procedure TFRMLISTADOSMOVIMIENTOS.FormShow(Sender: TObject);
  VAR   SQL,fecha:STRING;
  BEGIN
-
+        CAPTION:='LISTADO DE MOVIMIENTOS | PUESTO: '+INTTOSTR(FORM1.PUESTO_PC);
     FDQuery2.Close;
    FDQuery2.SQL.Clear;
-   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 and pc='+inttostr(form1.PUESTO_PC)+' order by idcaja desc');
    FDQuery2.Open;
    fecha:= FDQuery2.FieldByName('fecha').AsString;
 
- self.DateTimePicker1.DateTime:=strtodate(fecha);
+   if trim(fecha)<>'' then
+   self.DateTimePicker1.DateTime:=strtodate(fecha)
+   else
+    self.DateTimePicker1.DateTime:=date;
  BitBtn2Click(Sender);
 
 end;

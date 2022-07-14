@@ -2,7 +2,7 @@ object disenioimprimirFactura58: TdisenioimprimirFactura58
   Left = 0
   Top = 0
   Caption = 'disenioimprimirFactura58'
-  ClientHeight = 685
+  ClientHeight = 744
   ClientWidth = 447
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -1301,35 +1301,6 @@ object disenioimprimirFactura58: TdisenioimprimirFactura58
         WrapStyle = BreakOnSpaces
         VerticalAlignment = tlTop
         FontSize = 9
-      end
-      object QRLabel31: TQRLabel
-        Left = 6
-        Top = 78
-        Width = 95
-        Height = 14
-        Size.Values = (
-          37.041666666666670000
-          15.875000000000000000
-          206.375000000000000000
-          251.354166666666700000)
-        XLColumn = 0
-        XLNumFormat = nfGeneral
-        ActiveInPreview = False
-        Alignment = taLeftJustify
-        AlignToBand = False
-        Caption = 'TARJETA DE CREDITO'
-        Color = clWhite
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Calibri'
-        Font.Style = [fsBold]
-        ParentFont = False
-        Transparent = False
-        ExportAs = exptText
-        WrapStyle = BreakOnSpaces
-        VerticalAlignment = tlTop
-        FontSize = 8
       end
       object QRLabel32: TQRLabel
         Left = 21

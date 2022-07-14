@@ -92,7 +92,7 @@ frmdiseniocierrecaja.QRLabel1.Caption:='CIERRE DE CAJA: '+trim(form1.FDQuery2.Fi
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (0,1,2,3) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (0,1,2,3) and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if TRIM(form1.FDQuery2.FieldByName('F').ASSTRING)='' then
   TOTALFACTUIRAS:=0
@@ -101,7 +101,7 @@ TOTALFACTUIRAS:=form1.FDQuery2.FieldByName('F').ASFLOAT;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if TRIM(form1.FDQuery2.FieldByName('F').ASSTRING)='' then
   TOTALNC:=0
@@ -125,7 +125,7 @@ form1.FDQuery2.SQL.Clear;
 form1.FDQuery2.SQL.Add('select TF.DESCRIPCION, SUM(TM.TOTAL) AS S  '+
 '  from tmovimientos TM  ,TFORMAPAGO TF    '+
 ' where TM.fecha='+#39+trim(fe)+#39+' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  '+
-' AND TM.TIPOMOVIMIENTO IN (0,1,2,3) AND  TM.cierre=0 '+
+' AND TM.TIPOMOVIMIENTO IN (0,1,2,3) AND  TM.cierre=0 and tm.pc='+inttostr(form1.PUESTO_PC)+
 ' GROUP BY  TF.IDFORMAPAGO   order  BY   TF.DESCRIPCION asc ');
 form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
@@ -156,7 +156,7 @@ form1.FDQuery2.SQL.Clear;
 form1.FDQuery2.SQL.Add('select TF.DESCRIPCION, SUM(TM.TOTAL) AS S  '+
 '  from tmovimientos TM  ,TFORMAPAGO TF    '+
 ' where TM.fecha='+#39+trim(fe)+#39+' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  '+
-' AND TM.TIPOMOVIMIENTO IN (4,5,6,7) AND  TM.cierre=0 '+
+' AND TM.TIPOMOVIMIENTO IN (4,5,6,7) AND  TM.cierre=0 and tm.pc='+inttostr(form1.PUESTO_PC)+
 ' GROUP BY  TF.IDFORMAPAGO   order  BY   TF.DESCRIPCION asc ');
 form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
@@ -189,7 +189,7 @@ form1.FDQuery2.SQL.Add('SELECT TD.ARTICULO,TD.CANTIDAD,TD.COMENTARIO  '+
 ' FROM TMOVIMIENTOS TM, TDEVOLCIONES TD '+
 ' WHERE TM.IDMOVIMIENTO=TD.IDMOVIMIENTO  '+
 ' AND TM.TIPOMOVIMIENTO IN (4,5,6,7)   '+
-' AND TM.CIERRE=0  '+
+' AND TM.CIERRE=0  and tm.pc='+inttostr(form1.PUESTO_PC)+
 ' AND TM.FECHA='+#39+trim(fe)+#39);
  form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
@@ -220,7 +220,7 @@ form1.FDQuery2.SQL.Add('SELECT TP.TOTAL,TC.APENOM ,TF.DESCRIPCION '+
 '  FROM TPAGOSCUENTACORRIENTES TP, TMOVIMIENTOS TM  ,TCLIENTES TC ,TFORMAPAGO TF '+
 ' WHERE TP.IDMOVIMIENTO=TM.IDMOVIMIENTO '+
 ' AND TP.IDFORMAPAGO=TF.IDFORMAPAGO  '+
-' AND TM.IDCLIENTE=TC.IDCLIENTE  '+
+' AND TM.IDCLIENTE=TC.IDCLIENTE and tp.pc='+inttostr(form1.PUESTO_PC)+
 ' AND TP.CIERRE=0 AND TP.FECHA='+#39+trim(fe)+#39);
  form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
@@ -257,7 +257,7 @@ END;
                      ' LEFT JOIN TRUBROS R ON R.IDRUBRO=A.IDRUBRO '+
                      ' LEFT JOIN TPROVEEDORES P ON P.IDPROVEEDOR=A.IDPROVEEDOR  '+
                        ' LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA '+
-                     ' WHERE  TM.CIERRE=0 AND TM.FECHA ='+#39+trim(fe)+#39);
+                     ' WHERE  TM.CIERRE=0 and tm.pc='+inttostr(form1.PUESTO_PC)+' AND TM.FECHA ='+#39+trim(fe)+#39);
 
      form1.FDQuery2.SQL.Add(' GROUP BY A.DESCRIPCION  '+
                      ' ORDER BY VENDIDO DESC') ;
@@ -277,7 +277,7 @@ END;
  //EFE
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=1 AND TIPOMOVIMIENTO IN (0,1,2,3) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND IDFORMAPAGO=1 AND TIPOMOVIMIENTO IN (0,1,2,3) and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 efe:=0
@@ -286,7 +286,7 @@ efe:=form1.FDQuery2.FieldByName('F').asfloat ;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=1 AND TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND IDFORMAPAGO=1 AND TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 NCefe:=0
@@ -301,7 +301,7 @@ NCefe:=form1.FDQuery2.FieldByName('F').asfloat ;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=2 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=2 and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
  td:=0
@@ -311,7 +311,7 @@ td:=form1.FDQuery2.FieldByName('F').asfloat;
 //TC
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=3 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=3 and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 tc:=0
@@ -322,7 +322,7 @@ tc:=form1.FDQuery2.FieldByName('F').asfloat ;
 //billetera
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=4 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=4 and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 bs:=0
@@ -333,7 +333,7 @@ bs:=form1.FDQuery2.FieldByName('F').asfloat ;
 //CC
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=5 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=5 and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 CC:=0
@@ -343,7 +343,7 @@ CC:=form1.FDQuery2.FieldByName('F').asfloat ;
 //CC
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=6 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=6 and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 MP:=0
@@ -355,7 +355,7 @@ MP:=form1.FDQuery2.FieldByName('F').asfloat ;
 //SALIDAS
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM tsalidas WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0');
+form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM tsalidas WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('total').asstring)='' then
 salidas:=0
@@ -366,7 +366,7 @@ salidas:=form1.FDQuery2.fieldbyname('total').asfloat;
 //CAJA INICIAL
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT cambio FROM TCAJA WHERE fecha='+#39+trim(fe)+#39+' and estado=1');
+form1.FDQuery2.SQL.Add('SELECT cambio FROM TCAJA WHERE fecha='+#39+trim(fe)+#39+' and estado=1 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('cambio').asstring)='' then
 cambio:=0
@@ -376,7 +376,7 @@ cambio:=form1.FDQuery2.fieldbyname('cambio').asfloat;
 
  form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM TINGRESOS WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0');
+form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM TINGRESOS WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('total').asstring)='' then
 INGRESOACAJA:=0
@@ -387,7 +387,7 @@ INGRESOACAJA:=form1.FDQuery2.fieldbyname('total').asfloat;
 
  form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT sum(TOTAL)  as TOTA FROM TPAGOSCUENTACORRIENTES  WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0 AND IDFORMAPAGO=1');
+form1.FDQuery2.SQL.Add('SELECT sum(TOTAL)  as TOTA FROM TPAGOSCUENTACORRIENTES  WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0 AND IDFORMAPAGO=1 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('TOTA').asstring)='' then
 PAGOSCUENTACORRIENTES:=0
@@ -401,7 +401,7 @@ frmdiseniocierrecaja.QRLabel4.Caption:='DINERO DEL CAJERO :$ '+FLOATTOSTR(ingres
 frmdiseniocierrecaja.QRLabel10.Caption:='CAMBIO :$ '+FLOATTOSTR(cambio) ;
 frmdiseniocierrecaja.QRLabel12.Caption:='SALIDAS DE CAJA :$ '+FLOATTOSTR(salidas) ;
 frmdiseniocierrecaja.QRLabel18.Caption:='INGRESOS DE CAJA :$ '+FLOATTOSTR(INGRESOACAJA) ;
-frmdiseniocierrecaja.QRLabel18.Caption:='COBROS EN EFECT. C/C CLIENTES :$ '+FLOATTOSTR(PAGOSCUENTACORRIENTES) ;
+frmdiseniocierrecaja.QRLabel9.Caption:='COBROS EN EFECT. C/C CLIENTES :$ '+FLOATTOSTR(PAGOSCUENTACORRIENTES) ;
 
 efe:=efe - NCEFE;
 
@@ -455,23 +455,22 @@ frmdiseniocierrecaja.QRPQuickrep1.Preview;
  try
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE tmovimientos  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
+form1.FDQuery2.SQL.Add('UPDATE tmovimientos  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE TINGRESOS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
+form1.FDQuery2.SQL.Add('UPDATE TINGRESOS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
+
+form1.FDQuery2.Close;
+form1.FDQuery2.SQL.Clear;
+form1.FDQuery2.SQL.Add('UPDATE TSALIDAS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE TSALIDAS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
-form1.FDQuery2.ExecSQL;
-
-form1.FDQuery2.Close;
-form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE TPAGOSCUENTACORRIENTES  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
+form1.FDQuery2.SQL.Add('UPDATE TPAGOSCUENTACORRIENTES  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 
 
@@ -486,7 +485,7 @@ form1.FDQuery2.SQL.Add('update TCAJA  set VENTA_EFE='+FLOATTOSTR(EFE)+
                                        ', SALIDAS='+FLOATTOSTR(SALIDAS)+
                                      ', DINERO_EN_CAJA='+FLOATTOSTR(ENCAJA)+
                                      ', INGRESOSCAJA='+FLOATTOSTR(INGRESOACAJA)+
-                                     ' WHERE fecha='+#39+trim(fe)+#39+' and estado=1');
+                                     ' WHERE fecha='+#39+trim(fe)+#39+' and estado=1 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 form1.FDConnection1.Commit;
 
@@ -538,7 +537,7 @@ frmdiseniocierreCaja58.QRLabel1.Caption:='CIERRE DE CAJA: '+trim(form1.FDQuery2.
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (0,1,2,3) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (0,1,2,3) and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if TRIM(form1.FDQuery2.FieldByName('F').ASSTRING)='' then
   TOTALFACTUIRAS:=0
@@ -547,7 +546,7 @@ TOTALFACTUIRAS:=form1.FDQuery2.FieldByName('F').ASFLOAT;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if TRIM(form1.FDQuery2.FieldByName('F').ASSTRING)='' then
   TOTALNC:=0
@@ -568,11 +567,11 @@ frmdiseniocierreCaja58.RxMemoryData1.OPEN;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select TF.DESCRIPCION, SUM(TM.TOTAL) AS S  '+
-'  from tmovimientos TM  ,TFORMAPAGO TF    '+
-' where TM.fecha='+#39+trim(fe)+#39+' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  '+
-' AND TM.TIPOMOVIMIENTO IN (0,1,2,3) AND  TM.cierre=0 '+
-' GROUP BY  TF.IDFORMAPAGO   order  BY   TF.DESCRIPCION asc ');
+form1.FDQuery2.SQL.Add('select TF.DESCRIPCION, SUM(Tf.importe) AS S  '+
+ ' from tmovimientos TM  ,TFORMAPAGOS_FACTURAS TF   '+
+' where TM.fecha='+#39+trim(fe)+#39+' AND TM.IDmovimiento=TF.idmovimiento    '+
+' AND TM.TIPOMOVIMIENTO IN (0,1,2,3) AND  TM.cierre=0  and tm.pc='+inttostr(form1.PUESTO_PC)+
+' GROUP BY  TF.IDFORMA   order  BY   TF.DESCRIPCION asc ');
 form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
 BEGIN
@@ -600,11 +599,11 @@ END;
       frmdiseniocierreCaja58.QRPQuickrep1.Page.Length:=frmdiseniocierreCaja58.QRPQuickrep1.Page.Length + 10;
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select TF.DESCRIPCION, SUM(TM.TOTAL) AS S  '+
-'  from tmovimientos TM  ,TFORMAPAGO TF    '+
-' where TM.fecha='+#39+trim(fe)+#39+' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  '+
-' AND TM.TIPOMOVIMIENTO IN (4,5,6,7) AND  TM.cierre=0 '+
-' GROUP BY  TF.IDFORMAPAGO   order  BY   TF.DESCRIPCION asc ');
+form1.FDQuery2.SQL.Add('select TF.DESCRIPCION, SUM(tf.importe) AS S  '+
+'  from tmovimientos TM  ,TFORMAPAGOS_FACTURAS TF     '+
+' where TM.fecha='+#39+trim(fe)+#39+' AND  TM.IDmovimiento=TF.idmovimiento   '+
+' AND TM.TIPOMOVIMIENTO IN (4,5,6,7) AND  TM.cierre=0 and tm.pc='+inttostr(form1.PUESTO_PC)+
+' GROUP BY  TF.IDFORMA  order  BY   TF.DESCRIPCION asc ');
 form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
 BEGIN
@@ -636,7 +635,7 @@ form1.FDQuery2.SQL.Add('SELECT TD.ARTICULO,TD.CANTIDAD,TD.COMENTARIO  '+
 ' FROM TMOVIMIENTOS TM, TDEVOLCIONES TD '+
 ' WHERE TM.IDMOVIMIENTO=TD.IDMOVIMIENTO  '+
 ' AND TM.TIPOMOVIMIENTO IN (4,5,6,7)   '+
-' AND TM.CIERRE=0  '+
+' AND TM.CIERRE=0  and tm.pc='+inttostr(form1.PUESTO_PC)+
 ' AND TM.FECHA='+#39+trim(fe)+#39);
  form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
@@ -669,7 +668,7 @@ form1.FDQuery2.SQL.Clear;
 form1.FDQuery2.SQL.Add('SELECT TP.TOTAL,TC.APENOM ,TF.DESCRIPCION '+
 '  FROM TPAGOSCUENTACORRIENTES TP, TMOVIMIENTOS TM  ,TCLIENTES TC ,TFORMAPAGO TF '+
 ' WHERE TP.IDMOVIMIENTO=TM.IDMOVIMIENTO '+
-' AND TP.IDFORMAPAGO=TF.IDFORMAPAGO  '+
+' AND TP.IDFORMAPAGO=TF.IDFORMAPAGO  and tp.pc='+inttostr(form1.PUESTO_PC)+
 ' AND TM.IDCLIENTE=TC.IDCLIENTE  '+
 ' AND TP.CIERRE=0 AND TP.FECHA='+#39+trim(fe)+#39);
  form1.FDQuery2.Open;
@@ -711,7 +710,7 @@ END;
                      ' LEFT JOIN TRUBROS R ON R.IDRUBRO=A.IDRUBRO '+
                      ' LEFT JOIN TPROVEEDORES P ON P.IDPROVEEDOR=A.IDPROVEEDOR  '+
                        ' LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA '+
-                     ' WHERE  TM.CIERRE=0 AND TM.FECHA ='+#39+trim(fe)+#39);
+                     ' WHERE  TM.CIERRE=0  and tm.pc='+inttostr(form1.PUESTO_PC)+' and tm.total > 0 AND TM.FECHA ='+#39+trim(fe)+#39);
 
      form1.FDQuery2.SQL.Add(' GROUP BY A.DESCRIPCION  '+
                      ' ORDER BY VENDIDO DESC') ;
@@ -732,16 +731,27 @@ END;
  //EFE
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=1 AND TIPOMOVIMIENTO IN (0,1,2,3) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(tf.importe) AS F from tmovimientos tm , TFORMAPAGOS_FACTURAS tf  '+
+' where tm.fecha='+#39+trim(fe)+#39+' AND tf.IDFORMA=1   '+
+' and tm.IDMOVIMIENTO=tf.IDMOVIMIENTO   '+
+' AND tm.TIPOMOVIMIENTO IN (0,1,2,3) and tm.cierre=0 and tm.pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 efe:=0
 else
 efe:=form1.FDQuery2.FieldByName('F').asfloat ;
 
+{form1.FDQuery2.Close;
+form1.FDQuery2.SQL.Clear;
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND IDFORMAPAGO=1 AND TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0');
+form1.FDQuery2.Open;  }
+
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=1 AND TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(tf.importe) AS F from tmovimientos tm , TFORMAPAGOS_FACTURAS tf  '+
+' where tm.fecha='+#39+trim(fe)+#39+' AND tf.IDFORMA=1   '+
+' and tm.IDMOVIMIENTO=tf.IDMOVIMIENTO   '+
+' AND tm.TIPOMOVIMIENTO IN (4,5,6,7) and tm.cierre=0  and tm.pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 NCefe:=0
@@ -756,7 +766,10 @@ NCefe:=form1.FDQuery2.FieldByName('F').asfloat ;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=2 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(tf.importe) AS F from tmovimientos tm , TFORMAPAGOS_FACTURAS tf  '+
+' where tm.fecha='+#39+trim(fe)+#39+' AND tf.IDFORMA=2   '+
+' and tm.IDMOVIMIENTO=tf.IDMOVIMIENTO   '+
+'  and tm.cierre=0 and tm.pc='+inttostr(form1.PUESTO_PC));           //AND tm.TIPOMOVIMIENTO IN (0,1,2,3)
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
  td:=0
@@ -766,7 +779,10 @@ td:=form1.FDQuery2.FieldByName('F').asfloat;
 //TC
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=3 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(tf.importe) AS F from tmovimientos tm , TFORMAPAGOS_FACTURAS tf  '+
+' where tm.fecha='+#39+trim(fe)+#39+' AND tf.IDFORMA=3   '+
+' and tm.IDMOVIMIENTO=tf.IDMOVIMIENTO   '+
+'  and tm.cierre=0 and tm.pc='+inttostr(form1.PUESTO_PC));           //AND tm.TIPOMOVIMIENTO IN (0,1,2,3)
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 tc:=0
@@ -777,7 +793,10 @@ tc:=form1.FDQuery2.FieldByName('F').asfloat ;
 //billetera
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=4 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(tf.importe) AS F from tmovimientos tm , TFORMAPAGOS_FACTURAS tf  '+
+' where tm.fecha='+#39+trim(fe)+#39+' AND tf.IDFORMA=4  '+
+' and tm.IDMOVIMIENTO=tf.IDMOVIMIENTO   '+
+'  and tm.cierre=0  and tm.pc='+inttostr(form1.PUESTO_PC));         //AND tm.TIPOMOVIMIENTO IN (0,1,2,3)
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 bs:=0
@@ -788,17 +807,23 @@ bs:=form1.FDQuery2.FieldByName('F').asfloat ;
 //CC
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=5 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(tf.importe) AS F from tmovimientos tm , TFORMAPAGOS_FACTURAS tf  '+
+' where tm.fecha='+#39+trim(fe)+#39+' AND tf.IDFORMA=5   '+
+' and tm.IDMOVIMIENTO=tf.IDMOVIMIENTO   '+
+'  and tm.cierre=0  and tm.pc='+inttostr(form1.PUESTO_PC));          //AND tm.TIPOMOVIMIENTO IN (0,1,2,3)
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 CC:=0
 else
 CC:=form1.FDQuery2.FieldByName('F').asfloat ;
 
-//CC
+//mp
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=6 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(tf.importe) AS F from tmovimientos tm , TFORMAPAGOS_FACTURAS tf  '+
+' where tm.fecha='+#39+trim(fe)+#39+' AND tf.IDFORMA=6   '+
+' and tm.IDMOVIMIENTO=tf.IDMOVIMIENTO   '+
+'  and tm.cierre=0  and tm.pc='+inttostr(form1.PUESTO_PC));          //AND tm.TIPOMOVIMIENTO IN (0,1,2,3)
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 MP:=0
@@ -810,7 +835,7 @@ MP:=form1.FDQuery2.FieldByName('F').asfloat ;
 //SALIDAS
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM tsalidas WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0');
+form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM tsalidas WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0  and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('total').asstring)='' then
 salidas:=0
@@ -821,7 +846,7 @@ salidas:=form1.FDQuery2.fieldbyname('total').asfloat;
 //CAJA INICIAL
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT cambio FROM TCAJA WHERE fecha='+#39+trim(fe)+#39+' and estado=1');
+form1.FDQuery2.SQL.Add('SELECT cambio FROM TCAJA WHERE fecha='+#39+trim(fe)+#39+' and estado=1  and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('cambio').asstring)='' then
 cambio:=0
@@ -831,7 +856,8 @@ cambio:=form1.FDQuery2.fieldbyname('cambio').asfloat;
 
  form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM TINGRESOS WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0');
+form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM TINGRESOS WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0 and pc='+inttostr(form1.PUESTO_PC));
+form1.FDQuery2.Open;
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('total').asstring)='' then
 INGRESOACAJA:=0
@@ -842,7 +868,7 @@ INGRESOACAJA:=form1.FDQuery2.fieldbyname('total').asfloat;
 
  form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT sum(TOTAL)  as TOTA FROM TPAGOSCUENTACORRIENTES  WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0 AND IDFORMAPAGO=1');
+form1.FDQuery2.SQL.Add('SELECT sum(TOTAL)  as TOTA FROM TPAGOSCUENTACORRIENTES  WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0 AND IDFORMAPAGO=1 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('TOTA').asstring)='' then
 PAGOSCUENTACORRIENTES:=0
@@ -856,7 +882,7 @@ frmdiseniocierreCaja58.QRLabel4.Caption:='DINERO DEL CAJERO :$ '+FLOATTOSTR(ingr
 frmdiseniocierreCaja58.QRLabel10.Caption:='CAMBIO :$ '+FLOATTOSTR(cambio) ;
 frmdiseniocierreCaja58.QRLabel12.Caption:='SALIDAS DE CAJA :$ '+FLOATTOSTR(salidas) ;
 frmdiseniocierreCaja58.QRLabel18.Caption:='INGRESOS DE CAJA :$ '+FLOATTOSTR(INGRESOACAJA) ;
-frmdiseniocierreCaja58.QRLabel18.Caption:='COBROS EN EFECT. C/C CLIENTES :$ '+FLOATTOSTR(PAGOSCUENTACORRIENTES) ;
+frmdiseniocierreCaja58.QRLabel9.Caption:='COBROS EN EFECT. C/C CLIENTES :$ '+FLOATTOSTR(PAGOSCUENTACORRIENTES) ;
 
 efe:=efe - NCEFE;
 
@@ -880,6 +906,7 @@ end ELSE BEGIN
 
                       if saldo = ingresado then
                        begin
+                       saldo:=0;
                             showmessage('SALDO CERO');
                             MENSA:='';
                       end;
@@ -908,25 +935,26 @@ else  }
 frmdiseniocierreCaja58.QRPQuickrep1.Print;
 
  try
+
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE tmovimientos  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
+form1.FDQuery2.SQL.Add('UPDATE tmovimientos  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE TINGRESOS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
+form1.FDQuery2.SQL.Add('UPDATE TINGRESOS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE TSALIDAS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
+form1.FDQuery2.SQL.Add('UPDATE TSALIDAS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE TPAGOSCUENTACORRIENTES  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
+form1.FDQuery2.SQL.Add('UPDATE TPAGOSCUENTACORRIENTES  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 
 
@@ -941,7 +969,7 @@ form1.FDQuery2.SQL.Add('update TCAJA  set VENTA_EFE='+FLOATTOSTR(EFE)+
                                        ', SALIDAS='+FLOATTOSTR(SALIDAS)+
                                      ', DINERO_EN_CAJA='+FLOATTOSTR(ENCAJA)+
                                      ', INGRESOSCAJA='+FLOATTOSTR(INGRESOACAJA)+
-                                     ' WHERE fecha='+#39+trim(fe)+#39+' and estado=1');
+                                     ' WHERE fecha='+#39+trim(fe)+#39+' and estado=1 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 form1.FDConnection1.Commit;
 
@@ -992,7 +1020,7 @@ frmdiseniocierrecaja.QRLabel1.Caption:='CIERRE DE CAJA: '+trim(form1.FDQuery2.Fi
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (0,1,2,3) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (0,1,2,3) and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if TRIM(form1.FDQuery2.FieldByName('F').ASSTRING)='' then
   TOTALFACTUIRAS:=0
@@ -1001,7 +1029,7 @@ TOTALFACTUIRAS:=form1.FDQuery2.FieldByName('F').ASFLOAT;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+' AND  TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if TRIM(form1.FDQuery2.FieldByName('F').ASSTRING)='' then
   TOTALNC:=0
@@ -1025,7 +1053,7 @@ form1.FDQuery2.SQL.Clear;
 form1.FDQuery2.SQL.Add('select TF.DESCRIPCION, SUM(TM.TOTAL) AS S  '+
 '  from tmovimientos TM  ,TFORMAPAGO TF    '+
 ' where TM.fecha='+#39+trim(fe)+#39+' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  '+
-' AND TM.TIPOMOVIMIENTO IN (0,1,2,3) AND  TM.cierre=0 '+
+' AND TM.TIPOMOVIMIENTO IN (0,1,2,3) AND  TM.cierre=0 and tm.pc='+inttostr(form1.PUESTO_PC)+
 ' GROUP BY  TF.IDFORMAPAGO   order  BY   TF.DESCRIPCION asc ');
 form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
@@ -1056,7 +1084,7 @@ form1.FDQuery2.SQL.Clear;
 form1.FDQuery2.SQL.Add('select TF.DESCRIPCION, SUM(TM.TOTAL) AS S  '+
 '  from tmovimientos TM  ,TFORMAPAGO TF    '+
 ' where TM.fecha='+#39+trim(fe)+#39+' AND TM.IDFORMAPAGO=TF.IDFORMAPAGO  '+
-' AND TM.TIPOMOVIMIENTO IN (4,5,6,7) AND  TM.cierre=0 '+
+' AND TM.TIPOMOVIMIENTO IN (4,5,6,7) AND  TM.cierre=0 and tm.pc='+inttostr(form1.PUESTO_PC)+
 ' GROUP BY  TF.IDFORMAPAGO   order  BY   TF.DESCRIPCION asc ');
 form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
@@ -1089,7 +1117,7 @@ form1.FDQuery2.SQL.Add('SELECT TD.ARTICULO,TD.CANTIDAD,TD.COMENTARIO  '+
 ' FROM TMOVIMIENTOS TM, TDEVOLCIONES TD '+
 ' WHERE TM.IDMOVIMIENTO=TD.IDMOVIMIENTO  '+
 ' AND TM.TIPOMOVIMIENTO IN (4,5,6,7)   '+
-' AND TM.CIERRE=0  '+
+' AND TM.CIERRE=0  and tm.pc='+inttostr(form1.PUESTO_PC)+
 ' AND TM.FECHA='+#39+trim(fe)+#39);
  form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
@@ -1120,7 +1148,7 @@ form1.FDQuery2.SQL.Add('SELECT TP.TOTAL,TC.APENOM ,TF.DESCRIPCION '+
 '  FROM TPAGOSCUENTACORRIENTES TP, TMOVIMIENTOS TM  ,TCLIENTES TC ,TFORMAPAGO TF '+
 ' WHERE TP.IDMOVIMIENTO=TM.IDMOVIMIENTO '+
 ' AND TP.IDFORMAPAGO=TF.IDFORMAPAGO  '+
-' AND TM.IDCLIENTE=TC.IDCLIENTE  '+
+' AND TM.IDCLIENTE=TC.IDCLIENTE  and tp.pc='+inttostr(form1.PUESTO_PC)+
 ' AND TP.CIERRE=0 AND TP.FECHA='+#39+trim(fe)+#39);
  form1.FDQuery2.Open;
 while NOT FORM1.FDQuery2.Eof do
@@ -1157,7 +1185,7 @@ END;
                      ' LEFT JOIN TRUBROS R ON R.IDRUBRO=A.IDRUBRO '+
                      ' LEFT JOIN TPROVEEDORES P ON P.IDPROVEEDOR=A.IDPROVEEDOR  '+
                        ' LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA '+
-                     ' WHERE  TM.CIERRE=0 AND TM.FECHA ='+#39+trim(fe)+#39);
+                     ' WHERE  TM.CIERRE=0  and tm.pc='+inttostr(form1.PUESTO_PC)+' AND TM.FECHA ='+#39+trim(fe)+#39);
 
      form1.FDQuery2.SQL.Add(' GROUP BY A.DESCRIPCION  '+
                      ' ORDER BY VENDIDO DESC') ;
@@ -1177,7 +1205,7 @@ END;
  //EFE
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=1 AND TIPOMOVIMIENTO IN (0,1,2,3) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=1 AND TIPOMOVIMIENTO IN (0,1,2,3) and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 efe:=0
@@ -1186,7 +1214,7 @@ efe:=form1.FDQuery2.FieldByName('F').asfloat ;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=1 AND TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=1 AND TIPOMOVIMIENTO IN (4,5,6,7) and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 NCefe:=0
@@ -1201,7 +1229,7 @@ NCefe:=form1.FDQuery2.FieldByName('F').asfloat ;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=2 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=2 and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
  td:=0
@@ -1211,7 +1239,7 @@ td:=form1.FDQuery2.FieldByName('F').asfloat;
 //TC
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=3 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=3 and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 tc:=0
@@ -1222,7 +1250,7 @@ tc:=form1.FDQuery2.FieldByName('F').asfloat ;
 //billetera
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=4 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=4 and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 bs:=0
@@ -1233,7 +1261,7 @@ bs:=form1.FDQuery2.FieldByName('F').asfloat ;
 //CC
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=5 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=5 and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 CC:=0
@@ -1243,7 +1271,7 @@ CC:=form1.FDQuery2.FieldByName('F').asfloat ;
 //CC
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=6 and cierre=0');
+form1.FDQuery2.SQL.Add('select SUM(TOTAL) AS F from tmovimientos where fecha='+#39+trim(fe)+#39+'AND IDFORMAPAGO=6 and cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('F').asstring)='' then
 MP:=0
@@ -1255,7 +1283,7 @@ MP:=form1.FDQuery2.FieldByName('F').asfloat ;
 //SALIDAS
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM tsalidas WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0');
+form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM tsalidas WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('total').asstring)='' then
 salidas:=0
@@ -1266,7 +1294,7 @@ salidas:=form1.FDQuery2.fieldbyname('total').asfloat;
 //CAJA INICIAL
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT cambio FROM TCAJA WHERE fecha='+#39+trim(fe)+#39+' and estado=1');
+form1.FDQuery2.SQL.Add('SELECT cambio FROM TCAJA WHERE fecha='+#39+trim(fe)+#39+' and estado=1 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('cambio').asstring)='' then
 cambio:=0
@@ -1276,7 +1304,7 @@ cambio:=form1.FDQuery2.fieldbyname('cambio').asfloat;
 
  form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM TINGRESOS WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0');
+form1.FDQuery2.SQL.Add('SELECT sum(importe)  as total FROM TINGRESOS WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('total').asstring)='' then
 INGRESOACAJA:=0
@@ -1287,7 +1315,7 @@ INGRESOACAJA:=form1.FDQuery2.fieldbyname('total').asfloat;
 
  form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT sum(TOTAL)  as TOTA FROM TPAGOSCUENTACORRIENTES  WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0 AND IDFORMAPAGO=1');
+form1.FDQuery2.SQL.Add('SELECT sum(TOTAL)  as TOTA FROM TPAGOSCUENTACORRIENTES  WHERE fecha='+#39+trim(fe)+#39+' AND CIERRE=0 AND IDFORMAPAGO=1 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.Open;
 if trim(form1.FDQuery2.FieldByName('TOTA').asstring)='' then
 PAGOSCUENTACORRIENTES:=0
@@ -1301,7 +1329,7 @@ frmdiseniocierrecaja.QRLabel4.Caption:='DINERO DEL CAJERO :$ '+FLOATTOSTR(ingres
 frmdiseniocierrecaja.QRLabel10.Caption:='CAMBIO :$ '+FLOATTOSTR(cambio) ;
 frmdiseniocierrecaja.QRLabel12.Caption:='SALIDAS DE CAJA :$ '+FLOATTOSTR(salidas) ;
 frmdiseniocierrecaja.QRLabel18.Caption:='INGRESOS DE CAJA :$ '+FLOATTOSTR(INGRESOACAJA) ;
-frmdiseniocierrecaja.QRLabel18.Caption:='COBROS EN EFECT. C/C CLIENTES :$ '+FLOATTOSTR(PAGOSCUENTACORRIENTES) ;
+frmdiseniocierrecaja.QRLabel9.Caption:='COBROS EN EFECT. C/C CLIENTES :$ '+FLOATTOSTR(PAGOSCUENTACORRIENTES) ;
 
 efe:=efe - NCEFE;
 
@@ -1355,23 +1383,23 @@ frmdiseniocierrecaja.QRPQuickrep1.Preview;
  try
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE tmovimientos  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
+form1.FDQuery2.SQL.Add('UPDATE tmovimientos  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE TINGRESOS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
+form1.FDQuery2.SQL.Add('UPDATE TINGRESOS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE TSALIDAS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
+form1.FDQuery2.SQL.Add('UPDATE TSALIDAS  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('UPDATE TPAGOSCUENTACORRIENTES  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0');
+form1.FDQuery2.SQL.Add('UPDATE TPAGOSCUENTACORRIENTES  SET CIERRE = 1 where fecha='+#39+trim(FE)+#39+'AND cierre=0 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 
 
@@ -1386,7 +1414,7 @@ form1.FDQuery2.SQL.Add('update TCAJA  set VENTA_EFE='+FLOATTOSTR(EFE)+
                                        ', SALIDAS='+FLOATTOSTR(SALIDAS)+
                                      ', DINERO_EN_CAJA='+FLOATTOSTR(ENCAJA)+
                                      ', INGRESOSCAJA='+FLOATTOSTR(INGRESOACAJA)+
-                                     ' WHERE fecha='+#39+trim(fe)+#39+' and estado=1');
+                                     ' WHERE fecha='+#39+trim(fe)+#39+' and estado=1 and pc='+inttostr(form1.PUESTO_PC));
 form1.FDQuery2.ExecSQL;
 form1.FDConnection1.Commit;
 

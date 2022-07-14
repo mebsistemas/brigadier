@@ -1,0 +1,574 @@
+unit UnifrmabmArticulos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
+  Vcl.DBGrids, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  Vcl.Buttons, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.Menus;
+
+type
+  TfrmABMARticulos = class(TForm)
+    DBGrid1: TDBGrid;
+    DataSource1: TDataSource;
+    FDQuery1: TFDQuery;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    FDQuery2: TFDQuery;
+    Panel1: TPanel;
+    Edit1: TEdit;
+    DBLookupComboBox1: TDBLookupComboBox;
+    Label1: TLabel;
+    Edit2: TEdit;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
+    BitBtn5: TBitBtn;
+    FDQuery3: TFDQuery;
+    DataSource2: TDataSource;
+    BitBtn6: TBitBtn;
+    BitBtn7: TBitBtn;
+    Label5: TLabel;
+    DBLookupComboBox2: TDBLookupComboBox;
+    FDQuery4: TFDQuery;
+    DataSource3: TDataSource;
+    BitBtn8: TBitBtn;
+    CheckBox1: TCheckBox;
+    Label6: TLabel;
+    BitBtn9: TBitBtn;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Label7: TLabel;
+    BitBtn10: TBitBtn;
+    PopupMenu1: TPopupMenu;
+    ELIMINARARTICULO1: TMenuItem;
+    BitBtn11: TBitBtn;
+    FDQuery5: TFDQuery;
+    procedure FormShow(Sender: TObject);
+    procedure DBGrid1DblClick(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
+    procedure BitBtn6Click(Sender: TObject);
+    procedure BitBtn7Click(Sender: TObject);
+    procedure BitBtn8Click(Sender: TObject);
+    procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure CheckBox1Click(Sender: TObject);
+    procedure BitBtn9Click(Sender: TObject);
+    procedure BitBtn10Click(Sender: TObject);
+    procedure ELIMINARARTICULO1Click(Sender: TObject);
+    procedure BitBtn11Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    ver:string;
+    function cargararticulos(repo:longint):boolean;
+    function cargararticulosdESCRIPCION(DESCRI:STRING;REPO:LONGINT):boolean;
+    function cargararticulosCODIGOBARRA(DESCRI:STRING;REPO:LONGINT):boolean;
+     FUNCTION CARGARRUBRO:BOOLEAN;
+    function cargararticulosPORRUBRO(IDRUBRO:LONGINT;REPO:LONGINT):boolean;
+    function cargararticulosPORPROVEEDOR(IDPROVEEDOR:LONGINT;REPO:LONGINT):boolean;
+    FUNCTION CARGARPROVEEDOR:BOOLEAN;
+  end;
+
+var
+  frmABMARticulos: TfrmABMARticulos;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit1, UniFRMNUEVOARTICULO, Unit3INFOCOSTOS, Unit4ABMVENCIMIENTOS,
+  UIMPRIMIRARTICULOS;
+
+procedure TfrmABMARticulos.BitBtn10Click(Sender: TObject);
+begin
+if FORM1.revisaPermisoTAG(BitBtn10.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
+
+ABMVENCIMIENTOS.SHOWMODAL;
+end;
+
+procedure TfrmABMARticulos.BitBtn11Click(Sender: TObject);
+begin
+IMPRIMIRARTICULOS.QuickRep1.Prepare;
+IMPRIMIRARTICULOS.QuickRep1.Preview;
+end;
+
+procedure TfrmABMARticulos.BitBtn1Click(Sender: TObject);
+begin
+if FORM1.revisaPermisoTAG(BitBtn1.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
+
+FRMNUEVOARTICULO.Caption:='NUEVO ARTICULO';
+FRMNUEVOARTICULO.Edit1.Clear;
+FRMNUEVOARTICULO.Edit2.Clear;
+FRMNUEVOARTICULO.Edit3.Clear;
+
+FRMNUEVOARTICULO.Edit6.Clear;
+ FRMNUEVOARTICULO.Edit9.Text:='1';
+FRMNUEVOARTICULO.opcion:='N';
+FRMNUEVOARTICULO.SpeedButton1.Visible:=TRUE;
+FRMNUEVOARTICULO.CheckBox1.Checked:=false;
+FRMNUEVOARTICULO.CARGARRUBRO;
+FRMNUEVOARTICULO.DBLookupComboBox1.KeyValue:=1;
+FRMNUEVOARTICULO.Edit6.Enabled:=TRUE;
+FRMNUEVOARTICULO.CARGARPROVEEDOR;
+
+FRMNUEVOARTICULO.CARGARmarcas;
+ FRMNUEVOARTICULO.Edit7.Clear;
+  FRMNUEVOARTICULO.Edit8.Clear;
+FRMNUEVOARTICULO.SHOWMODAL;
+if self.CheckBox1.Checked=true then
+cargararticulos(1)
+else
+cargararticulos(0) ;
+end;
+
+function TfrmABMARticulos.cargararticulos(repo:longint):boolean;
+var sql:string;
+begin
+sql:='SELECT a.codigobarra as acodigobarra, '+
+                             ' a.descripcion as adescripcion , '+
+                             ' a.idarticulo as aidarticulo, '+
+                             ' a.precioventa as aprecioventa,'+
+                             ' a.stock   as astock ,'+
+                            ' r.descripcion as ru  , tp.razonsocial as prove,A.STOCKALERTA AS STaE '+
+                             ', A.COSTO AS ACOSTO , M.DESCRIPCION AS MARCA '+
+                             ' FROM TARTICULOS a , trubros r '+
+                               ' LEFT JOIN TPROVEEDORES TP ON TP.IDPROVEEDOR = A.IDPROVEEDOR '+
+                                ' LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA '+
+                             ' where  a.idrubro=r.idrubro ';
+   if repo=1 then
+    sql:=sql + ' and a.stock <=a.stockalerta ';
+
+sql:=sql+' ORDER BY A.DESCRIPCION ASC';
+  SELF.FDQuery1.Close;
+SELF.FDQuery1.Connection:=FORM1.FDConnection1;
+SELF.FDQuery1.SQL.Clear;
+SELF.FDQuery1.SQL.Add(sql);
+SELF.FDQuery1.Open;
+end;
+
+
+
+function TfrmABMARticulos.cargararticulosdESCRIPCION(DESCRI:STRING;REPO:LONGINT):boolean;
+begin
+DESCRI:=TRIM(DESCRI)+'%';
+  SELF.FDQuery1.Close;
+SELF.FDQuery1.Connection:=FORM1.FDConnection1;
+SELF.FDQuery1.SQL.Clear;
+SELF.FDQuery1.SQL.Add('SELECT a.codigobarra as acodigobarra, '+
+                             ' a.descripcion as adescripcion , '+
+                             ' a.idarticulo as aidarticulo, '+
+                             ' a.precioventa as aprecioventa,'+
+                             ' a.stock   as astock ,'+
+                             ' r.descripcion as ru  , tp.razonsocial as prove,A.STOCKALERTA AS STaE '+
+                             ', A.COSTO AS ACOSTO, M.DESCRIPCION AS MARCA '+
+                             ' FROM TARTICULOS a  '+
+                             ' LEFT JOIN TPROVEEDORES TP ON TP.IDPROVEEDOR = A.IDPROVEEDOR '+
+                               ' LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA '+
+                               ' LEFT JOIN  trubros r ON  r.idrubro=a.idrubro '+
+                             ' where  a.IDARTICULO > 1 ');
+   if REPO=1 then
+    SELF.FDQuery1.SQL.Add('AND A.STOCK <= A.STOCKALERTA');
+
+SELF.FDQuery1.SQL.Add(' AND A.DESCRIPCION LIKE '+#39+TRIM(DESCRI)+#39+' ORDER BY A.DESCRIPCION ASC');
+SELF.FDQuery1.Open;
+end;
+
+ FUNCTION TfrmABMARticulos.CARGARRUBRO:BOOLEAN;
+BEGIN
+SELF.FDQuery3.Close;
+SELF.FDQuery3.SQL.Clear;
+SELF.FDQuery3.SQL.Add('SELECT * FROM TRUBROS ORDER BY DESCRIPCION ASC');
+SELF.FDQuery3.Open;
+
+END;
+
+ procedure TfrmABMARticulos.CheckBox1Click(Sender: TObject);
+begin
+if SELF.CheckBox1.Checked=TRUE then
+  BEGIN
+        if TRIM(VER)='GENERAL' then
+            SELF.cargararticulos(1);
+
+           if TRIM(VER)='DESCRI' then
+            SELF.cargararticulosdESCRIPCION(TRIM(EDIT1.Text),1);
+
+         if TRIM(VER)='CODIGO' then
+            SELF.cargararticulosCODIGOBARRA(TRIM(EDIT2.Text),1);
+
+         if TRIM(VER)='RUBRO' then
+            cargararticulosPORRUBRO(self.DBLookupComboBox1.KeyValue,1);
+
+         if TRIM(VER)='PROVEEDOR' then
+            cargararticulosPORPROVEEDOR(SELF.DBLookupComboBox2.KeyValue,1);
+
+  END ELSE BEGIN
+         if TRIM(VER)='GENERAL' then
+            SELF.cargararticulos(0);
+
+          if TRIM(VER)='DESCRI' then
+            SELF.cargararticulosdESCRIPCION(TRIM(EDIT1.Text),0);
+
+         if TRIM(VER)='CODIGO' then
+            SELF.cargararticulosCODIGOBARRA(TRIM(EDIT2.Text),0);
+
+         if TRIM(VER)='RUBRO' then
+            cargararticulosPORRUBRO(self.DBLookupComboBox1.KeyValue,0);
+
+         if TRIM(VER)='PROVEEDOR' then
+            cargararticulosPORPROVEEDOR(SELF.DBLookupComboBox2.KeyValue,0);
+  END;
+end;
+
+FUNCTION TfrmABMARticulos.CARGARPROVEEDOR:BOOLEAN;
+BEGIN
+SELF.FDQuery4.Close;
+SELF.FDQuery4.SQL.Clear;
+SELF.FDQuery4.SQL.Add('SELECT * FROM TPROVEEDORES ORDER BY RAZONSOCIAL ASC');
+SELF.FDQuery4.Open;
+
+END;
+
+function TfrmABMARticulos.cargararticulosCODIGOBARRA(DESCRI:STRING;REPO:LONGINT):boolean;
+begin
+
+  SELF.FDQuery1.Close;
+SELF.FDQuery1.Connection:=FORM1.FDConnection1;
+SELF.FDQuery1.SQL.Clear;
+SELF.FDQuery1.SQL.Add('SELECT a.codigobarra as acodigobarra, '+
+                             ' a.descripcion as adescripcion , '+
+                             ' a.idarticulo as aidarticulo, '+
+                             ' a.precioventa as aprecioventa,'+
+                             ' a.stock   as astock ,'+
+                                 ' r.descripcion as ru  , tp.razonsocial as prove,A.STOCKALERTA AS STaE '+
+                             ', A.COSTO AS ACOSTO , M.DESCRIPCION AS MARCA '+
+                             ' FROM TARTICULOS a , trubros r '+
+                             ' LEFT JOIN TPROVEEDORES TP ON TP.IDPROVEEDOR = A.IDPROVEEDOR '+
+                              ' LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA '+
+                             ' where  a.idrubro=r.idrubro ');
+     if REPO=1 then
+    SELF.FDQuery1.SQL.Add('AND A.STOCK <= A.STOCKALERTA');
+
+    SELF.FDQuery1.SQL.Add(' AND A.codigobarra = '+#39+TRIM(DESCRI)+#39+' ORDER BY A.DESCRIPCION ASC');
+SELF.FDQuery1.Open;
+end;
+
+
+function TfrmABMARticulos.cargararticulosPORRUBRO(IDRUBRO:LONGINT;REPO:LONGINT):boolean;
+begin
+
+  SELF.FDQuery1.Close;
+SELF.FDQuery1.Connection:=FORM1.FDConnection1;
+SELF.FDQuery1.SQL.Clear;
+SELF.FDQuery1.SQL.Add('SELECT a.codigobarra as acodigobarra, '+
+                             ' a.descripcion as adescripcion , '+
+                             ' a.idarticulo as aidarticulo, '+
+                             ' a.precioventa as aprecioventa,'+
+                             ' a.stock   as astock ,'+
+                               ' r.descripcion as ru  , tp.razonsocial as prove,A.STOCKALERTA AS STaE '+
+                             ', A.COSTO AS ACOSTO, M.DESCRIPCION AS MARCA '+
+                             ' FROM TARTICULOS a , trubros r '+
+                             ' LEFT JOIN TPROVEEDORES TP ON TP.IDPROVEEDOR = A.IDPROVEEDOR '+
+                              ' LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA '+
+                             ' where  a.idrubro=r.idrubro ');
+     if REPO=1 then
+    SELF.FDQuery1.SQL.Add('AND A.STOCK <= A.STOCKALERTA');
+
+    SELF.FDQuery1.SQL.Add(' AND a.idrubro  = '+inttostr(IDRUBRO)+' ORDER BY A.DESCRIPCION ASC');
+SELF.FDQuery1.Open;
+end;
+
+
+
+
+function TfrmABMARticulos.cargararticulosPORPROVEEDOR(IDPROVEEDOR:LONGINT;REPO:LONGINT):boolean;
+begin
+
+  SELF.FDQuery1.Close;
+SELF.FDQuery1.Connection:=FORM1.FDConnection1;
+SELF.FDQuery1.SQL.Clear;
+SELF.FDQuery1.SQL.Add('SELECT a.codigobarra as acodigobarra, '+
+                             ' a.descripcion as adescripcion , '+
+                             ' a.idarticulo as aidarticulo, '+
+                             ' a.precioventa as aprecioventa,'+
+                             ' a.stock   as astock ,'+
+                             ' r.descripcion as ru  , tp.razonsocial as prove,A.STOCKALERTA AS STaE '+
+                             ', A.COSTO AS ACOSTO , M.DESCRIPCION AS MARCA'+
+                             ' FROM TARTICULOS a , trubros r '+
+                             ' LEFT JOIN TPROVEEDORES TP ON TP.IDPROVEEDOR = A.IDPROVEEDOR '+
+                             ' LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA '+
+                             ' where  a.idrubro=r.idrubro ');
+    if REPO=1 then
+    SELF.FDQuery1.SQL.Add('AND A.STOCK <= A.STOCKALERTA');
+
+    SELF.FDQuery1.SQL.Add(' AND A.IDPROVEEDOR  = '+inttostr(IDPROVEEDOR)+' ORDER BY A.DESCRIPCION ASC');
+SELF.FDQuery1.Open;
+end;
+
+procedure TfrmABMARticulos.BitBtn2Click(Sender: TObject);
+begin
+CLOSE;
+end;
+
+procedure TfrmABMARticulos.BitBtn3Click(Sender: TObject);
+begin
+cargararticulosdESCRIPCION(TRIM(EDIT1.Text),0);
+ver:='DESCRI';
+end;
+
+procedure TfrmABMARticulos.BitBtn4Click(Sender: TObject);
+var BUSCA,CODIGO_BARRA:string;  barra_hasta:longint;
+begin
+BUSCA:=TRIM(EDIT2.Text);
+  if COPY(BUSCA,1,1)=TRIM(form1.TCONFI.GET_FDIGITOCODIGOBARRA) then
+         BEGIN
+            CODIGO_BARRA:=BUSCA;
+
+            BUSCA:=COPY(CODIGO_BARRA,2,STRTOINT(TRIM(form1.TCONFI.GET_FCANTIDADIGITOCODIGOBARRA)));
+           CODIGO_BARRA:=COPY(CODIGO_BARRA,LENGTH(BUSCA)+1,LENGTH(CODIGO_BARRA));
+            if   TRIM(form1.TCONFI.GET_FCANTIDADIGITOCODIGOBARRA)='0' then
+                 barra_hasta:=length(CODIGO_BARRA)
+                 else
+                   if   TRIM(form1.TCONFI.GET_FCANTIDADIGITOCODIGOBARRA)='1' then
+                        barra_hasta:=length(CODIGO_BARRA)-1
+                        else
+                          barra_hasta:=length(CODIGO_BARRA)-1;
+
+
+         END;
+
+cargararticulosCODIGOBARRA(BUSCA,0);
+ver:='CODIGO';
+end;
+
+procedure TfrmABMARticulos.BitBtn5Click(Sender: TObject);
+begin
+cargararticulosPORRUBRO(self.DBLookupComboBox1.KeyValue,0);
+ver:='RUBRO';
+end;
+
+procedure TfrmABMARticulos.BitBtn6Click(Sender: TObject);
+begin
+if FORM1.revisaPermisoTAG(BitBtn6.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
+
+DBGrid1DblClick(Sender);
+end;
+
+procedure TfrmABMARticulos.BitBtn7Click(Sender: TObject);
+begin
+ver:='GENERAL';
+if self.CheckBox1.Checked=true then
+cargararticulos(1)
+else
+cargararticulos(0) ;
+end;
+
+procedure TfrmABMARticulos.BitBtn8Click(Sender: TObject);
+begin
+ cargararticulosPORPROVEEDOR(SELF.DBLookupComboBox2.KeyValue,0);
+ ver:='PROVEEDOR';
+end;
+
+procedure TfrmABMARticulos.BitBtn9Click(Sender: TObject);
+begin
+if FORM1.revisaPermisoTAG(BitBtn9.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
+
+INFOCOSTOS.FDQuery1.Close;
+INFOCOSTOS.FDQuery1.SQL.Clear;
+infocostos.FDQuery1.Sql.Add('select  '+
+' h.fecha as FECHA ,p.razonsocial AS PROVEEDOR,h.COSTO AS COSTO      '+
+' from thistorial_costo h     '+
+' left join tarticulos a on a.IDARTICULO=h.IDARTICULO     '+
+' left join tproveedores p on p.idproveedor = a.idproveedor   '+
+' where h.IDARTICULO='+inttostr(dbgrid1.Fields[0].asINTEGER)+' ORDER BY H.IDTABLA DESC');
+infocostos.FDQuery1.open;
+INFOCOSTOS.SHOWMODAL;
+end;
+
+procedure TfrmABMARticulos.DBGrid1DblClick(Sender: TObject);
+VAR IDAR:LONGINT;
+begin
+if FORM1.revisaPermisoTAG(BitBtn6.Tag)=true then
+  begin
+    Application.MessageBox( 'USTED NO TIENE PERMISOS.',
+    'Acceso denegado', MB_ICONSTOP );
+    exit;
+  end;
+
+IDAR:=dbgrid1.Fields[0].asINTEGER;
+FRMNUEVOARTICULO.FDQuery2.Close;
+FRMNUEVOARTICULO.FDQuery2.SQL.Clear;
+FRMNUEVOARTICULO.FDQuery2.SQL.Add('SELECT * FROM TARTICULOS WHERE IDARTICULO='+INTTOSTR(IDAR));
+FRMNUEVOARTICULO.FDQuery2.OpeN;
+
+
+FRMNUEVOARTICULO.Caption:='MODIFICAR ARTICULO';
+
+if trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('DESCUENTAPOR').ASSTRING)='' then
+  FRMNUEVOARTICULO.Edit9.text:='1'
+  ELSE
+FRMNUEVOARTICULO.Edit9.text:=trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('DESCUENTAPOR').ASSTRING);
+
+FRMNUEVOARTICULO.Edit1.text:=trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('codigobarra').ASSTRING);
+FRMNUEVOARTICULO.Edit2.text:=trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('DESCRIPCION').ASSTRING);
+FRMNUEVOARTICULO.Edit3.text:=trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('precioventa').ASSTRING);
+if trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('IVA').ASSTRING)='0.00' then
+   FRMNUEVOARTICULO.ComboBox1.ItemIndex:=0
+    else
+       if trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('IVA').ASSTRING)='10.50' then
+          FRMNUEVOARTICULO.ComboBox1.ItemIndex:=1
+          else
+          if trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('IVA').ASSTRING)='21.00' then
+            FRMNUEVOARTICULO.ComboBox1.ItemIndex:=2
+            else
+             FRMNUEVOARTICULO.ComboBox1.ItemIndex:=2;
+
+
+//FRMNUEVOARTICULO.Edit4.text:=trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('IVA').ASSTRING);
+FRMNUEVOARTICULO.Edit5.text:=trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('IDARTICULO').ASSTRING);
+FRMNUEVOARTICULO.Edit6.text:=trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('STOCKINICIA').ASSTRING);
+if trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('preciovariable').ASSTRING)='S' then
+      FRMNUEVOARTICULO.CheckBox1.Checked:=true
+      else
+      FRMNUEVOARTICULO.CheckBox1.Checked:=falsE;
+
+      FRMNUEVOARTICULO.CARGARRUBRO;
+      FRMNUEVOARTICULO.DBLookupComboBox1.KeyValue:=FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('IDRUBRO').AsInteger;
+
+
+      FRMNUEVOARTICULO.CARGARPROVEEDOR;
+      FRMNUEVOARTICULO.DBLookupComboBox2.KeyValue:=FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('IDPROVEEDOR').AsInteger;
+
+      FRMNUEVOARTICULO.Edit7.text:=trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('STOCKALERTA').ASSTRING);
+      FRMNUEVOARTICULO.Edit8.text:=trim(FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('COSTO').ASSTRING);
+     FRMNUEVOARTICULO.CARGARmarcas;
+      FRMNUEVOARTICULO.DBLookupComboBox3.KeyValue:=FRMNUEVOARTICULO.FDQuery2.FIELDBYNAME('IDMARCA').AsInteger;
+
+
+      FRMNUEVOARTICULO.opcion:='M';
+FRMNUEVOARTICULO.SpeedButton1.Visible:=TRUE;
+FRMNUEVOARTICULO.Edit6.Enabled:=FALSE;
+FRMNUEVOARTICULO.SHOWMODAL;
+if self.CheckBox1.Checked=true then
+cargararticulos(1)
+else
+cargararticulos(0) ;
+end;
+
+procedure TfrmABMARticulos.DBGrid1DrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+  VAR STO,ALER:STRING;
+begin
+ if TRIM(DBGRID1.Fields[7].AsString)='' then
+    STO:='0'
+    ELSE
+      STO:=TRIM(DBGRID1.Fields[7].AsString);
+
+ if TRIM(DBGRID1.Fields[8].AsString)='' then
+    ALER:='0'
+     ELSE
+      ALER:=TRIM(DBGRID1.Fields[8].AsString);
+
+
+     if ((STRTOINT(STO))<(STRTOINT(ALER))) then   BEGIN
+
+    //if (Column.Index = 3)and (gdSelected in State)then begin
+      //Pintar el Color de la Letra
+      DBGRID1.Canvas.Font.Color := clBlack;
+      //Pintar el Fondo de la Celda
+      DBGRID1.Canvas.Brush.Color := CLRED;
+      DBGRID1.DefaultDrawColumnCell(rect,DataCol,Column,State);
+    end;
+
+        if ((STRTOINT(STO))=(STRTOINT(ALER))) then   BEGIN
+
+    //if (Column.Index = 3)and (gdSelected in State)then begin
+      //Pintar el Color de la Letra
+      DBGRID1.Canvas.Font.Color := clBlack;
+      //Pintar el Fondo de la Celda
+      DBGRID1.Canvas.Brush.Color := CLYELLOW;
+      DBGRID1.DefaultDrawColumnCell(rect,DataCol,Column,State);
+    end;
+end;
+
+procedure TfrmABMARticulos.ELIMINARARTICULO1Click(Sender: TObject);
+VAR IDAR:LONGINT;
+begin
+if FORM1.ESADMINISTRADOR=2 then
+BEGIN
+SHOWMESSAGE('NO ERES ADMINISTRADOR');
+EXIT;
+END ;
+
+if Application.MessageBox( pchar('¿Desea eliminar el articulculo '+trim(DBGRID1.Fields[2].Asstring)+'?'), 'Eliminar',
+  MB_ICONQUESTION OR MB_YESNO ) = ID_YES then
+begin
+FORM1.FDConnection1.StartTransaction;
+TRY
+IDAR:=DBGRID1.Fields[0].AsInteger;
+SELF.FDQuery5.Close;
+SELF.FDQuery5.SQL.Clear;
+SELF.FDQuery5.SQL.Add('DELETE FROM TARTICULOS WHERE IDARTICULO='+INTTOSTR(IDAR));
+SELF.FDQuery5.ExecSQL;
+FORM1.FDConnection1.Commit;
+SHOWMESSAGE('SE HA ELIMINADO EL ARTICULO');
+ EXCEPT
+   FORM1.FDConnection1.Rollback;
+ SHOWMESSAGE('SE PRODUJO UN ERROR AL ELIMINAR EL ARTICULO');
+END;
+
+ver:='GENERAL';
+if self.CheckBox1.Checked=true then
+cargararticulos(1)
+else
+cargararticulos(0) ;
+end;
+end;
+
+procedure TfrmABMARticulos.FormCreate(Sender: TObject);
+begin
+EDIT1.Clear;
+EDIT2.Clear;
+
+end;
+
+procedure TfrmABMARticulos.FormShow(Sender: TObject);
+begin
+ver:='GENERAL';
+cargararticulos(0);
+CARGARRUBRO;
+CARGARPROVEEDOR;
+end;
+
+end.

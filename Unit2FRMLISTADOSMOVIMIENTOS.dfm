@@ -3,9 +3,9 @@ object FRMLISTADOSMOVIMIENTOS: TFRMLISTADOSMOVIMIENTOS
   Top = 0
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
-  Caption = 'FRMLISTADOSMOVIMIENTOS'
+  Caption = 'LISTADOS DE VENTAS'
   ClientHeight = 390
-  ClientWidth = 756
+  ClientWidth = 863
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,117 +17,6 @@ object FRMLISTADOSMOVIMIENTOS: TFRMLISTADOSMOVIMIENTOS
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object DBGrid1: TDBGrid
-    Left = 8
-    Top = 8
-    Width = 730
-    Height = 313
-    DataSource = DataSource1
-    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
-    PopupMenu = PopupMenu1
-    TabOrder = 0
-    TitleFont.Charset = DEFAULT_CHARSET
-    TitleFont.Color = clWindowText
-    TitleFont.Height = -11
-    TitleFont.Name = 'Tahoma'
-    TitleFont.Style = []
-    Columns = <
-      item
-        Expanded = False
-        FieldName = 'TMDIMOVIMIENTO'
-        Title.Alignment = taCenter
-        Title.Font.Charset = ANSI_CHARSET
-        Title.Font.Color = clWindowText
-        Title.Font.Height = -12
-        Title.Font.Name = 'Calibri'
-        Title.Font.Style = [fsBold]
-        Visible = False
-      end
-      item
-        Expanded = False
-        FieldName = 'TMFECHA'
-        Title.Alignment = taCenter
-        Title.Caption = 'FECHA'
-        Title.Font.Charset = ANSI_CHARSET
-        Title.Font.Color = clWindowText
-        Title.Font.Height = -12
-        Title.Font.Name = 'Calibri'
-        Title.Font.Style = [fsBold]
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'TCCLIENTE'
-        Title.Alignment = taCenter
-        Title.Caption = 'CLIENTE'
-        Title.Font.Charset = ANSI_CHARSET
-        Title.Font.Color = clWindowText
-        Title.Font.Height = -12
-        Title.Font.Name = 'Calibri'
-        Title.Font.Style = [fsBold]
-        Width = 200
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'FACTU'
-        Title.Alignment = taCenter
-        Title.Caption = 'COMPROBANTE'
-        Title.Font.Charset = ANSI_CHARSET
-        Title.Font.Color = clWindowText
-        Title.Font.Height = -12
-        Title.Font.Name = 'Calibri'
-        Title.Font.Style = [fsBold]
-        Width = 100
-        Visible = True
-      end
-      item
-        Alignment = taRightJustify
-        Expanded = False
-        FieldName = 'NRO'
-        Title.Alignment = taCenter
-        Title.Caption = 'NUMERO'
-        Title.Font.Charset = ANSI_CHARSET
-        Title.Font.Color = clWindowText
-        Title.Font.Height = -12
-        Title.Font.Name = 'Calibri'
-        Title.Font.Style = [fsBold]
-        Width = 77
-        Visible = True
-      end
-      item
-        Alignment = taRightJustify
-        Expanded = False
-        FieldName = 'TMTOTAL'
-        Title.Alignment = taCenter
-        Title.Caption = 'TOTAL'
-        Title.Font.Charset = ANSI_CHARSET
-        Title.Font.Color = clWindowText
-        Title.Font.Height = -12
-        Title.Font.Name = 'Calibri'
-        Title.Font.Style = [fsBold]
-        Width = 70
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'FORMAPAGO'
-        Title.Alignment = taCenter
-        Title.Caption = 'FORMA PAGO'
-        Title.Font.Charset = ANSI_CHARSET
-        Title.Font.Color = clWindowText
-        Title.Font.Height = -12
-        Title.Font.Name = 'Calibri'
-        Title.Font.Style = [fsBold]
-        Width = 105
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'tmTIPOMOVIMIENTO'
-        Visible = False
-      end>
-  end
   object DateTimePicker1: TDateTimePicker
     Left = 24
     Top = 344
@@ -135,10 +24,10 @@ object FRMLISTADOSMOVIMIENTOS: TFRMLISTADOSMOVIMIENTOS
     Height = 21
     Date = 44581.000000000000000000
     Time = 0.522964768519159400
-    TabOrder = 1
+    TabOrder = 0
   end
   object BitBtn1: TBitBtn
-    Left = 648
+    Left = 752
     Top = 334
     Width = 90
     Height = 39
@@ -280,7 +169,7 @@ object FRMLISTADOSMOVIMIENTOS: TFRMLISTADOSMOVIMIENTOS
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000}
     ParentFont = False
-    TabOrder = 2
+    TabOrder = 1
     OnClick = BitBtn1Click
   end
   object BitBtn2: TBitBtn
@@ -426,7 +315,7 @@ object FRMLISTADOSMOVIMIENTOS: TFRMLISTADOSMOVIMIENTOS
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000}
     ParentFont = False
-    TabOrder = 3
+    TabOrder = 2
     OnClick = BitBtn2Click
   end
   object BitBtn3: TBitBtn
@@ -572,8 +461,651 @@ object FRMLISTADOSMOVIMIENTOS: TFRMLISTADOSMOVIMIENTOS
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000}
     ParentFont = False
-    TabOrder = 4
+    TabOrder = 3
     OnClick = BitBtn3Click
+  end
+  object PageControl1: TPageControl
+    Left = 0
+    Top = 0
+    Width = 863
+    Height = 313
+    ActivePage = TabSheet1
+    Align = alTop
+    TabOrder = 4
+    object TabSheet1: TTabSheet
+      Caption = 'TODOS LAS VENTAS'
+      object DBGrid1: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 855
+        Height = 285
+        Align = alClient
+        DataSource = DataSource1
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        PopupMenu = PopupMenu1
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'TMDIMOVIMIENTO'
+            Title.Alignment = taCenter
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = False
+          end
+          item
+            Expanded = False
+            FieldName = 'TMFECHA'
+            Title.Alignment = taCenter
+            Title.Caption = 'FECHA'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TCCLIENTE'
+            Title.Alignment = taCenter
+            Title.Caption = 'CLIENTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 200
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'FACTU'
+            Title.Alignment = taCenter
+            Title.Caption = 'COMPROBANTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 100
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'NRO'
+            Title.Alignment = taCenter
+            Title.Caption = 'NUMERO'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 77
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'TMTOTAL'
+            Title.Alignment = taCenter
+            Title.Caption = 'TOTAL'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 70
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'tmTIPOMOVIMIENTO'
+            Visible = False
+          end
+          item
+            Expanded = False
+            FieldName = 'FORMA'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            Title.Alignment = taCenter
+            Title.Caption = 'FORMA DE PAGO'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = True
+          end>
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'VENTAS EN EFECTIVO'
+      ImageIndex = 1
+      object DBGrid2: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 855
+        Height = 285
+        Align = alClient
+        DataSource = DataSource2
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        PopupMenu = PopupMenu1
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'TMDIMOVIMIENTO'
+            Title.Alignment = taCenter
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = False
+          end
+          item
+            Expanded = False
+            FieldName = 'TMFECHA'
+            Title.Alignment = taCenter
+            Title.Caption = 'FECHA'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TCCLIENTE'
+            Title.Alignment = taCenter
+            Title.Caption = 'CLIENTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 200
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'FACTU'
+            Title.Alignment = taCenter
+            Title.Caption = 'COMPROBANTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 100
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'NRO'
+            Title.Alignment = taCenter
+            Title.Caption = 'NUMERO'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 77
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'TMTOTAL'
+            Title.Alignment = taCenter
+            Title.Caption = 'TOTAL'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 70
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'tmTIPOMOVIMIENTO'
+            Visible = False
+          end>
+      end
+    end
+    object TabSheet3: TTabSheet
+      Caption = 'VENTAS EN TARJETA CREDITO'
+      ImageIndex = 2
+      object DBGrid3: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 855
+        Height = 285
+        Align = alClient
+        DataSource = DataSource3
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        PopupMenu = PopupMenu1
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'TMDIMOVIMIENTO'
+            Title.Alignment = taCenter
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = False
+          end
+          item
+            Expanded = False
+            FieldName = 'TMFECHA'
+            Title.Alignment = taCenter
+            Title.Caption = 'FECHA'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TCCLIENTE'
+            Title.Alignment = taCenter
+            Title.Caption = 'CLIENTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 200
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'FACTU'
+            Title.Alignment = taCenter
+            Title.Caption = 'COMPROBANTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 100
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'NRO'
+            Title.Alignment = taCenter
+            Title.Caption = 'NUMERO'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 77
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'TMTOTAL'
+            Title.Alignment = taCenter
+            Title.Caption = 'TOTAL'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 70
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'tmTIPOMOVIMIENTO'
+            Visible = False
+          end>
+      end
+    end
+    object TabSheet4: TTabSheet
+      Caption = 'VENTAS EN TARJETA DEBITO'
+      ImageIndex = 3
+      object DBGrid4: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 855
+        Height = 285
+        Align = alClient
+        DataSource = DataSource4
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        PopupMenu = PopupMenu1
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'TMDIMOVIMIENTO'
+            Title.Alignment = taCenter
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = False
+          end
+          item
+            Expanded = False
+            FieldName = 'TMFECHA'
+            Title.Alignment = taCenter
+            Title.Caption = 'FECHA'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TCCLIENTE'
+            Title.Alignment = taCenter
+            Title.Caption = 'CLIENTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 200
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'FACTU'
+            Title.Alignment = taCenter
+            Title.Caption = 'COMPROBANTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 100
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'NRO'
+            Title.Alignment = taCenter
+            Title.Caption = 'NUMERO'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 77
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'TMTOTAL'
+            Title.Alignment = taCenter
+            Title.Caption = 'TOTAL'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 70
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'tmTIPOMOVIMIENTO'
+            Visible = False
+          end>
+      end
+    end
+    object TabSheet5: TTabSheet
+      Caption = 'VENTAS EN CUENTA CORRIENTES'
+      ImageIndex = 4
+      object DBGrid5: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 855
+        Height = 285
+        Align = alClient
+        DataSource = DataSource5
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        PopupMenu = PopupMenu1
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'TMDIMOVIMIENTO'
+            Title.Alignment = taCenter
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = False
+          end
+          item
+            Expanded = False
+            FieldName = 'TMFECHA'
+            Title.Alignment = taCenter
+            Title.Caption = 'FECHA'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TCCLIENTE'
+            Title.Alignment = taCenter
+            Title.Caption = 'CLIENTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 200
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'FACTU'
+            Title.Alignment = taCenter
+            Title.Caption = 'COMPROBANTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 100
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'NRO'
+            Title.Alignment = taCenter
+            Title.Caption = 'NUMERO'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 77
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'TMTOTAL'
+            Title.Alignment = taCenter
+            Title.Caption = 'TOTAL'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 70
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'tmTIPOMOVIMIENTO'
+            Visible = False
+          end>
+      end
+    end
+    object TabSheet6: TTabSheet
+      Caption = 'MERCADO PAGO'
+      ImageIndex = 5
+      object DBGrid6: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 855
+        Height = 285
+        Align = alClient
+        DataSource = DataSource6
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+        PopupMenu = PopupMenu1
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'TMDIMOVIMIENTO'
+            Title.Alignment = taCenter
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = False
+          end
+          item
+            Expanded = False
+            FieldName = 'TMFECHA'
+            Title.Alignment = taCenter
+            Title.Caption = 'FECHA'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TCCLIENTE'
+            Title.Alignment = taCenter
+            Title.Caption = 'CLIENTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 200
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'FACTU'
+            Title.Alignment = taCenter
+            Title.Caption = 'COMPROBANTE'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 100
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'NRO'
+            Title.Alignment = taCenter
+            Title.Caption = 'NUMERO'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 77
+            Visible = True
+          end
+          item
+            Alignment = taRightJustify
+            Expanded = False
+            FieldName = 'TMTOTAL'
+            Title.Alignment = taCenter
+            Title.Caption = 'TOTAL'
+            Title.Font.Charset = ANSI_CHARSET
+            Title.Font.Color = clWindowText
+            Title.Font.Height = -12
+            Title.Font.Name = 'Calibri'
+            Title.Font.Style = [fsBold]
+            Width = 70
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'tmTIPOMOVIMIENTO'
+            Visible = False
+          end>
+      end
+    end
   end
   object DataSource1: TDataSource
     DataSet = FDQuery1
@@ -597,5 +1129,55 @@ object FRMLISTADOSMOVIMIENTOS: TFRMLISTADOSMOVIMIENTOS
     Connection = Form1.FDConnection1
     Left = 144
     Top = 192
+  end
+  object DataSource2: TDataSource
+    DataSet = FDQuery3
+    Left = 292
+    Top = 72
+  end
+  object FDQuery3: TFDQuery
+    Connection = Form1.FDConnection1
+    Left = 332
+    Top = 72
+  end
+  object DataSource3: TDataSource
+    DataSet = FDQuery4
+    Left = 492
+    Top = 104
+  end
+  object FDQuery4: TFDQuery
+    Connection = Form1.FDConnection1
+    Left = 556
+    Top = 120
+  end
+  object DataSource4: TDataSource
+    DataSet = FDQuery5
+    Left = 540
+    Top = 48
+  end
+  object FDQuery5: TFDQuery
+    Connection = Form1.FDConnection1
+    Left = 612
+    Top = 56
+  end
+  object DataSource5: TDataSource
+    DataSet = FDQuery6
+    Left = 636
+    Top = 136
+  end
+  object FDQuery6: TFDQuery
+    Connection = Form1.FDConnection1
+    Left = 676
+    Top = 136
+  end
+  object DataSource6: TDataSource
+    DataSet = FDQuery7
+    Left = 468
+    Top = 216
+  end
+  object FDQuery7: TFDQuery
+    Connection = Form1.FDConnection1
+    Left = 516
+    Top = 224
   end
 end

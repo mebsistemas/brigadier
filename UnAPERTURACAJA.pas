@@ -44,7 +44,7 @@ END;
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE fecha='+#39+trim(fe)+#39+' and estado=1');
+form1.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE fecha='+#39+trim(fe)+#39+' and estado=1 AND PC='+INTTOSTR(FORM1.PUESTO_PC));
 form1.FDQuery2.Open;
 if form1.FDQuery2.RecordCount > 0 then
 begin
@@ -57,7 +57,7 @@ form1.FDConnection1.StartTransaction;
 try
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('insert into TCAJA  (fecha,cambio,estado) values ('+#39+trim(fe)+#39+','+floattostr(strtofloat(edit1.Text))+','+inttostr(estado)+')');
+form1.FDQuery2.SQL.Add('insert into TCAJA  (fecha,cambio,estado,PC) values ('+#39+trim(fe)+#39+','+floattostr(strtofloat(edit1.Text))+','+inttostr(estado)+','+INTTOSTR(FORM1.PUESTO_PC)+')');
 form1.FDQuery2.ExecSQL;
 form1.FDConnection1.Commit;
 form1.Panel2.Caption:='CAJA '+FE;

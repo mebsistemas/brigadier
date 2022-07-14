@@ -45,7 +45,6 @@ type
     QRQRBarcode1: TQRQRBarcode;
     QRImage1: TQRImage;
     QRLabel8: TQRLabel;
-    QRLabel31: TQRLabel;
     TitleBand1: TQRBand;
     QRLabel9: TQRLabel;
     qrrazonsocial: TQRLabel;

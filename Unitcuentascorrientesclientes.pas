@@ -23,6 +23,7 @@ type
     FDQuery3: TFDQuery;
     BitBtn5: TBitBtn;
     Label1: TLabel;
+    FDQuery4: TFDQuery;
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
@@ -61,14 +62,23 @@ IDCLIENTE:=buscar_clientes.DBGRID1.Fields[0].AsInteger;
 t:=0;
 p:=0 ;
 s:=0;
-SQL:='SELECT sum(tm.total),sum(tm.pago) '+
-' FROM TMOVIMIENTOS  TM,TCLIENTES TC  '+
+{SQL:='SELECT sum(tf.importe),sum(tm.pago) '+
+' FROM TMOVIMIENTOS  TM,TCLIENTES TC ,TFORMAPAGOS_FACTURAS tf '+
 ' WHERE TM.IDCLIENTE='+inttostr(idcliente)+
-' AND TM.IDFORMAPAGO=5  '+
-' AND TM.TOTAL<>TM.PAGO  '+
+' AND Tf.IDFORMA=5  and tm.idmovimiento=tf.idmovimiento '+
+' AND Tf.importe<>TM.PAGO  '+
 ' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
 ' AND CODNC IS NULL   '+
 ' AND TM.TIPOMOVIMIENTO IN (0,1,2,3,4,5,6,7) ORDER BY TM.IDMOVIMIENTO ASC ';
+  }
+sql:=' select sum(tf.importe),sum(tm.pago) from tmovimientos tm  ,tclientes tc, TFORMAPAGOS_FACTURAS tf '+
+ ' where tm.idcliente='+inttostr(idcliente)+
+ ' and tm.idmovimiento=tf.idmovimiento   '+
+ ' AND Tf.importe<>TM.PAGO   '+
+' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
+' and tf.IDFORMA=5   AND CODNC=0   '+
+'  AND TM.TIPOMOVIMIENTO IN (0,1,2,3,4,5,6,7) ORDER BY TM.IDMOVIMIENTO ASC';
+
  self.FDQuery1.Close;
  self.FDQuery1.SQL.Clear;
  self.FDQuery1.SQL.Add(SQL);
@@ -91,7 +101,7 @@ LABEL1.Caption:='SALDO  $'+FLOATTOSTR(S);
 
 
 SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
-' TM.TOTAL as tmtotal,TM.PAGO as tmpago,TM.NROFACTURA as tmnro,TC.APENOM as tmcliente,'+
+' Tf.importe as tmtotal,TM.PAGO as tmpago,TM.NROFACTURA as tmnro,TC.APENOM as tmcliente,'+
 ' CASE TM.TIPOMOVIMIENTO  '+
 ' WHEN 0 THEN ''TICKET''  '+
 ' WHEN 1 THEN ''FACTURA A'' '+
@@ -103,13 +113,13 @@ SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
 ' WHEN 7 THEN ''NC TKT'' '+
 ' ELSE    '+
 ' ''ERROR'' '+
-' END  AS TICK , (tm.total - tm.pago) as saldo '+
-' FROM TMOVIMIENTOS  TM,TCLIENTES TC  '+
+' END  AS TICK , (tf.importe - tm.pago) as saldo '+
+' FROM TMOVIMIENTOS  TM,TCLIENTES TC ,TFORMAPAGOS_FACTURAS tf '+
 ' WHERE TM.IDCLIENTE='+inttostr(idcliente)+
-' AND TM.IDFORMAPAGO=5  '+
-' AND TM.TOTAL<>TM.PAGO  '+
+' AND Tf.IDFORMA=5  and tm.idmovimiento=tf.idmovimiento '+
+' AND Tf.importe<>TM.PAGO  '+
 ' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
-' AND CODNC IS NULL   '+
+' AND CODNC=0  '+
 ' AND TM.TIPOMOVIMIENTO IN (0,1,2,3,4,5,6,7) ORDER BY TM.IDMOVIMIENTO ASC ';
  self.FDQuery1.Close;
  self.FDQuery1.SQL.Clear;
@@ -143,7 +153,7 @@ form1.FDConnection1.StartTransaction;
 try
    FDQuery2.Close;
    FDQuery2.SQL.Clear;
-   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 AND PC='+INTTOSTR(FORM1.PUESTO_PC)+' order by idcaja desc');
    FDQuery2.Open;
    fecha:= FDQuery2.FieldByName('fecha').AsString;
 
@@ -155,8 +165,8 @@ try
    CIERRE:=0;
    self.FDQuery2.Close;
    FDQuery2.SQL.Clear;
-   FDQuery2.SQL.Add('insert into TPAGOSCUENTACORRIENTES (IDMOVIMIENTO,TOTAL,IDFORMAPAGO,FECHA,CIERRE) '+
-   ' values ('+inttostr(strtoint(COBRARCC.edit3.text))+','+floattostr(pa)+','+INTTOSTR(COBRARCC.DBLookupComboBox1.KeyValue)+','+#39+TRIM(fecha)+#39+','+INTTOSTR(CIERRE)+')');
+   FDQuery2.SQL.Add('insert into TPAGOSCUENTACORRIENTES (IDMOVIMIENTO,TOTAL,IDFORMAPAGO,FECHA,CIERRE,PC) '+
+   ' values ('+inttostr(strtoint(COBRARCC.edit3.text))+','+floattostr(pa)+','+INTTOSTR(COBRARCC.DBLookupComboBox1.KeyValue)+','+#39+TRIM(fecha)+#39+','+INTTOSTR(CIERRE)+','+INTTOSTR(FORM1.PUESTO_PC)+')');
    FDQuery2.ExecSQL;
 
    form1.FDConnection1.Commit;
@@ -169,14 +179,14 @@ end;
  t:=0;
 p:=0 ;
 s:=0;
-SQL:='SELECT sum(tm.total),sum(tm.pago) '+
-' FROM TMOVIMIENTOS  TM,TCLIENTES TC  '+
-' WHERE TM.IDCLIENTE='+inttostr(idcliente)+
-' AND TM.IDFORMAPAGO=5  '+
-' AND TM.TOTAL<>TM.PAGO  '+
+sql:=' select sum(tf.importe),sum(tm.pago) from tmovimientos tm  ,tclientes tc, TFORMAPAGOS_FACTURAS tf '+
+ ' where tm.idcliente='+inttostr(idcliente)+
+ ' and tm.idmovimiento=tf.idmovimiento   '+
+ ' AND Tf.importe<>TM.PAGO   '+
 ' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
-' AND CODNC IS NULL   '+
-' AND TM.TIPOMOVIMIENTO IN  (0,1,2,3,4,5,6,7)  ORDER BY TM.IDMOVIMIENTO ASC ';
+' and tf.IDFORMA=5   AND CODNC=0   '+
+'  AND TM.TIPOMOVIMIENTO IN (0,1,2,3,4,5,6,7) ORDER BY TM.IDMOVIMIENTO ASC';
+
  self.FDQuery1.Close;
  self.FDQuery1.SQL.Clear;
  self.FDQuery1.SQL.Add(SQL);
@@ -198,9 +208,9 @@ SQL:='SELECT sum(tm.total),sum(tm.pago) '+
 LABEL1.Caption:='SALDO  $'+FLOATTOSTR(S);
 
 SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
-' TM.TOTAL as tmtotal,TM.PAGO as tmpago,TM.NROFACTURA as tmnro,TC.APENOM as tmcliente,'+
+' Tf.importe as tmtotal,TM.PAGO as tmpago,TM.NROFACTURA as tmnro,TC.APENOM as tmcliente,'+
 ' CASE TM.TIPOMOVIMIENTO  '+
- ' WHEN 0 THEN ''TICKET''  '+
+' WHEN 0 THEN ''TICKET''  '+
 ' WHEN 1 THEN ''FACTURA A'' '+
 ' WHEN 2 THEN ''FACTURA B'' '+
 ' WHEN 3 THEN ''FACTURA C'' '+
@@ -210,14 +220,14 @@ SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
 ' WHEN 7 THEN ''NC TKT'' '+
 ' ELSE    '+
 ' ''ERROR'' '+
-' END  AS TICK , (tm.total - tm.pago) as saldo '+
-' FROM TMOVIMIENTOS  TM,TCLIENTES TC  '+
+' END  AS TICK , (tf.importe - tm.pago) as saldo '+
+' FROM TMOVIMIENTOS  TM,TCLIENTES TC ,TFORMAPAGOS_FACTURAS tf '+
 ' WHERE TM.IDCLIENTE='+inttostr(idcliente)+
-' AND TM.IDFORMAPAGO=5  '+
-' AND TM.TOTAL<>TM.PAGO  '+
+' AND Tf.IDFORMA=5  and tm.idmovimiento=tf.idmovimiento '+
+' AND Tf.importe<>TM.PAGO  '+
 ' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
-' AND CODNC IS NULL   '+
-' AND TM.TIPOMOVIMIENTO IN  (0,1,2,3,4,5,6,7)  ORDER BY TM.IDMOVIMIENTO ASC ';
+' AND CODNC=0  '+
+' AND TM.TIPOMOVIMIENTO IN (0,1,2,3,4,5,6,7) ORDER BY TM.IDMOVIMIENTO ASC ';
  self.FDQuery1.Close;
  self.FDQuery1.SQL.Clear;
  self.FDQuery1.SQL.Add(SQL);
@@ -235,17 +245,17 @@ sql:='select tp.idcc as tpidcc,tp.idmovimiento as idm, tp.fecha as Fecha, tf.des
 ' from TPAGOSCUENTACORRIENTES tp, tformapago tf   '+
 ' where tp.idformapago=tf.idformapago '+
 ' and tp.idmovimiento='+inttostr(strtoint(trim(dbgrid1.Fields[0].asstring)))+' order by tp.idmovimiento asc';
- fdquery3.Close;
- fdquery3.SQL.Clear;
- fdquery3.SQL.Add(sql);
- fdquery3.Open;
- FRMINFOPAGOS.DataSource1.DataSet:=fdquery3;
+
+ fdquery4.Close;
+ fdquery4.SQL.Clear;
+ fdquery4.SQL.Add(sql);
+ fdquery4.Open;
+ FRMINFOPAGOS.DataSource1.DataSet:=fdquery4;
  FRMINFOPAGOS.ShowModal;
 
 
-
 SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
-' TM.TOTAL as tmtotal,TM.PAGO as tmpago,TM.NROFACTURA as tmnro,TC.APENOM as tmcliente,'+
+' Tf.importe as tmtotal,TM.PAGO as tmpago,TM.NROFACTURA as tmnro,TC.APENOM as tmcliente,'+
 ' CASE TM.TIPOMOVIMIENTO  '+
 ' WHEN 0 THEN ''TICKET''  '+
 ' WHEN 1 THEN ''FACTURA A'' '+
@@ -257,14 +267,14 @@ SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
 ' WHEN 7 THEN ''NC TKT'' '+
 ' ELSE    '+
 ' ''ERROR'' '+
-' END  AS TICK , (tm.total - tm.pago) as saldo '+
-' FROM TMOVIMIENTOS  TM,TCLIENTES TC  '+
+' END  AS TICK , (tf.importe - tm.pago) as saldo '+
+' FROM TMOVIMIENTOS  TM,TCLIENTES TC ,TFORMAPAGOS_FACTURAS tf '+
 ' WHERE TM.IDCLIENTE='+inttostr(idcliente)+
-' AND TM.IDFORMAPAGO=5  '+
-' AND TM.TOTAL<>TM.PAGO  '+
+' AND Tf.IDFORMA=5  and tm.idmovimiento=tf.idmovimiento '+
+' AND Tf.importe<>TM.PAGO  '+
 ' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
-' AND CODNC IS NULL   '+
-' AND TM.TIPOMOVIMIENTO IN  (0,1,2,3,4,5,6,7)  ORDER BY TM.IDMOVIMIENTO ASC ';
+' AND CODNC=0  '+
+' AND TM.TIPOMOVIMIENTO IN (0,1,2,3,4,5,6,7) ORDER BY TM.IDMOVIMIENTO ASC ';
  self.FDQuery1.Close;
  self.FDQuery1.SQL.Clear;
  self.FDQuery1.SQL.Add(SQL);

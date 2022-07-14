@@ -43,7 +43,7 @@ var fecha:String;
 begin
    FDQuery2.Close;
    FDQuery2.SQL.Clear;
-   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 AND PC='+INTTOSTR(FORM1.PUESTO_PC)+' order by idcaja desc');
    FDQuery2.Open;
    fecha:= FDQuery2.FieldByName('fecha').AsString;
   registarIngresosCaja.Edit1.Text:=fecha;
@@ -56,11 +56,11 @@ if registarIngresosCaja.ModalResult=mrok then
      try
          self.FDQuery2.Close;
          FDQuery2.SQL.Clear;
-         FDQuery2.SQL.Add('insert into tingresos (motivo,fecha,importe,CIERRE)  '+
+         FDQuery2.SQL.Add('insert into tingresos (motivo,fecha,importe,CIERRE,PC)  '+
          ' values ('+#39+trim(registarIngresosCaja.Edit2.Text)+#39+
                       ','+#39+trim(registarIngresosCaja.Edit1.Text)+#39+
                       ','+floattostr(strtofloat(registarIngresosCaja.Edit3.Text))+
-                      ',0)');
+                      ',0,'+INTTOSTR(FORM1.PUESTO_PC)+')');
          FDQuery2.ExecSQL;
         form1.FDConnection1.Commit;
         Application.MessageBox( 'Registro con éxito.', 'Atención',
@@ -76,13 +76,13 @@ if registarIngresosCaja.ModalResult=mrok then
 
    FDQuery1.Close;
    FDQuery1.SQL.Clear;
-   FDQuery1.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   FDQuery1.SQL.Add('SELECT * FROM TCAJA WHERE estado=1  AND PC='+INTTOSTR(FORM1.PUESTO_PC)+' order by idcaja desc');
    FDQuery1.Open;
    fecha:= FDQuery1.FieldByName('fecha').AsString;
 
 FDQuery1.Close;
 FDQuery1.SQL.Clear;
-FDQuery1.SQL.Add('select * from TINGRESOS where fecha='+#39+trim(fecha)+#39+' AND CIERRE=0');
+FDQuery1.SQL.Add('select * from TINGRESOS where fecha='+#39+trim(fecha)+#39+' AND CIERRE=0  AND PC='+INTTOSTR(FORM1.PUESTO_PC));
 FDQuery1.Open;
 end;
 
@@ -98,13 +98,13 @@ VAR FECHA:STRING;
 begin
   FDQuery1.Close;
    FDQuery1.SQL.Clear;
-   FDQuery1.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   FDQuery1.SQL.Add('SELECT * FROM TCAJA WHERE estado=1  AND PC='+INTTOSTR(FORM1.PUESTO_PC)+' order by idcaja desc');
    FDQuery1.Open;
    fecha:= FDQuery1.FieldByName('fecha').AsString;
 
 FDQuery1.Close;
 FDQuery1.SQL.Clear;
-FDQuery1.SQL.Add('select * from TINGRESOS where fecha='+#39+trim(fecha)+#39+' AND CIERRE=0');
+FDQuery1.SQL.Add('select * from TINGRESOS where fecha='+#39+trim(fecha)+#39+' AND CIERRE=0 AND PC='+INTTOSTR(FORM1.PUESTO_PC));
 FDQuery1.Open
 end;
 

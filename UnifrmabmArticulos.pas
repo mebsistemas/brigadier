@@ -146,12 +146,13 @@ end;
 function TfrmABMARticulos.cargararticulos(repo:longint):boolean;
 var sql:string;
 begin
+
 sql:='SELECT a.codigobarra as acodigobarra, '+
                              ' a.descripcion as adescripcion , '+
                              ' a.idarticulo as aidarticulo, '+
                              ' a.precioventa as aprecioventa,'+
-                             ' a.stock   as astock ,'+
-                            ' r.descripcion as ru  , tp.razonsocial as prove,A.STOCKALERTA AS STaE '+
+                             ' A.stock    as astock ,'+
+                            ' r.descripcion as ru  , tp.razonsocial as prove,A.STOCKALERTA  AS STaE '+
                              ', A.COSTO AS ACOSTO , M.DESCRIPCION AS MARCA '+
                              ' FROM TARTICULOS a , trubros r '+
                                ' LEFT JOIN TPROVEEDORES TP ON TP.IDPROVEEDOR = A.IDPROVEEDOR '+
@@ -501,7 +502,7 @@ begin
       ALER:=TRIM(DBGRID1.Fields[8].AsString);
 
 
-     if ((STRTOINT(STO))<(STRTOINT(ALER))) then   BEGIN
+     if ((STRTOFLOAT(STO))<(STRTOFLOAT(ALER))) then   BEGIN
 
     //if (Column.Index = 3)and (gdSelected in State)then begin
       //Pintar el Color de la Letra
@@ -511,7 +512,7 @@ begin
       DBGRID1.DefaultDrawColumnCell(rect,DataCol,Column,State);
     end;
 
-        if ((STRTOINT(STO))=(STRTOINT(ALER))) then   BEGIN
+        if ((STRTOFLOAT(STO))=(STRTOFLOAT(ALER))) then   BEGIN
 
     //if (Column.Index = 3)and (gdSelected in State)then begin
       //Pintar el Color de la Letra

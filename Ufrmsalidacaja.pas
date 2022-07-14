@@ -105,13 +105,13 @@ var fecha:string;
 begin
    FDQuery1.Close;
    FDQuery1.SQL.Clear;
-   FDQuery1.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   FDQuery1.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 AND PC='+INTTOSTR(FORM1.PUESTO_PC)+' order by idcaja desc');
    FDQuery1.Open;
    fecha:= FDQuery1.FieldByName('fecha').AsString;
 
  self.FDQuery1.Close;
  FDQuery1.SQL.Clear;
- FDQuery1.SQL.Add('select * from tsalidas where fecha='+#39+trim(fecha)+#39+' AND CIERRE=0');
+ FDQuery1.SQL.Add('select * from tsalidas where fecha='+#39+trim(fecha)+#39+' AND CIERRE=0 AND PC='+INTTOSTR(FORM1.PUESTO_PC));
  FDQuery1.Open;
 end;
 

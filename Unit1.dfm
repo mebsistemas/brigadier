@@ -55,6 +55,15 @@ object Form1: TForm1
         ParentBackground = False
         TabOrder = 0
       end
+      object Edit3: TEdit
+        Left = 672
+        Top = 8
+        Width = 121
+        Height = 27
+        TabOrder = 1
+        Text = 'Edit3'
+        Visible = False
+      end
     end
     object Panel3: TPanel
       Left = 1
@@ -617,7 +626,7 @@ object Form1: TForm1
           ParentFont = False
           OnClick = SpeedButton1Click
           ExplicitLeft = 4
-          ExplicitTop = 54
+          ExplicitTop = 83
         end
         object SpeedButton2: TSpeedButton
           Left = 1
@@ -1611,6 +1620,9 @@ object Form1: TForm1
       end
       item
         Width = 300
+      end
+      item
+        Width = 50
       end>
   end
   object MainMenu1: TMainMenu
@@ -1782,7 +1794,7 @@ object Form1: TForm1
         end
         object ListadodeMovimientos1: TMenuItem
           Tag = 12006
-          Caption = 'Listado de Movimientos'
+          Caption = 'Listado de Ventas'
           OnClick = ListadodeMovimientos1Click
         end
       end

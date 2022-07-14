@@ -11,7 +11,8 @@ uses
   FireDAC.Comp.Client,Class_decimales,UDisenioPDF,Exportar2PDF, IdIOHandler,
   IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, IdBaseComponent,
   IdComponent, IdTCPConnection, IdTCPClient, IdExplicitTLSClientServerBase,
-  IdMessageClient, IdSMTPBase, IdSMTP,IdMessage,  IdSSLOpenSSLHeaders, Vcl.Menus;
+  IdMessageClient, IdSMTPBase, IdSMTP,IdMessage,  IdSSLOpenSSLHeaders, Vcl.Menus,
+  Vcl.Grids, Vcl.DBGrids, RxMemDS;
 
 type
   Tfrmterminar = class(TForm)
@@ -47,6 +48,20 @@ type
     IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
     MainMenu1: TMainMenu;
     aceptar1: TMenuItem;
+    Panel6: TPanel;
+    DBGrid1: TDBGrid;
+    Label8: TLabel;
+    Edit4: TEdit;
+    BitBtn2: TBitBtn;
+    RxMemoryData1: TRxMemoryData;
+    RxMemoryData1IDFORMA: TIntegerField;
+    RxMemoryData1FORMA: TStringField;
+    RxMemoryData1IMPORTES: TStringField;
+    RxMemoryData1IMPORTEF: TFloatField;
+    DataSource2: TDataSource;
+    Label9: TLabel;
+    Edit5: TEdit;
+    FDQuery7: TFDQuery;
     procedure SpeedButton2Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure ComboBox1KeyPress(Sender: TObject; var Key: Char);
@@ -57,6 +72,9 @@ type
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
     procedure aceptar1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure Edit4KeyPress(Sender: TObject; var Key: Char);
+    procedure DBGrid1DblClick(Sender: TObject);
   private
     { Private declarations }
     FUNCTION GUARDAR:BOOLEAN;
@@ -104,6 +122,7 @@ BEGIN
      posi:=pos('-',trim(label7.Caption));
    IDCLIENTE:=strtoint(trim(copy(trim(label7.Caption),0,posi-1)));
 
+   IDMOVIMIENTONC:=0;
 
   IF (TIPOMOVIMIENTO = 4)  OR (TIPOMOVIMIENTO = 5)
        OR (TIPOMOVIMIENTO = 6) OR  (TIPOMOVIMIENTO = 7) THEN
@@ -162,7 +181,7 @@ TD:=TDECIMALES.Create;
 
 
 
-   IDFORMAPAGO:=SELF.DBLookupComboBox2.KeyValue;
+
 
    if TIPOMOVIMIENTO=0 then
    BEGIN
@@ -202,16 +221,38 @@ TD:=TDECIMALES.Create;
    FDQuery2.Open;
    FECHAHOY:= FDQuery2.FieldByName('fecha').AsString;
    PAGO:=0;
+
+    self.RxMemoryData1.Open;
+   if RxMemoryData1.RecordCount > 1 then
+     IDFORMAPAGO:=0
+     ELSE
+      IDFORMAPAGO:=SELF.RxMemoryData1IDFORMA.Value;
+
    FDQuery2.Close;
    FDQuery2.SQL.Clear;
    FDQuery2.SQL.Add('INSERT INTO TMOVIMIENTOS (IDMOVIMIENTO,TIPOMOVIMIENTO,IDCLIENTE, IDFORMAPAGO '+
-                    ',FECHA,SUBTOTAL,IVA,TOTAL,NROFACTURA,CAE,FECHAVENCE,CODIGOUSUARIO,CIERRE,IVA10,PAGO) ' +
+                    ',FECHA,SUBTOTAL,IVA,TOTAL,NROFACTURA,CAE,FECHAVENCE,CODIGOUSUARIO,CIERRE,IVA10,PAGO,CODNC,PC) ' +
                    ' VALUES ('+INTTOSTR(IDMOVI)+','+INTTOSTR(TIPOMOVIMIENTO)+','+INTTOSTR(IDCLIENTE)+
                    ','+INTTOSTR(IDFORMAPAGO)+','+#39+TRIM(FECHAHOY)+#39+','+FLOATTOSTR(SUBTOTAL)+
                    ','+FLOATTOSTR(IVA)+','+FLOATTOSTR(TOTAL)+','+#39+TRIM(NROFACTURA)+#39+
-                   ','+#39+TRIM(CAE)+#39+','+#39+TRIM(FECHAVENCE)+#39+','+INTTOSTR(CODIGOUSUARIO)+','+inttostr(cierre)+','+FLOATTOSTR(IVA10)+','+FLOATTOSTR(PAGO)+')');
+                   ','+#39+TRIM(CAE)+#39+','+#39+TRIM(FECHAVENCE)+#39+','+INTTOSTR(CODIGOUSUARIO)+','+inttostr(cierre)+','+FLOATTOSTR(IVA10)+','+FLOATTOSTR(PAGO)+','+inttostr(IDMOVIMIENTONC)+','+INTTOSTR(FORM1.PUESTO_PC)+')');
 
    FDQuery2.ExecSQL;
+
+
+   self.RxMemoryData1.Open;
+   self.RxMemoryData1.First;
+   while not self.RxMemoryData1.Eof do
+   begin
+        FDQuery7.Close;
+        FDQuery7.SQL.Clear;
+        FDQuery7.SQL.Add('insert into TFORMAPAGOS_FACTURAS (idmovimiento,idforma,descripcion,importe) '+
+        ' values ('+inttostr(IDMOVI)+','+inttostr(self.RxMemoryData1IDFORMA.Value)+
+        ','+#39+trim(self.RxMemoryData1FORMA.Value)+#39+','+floattostr(self.RxMemoryData1IMPORTEF.Value)+')') ;
+        FDQuery7.ExecSQL;
+
+   self.RxMemoryData1.Next
+   end;
 
     {   IF (TIPOMOVIMIENTO = 4)  OR (TIPOMOVIMIENTO = 5)
        OR (TIPOMOVIMIENTO = 6) OR  (TIPOMOVIMIENTO = 7) THEN
@@ -373,10 +414,101 @@ begin
 SpeedButton1Click(Sender);
 end;
 
+procedure Tfrmterminar.BitBtn2Click(Sender: TObject);
+VAR T:TDECIMALES;     S,TT:REAL;
+begin
+if TRIM(SELF.DBLookupComboBox2.Text)='' then
+BEGIN
+   SHOWMESSAGE('DEBE SELECCIONAR LA FORMA DE PAGO');
+  EXIT;
+END;
+
+if TRIM(EDIT4.Text)='' then
+BEGIN
+   SHOWMESSAGE('DEBE INGRESAR EL IMPORTE');
+  EXIT;
+END;
+
+if TRIM(EDIT4.Text)='0' then
+BEGIN
+   SHOWMESSAGE('DEBE INGRESAR EL IMPORTE');
+  EXIT;
+END;
+
+if STRTOFLOAT(LABEL4.Caption)<STRTOFLOAT(EDIT1.Text) then
+   BEGIN
+       SHOWMESSAGE('EL IMPORTE TOTAL PAGADO NO PUEDE SER MAYOR AL TOTAL DE LA VENTA');
+           EXIT;
+
+   END;
+
+    if STRTOFLOAT(EDIT4.Text) > STRTOFLOAT(EDIT5.Text) then
+   BEGIN
+       SHOWMESSAGE('EL IMPORTE INGRESADO NO PUEDE SER MAYOR AL SALDO');
+           EXIT;
+
+   END;
+
+
+T:=TDECIMALES.Create;
+SELF.RxMemoryData1.Append;
+SELF.RxMemoryData1IDFORMA.Value:=SELF.DBLookupComboBox2.KeyValue;
+SELF.RxMemoryData1FORMA.Value:=TRIM(SELF.DBLookupComboBox2.Text);
+SELF.RxMemoryData1IMPORTES.Value:=T.arma_importe_para_mostrar(STRTOFLOAT(EDIT4.Text));
+SELF.RxMemoryData1IMPORTEF.Value:=STRTOFLOAT(EDIT4.Text);
+SELF.RxMemoryData1.Post;
+
+SELF.RxMemoryData1.First;
+TT:=0;
+S:=STRTOFLOAT(EDIT5.Text);
+while NOT SELF.RxMemoryData1.Eof do
+BEGIN
+    TT:=TT + SELF.RxMemoryData1IMPORTEF.Value;
+  SELF.RxMemoryData1.Next;
+END;
+EDIT1.Text:=T.arma_importe_para_mostrar(TT);
+
+EDIT5.Text:=T.arma_importe_para_mostrar(STRTOFLOAT(LABEL4.Caption) - TT);
+EDIT4.Text:=TRIM(EDIT5.Text);
+
+T.Free;
+
+
+end;
+
 procedure Tfrmterminar.ComboBox1KeyPress(Sender: TObject; var Key: Char);
 begin
 if KEY=#13 THEN
 SELF.DBLookupComboBox2.SetFocus;
+
+end;
+
+procedure Tfrmterminar.DBGrid1DblClick(Sender: TObject);
+VAR T:TDECIMALES;
+TT,S:REAL;
+begin
+if SELF.RxMemoryData1.RecordCount=0 then
+  EXIT;
+
+SELF.RxMemoryData1.Delete;
+
+T:=TDECIMALES.Create;
+
+
+SELF.RxMemoryData1.First;
+TT:=0;
+S:=STRTOFLOAT(EDIT5.Text);
+while NOT SELF.RxMemoryData1.Eof do
+BEGIN
+    TT:=TT + SELF.RxMemoryData1IMPORTEF.Value;
+  SELF.RxMemoryData1.Next;
+END;
+EDIT1.Text:=T.arma_importe_para_mostrar(TT);
+
+EDIT5.Text:=T.arma_importe_para_mostrar(STRTOFLOAT(LABEL4.Caption) - TT);
+EDIT4.Text:=TRIM(EDIT5.Text);
+
+T.Free;
 
 end;
 
@@ -409,6 +541,15 @@ if KEY=#13 THEN
 SELF.BitBtn1Click(Sender);
 end;
 
+procedure Tfrmterminar.Edit4KeyPress(Sender: TObject; var Key: Char);
+begin
+  if KEY IN ['1','2','3','4','5','6','7','8','9','0','.',#8,#13,#27] then
+  EDIT4.ReadOnly:=FALSE
+  ELSE
+  EDIT4.ReadOnly:=TRUE;
+
+end;
+
 procedure Tfrmterminar.FormShow(Sender: TObject);
 begin
 FDQuery1.Connection:=FORM1.FDConnection1;
@@ -428,6 +569,19 @@ procedure Tfrmterminar.SpeedButton1Click(Sender: TObject);
 VAR IDCLIENTE:LONGINT;     TIPOMOVIMIENTO:LONGINT;
 POSI:LONGINT;    ARCHVOENVIA:sTRING;
 begin
+   if (SELF.RxMemoryData1.RecordCount=0)  then
+       BEGIN
+            Application.MessageBox( 'NO HAY FORMA DE PAGOS INGRESADAS.',
+  'Acceso denegado', MB_ICONSTOP );
+       EXIT;
+       END;
+
+    if STRTOFLOAT(EDIT5.Text) > 0 then
+   BEGIN
+       SHOWMESSAGE('NO SE HA PAGADO LA TOTALIDAD DE LA VENTA.');
+           EXIT;
+
+   END;
 
    posi:=pos('-',trim(ComboBox1.Text));
    TIPOMOVIMIENTO:=strtoint(trim(copy(trim(ComboBox1.TEXT),0,posi-1)));
@@ -710,7 +864,7 @@ var posi,codigocliente:longint; COMPROBANTE,LETRA,COD,DNICUIT,TIPODOC,RAZONSOCIA
     fechaqr,tipocbte,CODIGO_QR:String;
                     fechadir:sTRING;
     NROFAC,  ARCHIVO,DIRFAE:STRING;   Gpdf :TExportar2PDFSyn ;
-    IDFOMAPAO:LONGINT;TIPOMOVIMIENTO:LONGINT;
+    IDFOMAPAO:LONGINT;TIPOMOVIMIENTO,I:LONGINT;
 begin
 
    posi:=pos('-',trim(label7.Caption));
@@ -927,6 +1081,44 @@ begin
 
 
 
+  //fomra de pago
+  for i:=1 to 5 do
+   begin
+       frmpdf.RxMemoryData1.Append;
+       frmpdf.RxMemoryData1DESCRIPCION.Value:='';
+       frmpdf.RxMemoryData1PUNITARIO.Value:='';
+       frmpdf.RxMemoryData1IVA.Value:='';
+       frmpdf.RxMemoryData1TOTAL.Value:= '';
+       frmpdf.RxMemoryData1.Post;
+       frmpdf.QRPQuickrep1.Page.Length:= frmpdf.QRPQuickrep1.Page.Length + 20;
+   end;
+      frmpdf.RxMemoryData1.Append;
+       frmpdf.RxMemoryData1DESCRIPCION.Value:='FORMAS DE PAGOS';
+       frmpdf.RxMemoryData1PUNITARIO.Value:='';
+       frmpdf.RxMemoryData1IVA.Value:='';
+       frmpdf.RxMemoryData1TOTAL.Value:= '';
+       frmpdf.RxMemoryData1.Post;
+       frmpdf.QRPQuickrep1.Page.Length:= frmpdf.QRPQuickrep1.Page.Length + 20;
+
+     Form1.FDQuery3.Close;
+     Form1.FDQuery3.SQL.Clear;
+     Form1.FDQuery3.SQL.Add('SELECT  * FROM TFORMAPAGOS_FACTURAS WHERE IDMOVIMIENTO='+INTTOSTR(idmovi));
+     Form1.FDQuery3.Open;
+     while NOT Form1.FDQuery3.Eof do
+     BEGIN
+         frmpdf.RxMemoryData1.Append;
+         frmpdf.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.FieldByName('DESCRIPCION').AsString);
+         frmpdf.RxMemoryData1PUNITARIO.Value:='';
+         frmpdf.RxMemoryData1IVA.Value:='';
+         frmpdf.RxMemoryData1TOTAL.Value:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.FieldByName('IMPORTE').AsString)),FFFIXED,8,2);
+         frmpdf.RxMemoryData1.Post;
+         frmpdf.QRPQuickrep1.Page.Length:= frmpdf.QRPQuickrep1.Page.Length + 20;
+
+
+     Form1.FDQuery3.Next;
+     END;
+
+
 
 
    {forma directorios}
@@ -996,7 +1188,7 @@ var posi,codigocliente:longint; COMPROBANTE,LETRA,COD,DNICUIT,TIPODOC,RAZONSOCIA
     fechaqr,tipocbte,CODIGO_QR:String;
                     fechadir:sTRING;
     NROFAC,  ARCHIVO,DIRFAE:STRING;   Gpdf :TExportar2PDFSyn ;
-    IDFOMAPAO:LONGINT;TIPOMOVIMIENTO:LONGINT;
+    IDFOMAPAO:LONGINT;TIPOMOVIMIENTO,I:LONGINT;
 begin
 
    posi:=pos('-',trim(label7.Caption));
@@ -1132,7 +1324,7 @@ begin
   Form1.FDQuery3.SQL.Clear;
   Form1.FDQuery3.SQL.Add('SELECT  DESCRIPCION FROM TFORMAPAGO WHERE IDFORMAPAGO='+INTTOSTR(IDFOMAPAO));
   Form1.FDQuery3.Open;
-  disenioimprimirFactura58.QRLabel31.CAPTION:='FORMA DE PAGO:'+TRIM(Form1.FDQuery3.FieldByName('DESCRIPCION').ASSTRING);
+//  disenioimprimirFactura58.QRLabel31.CAPTION:='FORMA DE PAGO:'+TRIM(Form1.FDQuery3.FieldByName('DESCRIPCION').ASSTRING);
 
   if trim(letra)='B' then
   begin
@@ -1228,7 +1420,42 @@ begin
   Form1.FDQuery3.NEXT;
   END;
 
+  //fomra de pago
+  for i:=1 to 5 do
+   begin
+       disenioimprimirFactura58.RxMemoryData1.Append;
+       disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:='';
+       disenioimprimirFactura58.RxMemoryData1PUNITARIO.Value:='';
+       disenioimprimirFactura58.RxMemoryData1IVA.Value:='';
+       disenioimprimirFactura58.RxMemoryData1TOTAL.Value:= '';
+       disenioimprimirFactura58.RxMemoryData1.Post;
+       disenioimprimirFactura58.QRPQuickrep1.Page.Length:= disenioimprimirFactura58.QRPQuickrep1.Page.Length + 20;
+   end;
+      disenioimprimirFactura58.RxMemoryData1.Append;
+       disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:='FORMAS DE PAGOS';
+       disenioimprimirFactura58.RxMemoryData1PUNITARIO.Value:='';
+       disenioimprimirFactura58.RxMemoryData1IVA.Value:='';
+       disenioimprimirFactura58.RxMemoryData1TOTAL.Value:= '';
+       disenioimprimirFactura58.RxMemoryData1.Post;
+       disenioimprimirFactura58.QRPQuickrep1.Page.Length:= disenioimprimirFactura58.QRPQuickrep1.Page.Length + 20;
 
+     Form1.FDQuery3.Close;
+     Form1.FDQuery3.SQL.Clear;
+     Form1.FDQuery3.SQL.Add('SELECT  * FROM TFORMAPAGOS_FACTURAS WHERE IDMOVIMIENTO='+INTTOSTR(idmovi));
+     Form1.FDQuery3.Open;
+     while NOT Form1.FDQuery3.Eof do
+     BEGIN
+         disenioimprimirFactura58.RxMemoryData1.Append;
+         disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.FieldByName('DESCRIPCION').AsString);
+         disenioimprimirFactura58.RxMemoryData1PUNITARIO.Value:='';
+         disenioimprimirFactura58.RxMemoryData1IVA.Value:='';
+         disenioimprimirFactura58.RxMemoryData1TOTAL.Value:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.FieldByName('IMPORTE').AsString)),FFFIXED,8,2);
+         disenioimprimirFactura58.RxMemoryData1.Post;
+         disenioimprimirFactura58.QRPQuickrep1.Page.Length:= disenioimprimirFactura58.QRPQuickrep1.Page.Length + 20;
+
+
+     Form1.FDQuery3.Next;
+     END;
 
 
 
@@ -1297,7 +1524,7 @@ var posi,codigocliente:longint; COMPROBANTE,LETRA,COD,DNICUIT,TIPODOC,RAZONSOCIA
     fechaqr,tipocbte,CODIGO_QR:String;
                     fechadir:sTRING;
     NROFAC,  ARCHIVO,DIRFAE:STRING;   Gpdf :TExportar2PDFSyn ;
-    IDFOMAPAO:LONGINT;TIPOMOVIMIENTO:LONGINT;
+    IDFOMAPAO:LONGINT;TIPOMOVIMIENTO,I:LONGINT;
 begin
 
    posi:=pos('-',trim(label7.Caption));
@@ -1418,6 +1645,43 @@ begin
 
 
 
+  //fomra de pago
+  for i:=1 to 5 do
+   begin
+       FRMDISENIOTICKET.RxMemoryData1.Append;
+       FRMDISENIOTICKET.RxMemoryData1DESCRIPCION.Value:='';
+       FRMDISENIOTICKET.RxMemoryData1PUNITARIO.Value:='';
+       FRMDISENIOTICKET.RxMemoryData1IVA.Value:='';
+       FRMDISENIOTICKET.RxMemoryData1TOTAL.Value:= '';
+       FRMDISENIOTICKET.RxMemoryData1.Post;
+       FRMDISENIOTICKET.QRPQuickrep1.Page.Length:= FRMDISENIOTICKET.QRPQuickrep1.Page.Length + 20;
+   end;
+      FRMDISENIOTICKET.RxMemoryData1.Append;
+       FRMDISENIOTICKET.RxMemoryData1DESCRIPCION.Value:='FORMAS DE PAGOS';
+       FRMDISENIOTICKET.RxMemoryData1PUNITARIO.Value:='';
+       FRMDISENIOTICKET.RxMemoryData1IVA.Value:='';
+       FRMDISENIOTICKET.RxMemoryData1TOTAL.Value:= '';
+       FRMDISENIOTICKET.RxMemoryData1.Post;
+       FRMDISENIOTICKET.QRPQuickrep1.Page.Length:= FRMDISENIOTICKET.QRPQuickrep1.Page.Length + 20;
+
+     Form1.FDQuery3.Close;
+     Form1.FDQuery3.SQL.Clear;
+     Form1.FDQuery3.SQL.Add('SELECT  * FROM TFORMAPAGOS_FACTURAS WHERE IDMOVIMIENTO='+INTTOSTR(idmovi));
+     Form1.FDQuery3.Open;
+     while NOT Form1.FDQuery3.Eof do
+     BEGIN
+         FRMDISENIOTICKET.RxMemoryData1.Append;
+         FRMDISENIOTICKET.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.FieldByName('DESCRIPCION').AsString);
+         FRMDISENIOTICKET.RxMemoryData1PUNITARIO.Value:='';
+         FRMDISENIOTICKET.RxMemoryData1IVA.Value:='';
+         FRMDISENIOTICKET.RxMemoryData1TOTAL.Value:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.FieldByName('IMPORTE').AsString)),FFFIXED,8,2);
+         FRMDISENIOTICKET.RxMemoryData1.Post;
+         FRMDISENIOTICKET.QRPQuickrep1.Page.Length:= FRMDISENIOTICKET.QRPQuickrep1.Page.Length + 20;
+
+
+     Form1.FDQuery3.Next;
+     END;
+
 
 
    {forma directorios}
@@ -1470,7 +1734,7 @@ var posi,codigocliente:longint; COMPROBANTE,LETRA,COD,DNICUIT,TIPODOC,RAZONSOCIA
     fechaqr,tipocbte,CODIGO_QR:String;
                     fechadir:sTRING;
     NROFAC,  ARCHIVO,DIRFAE:STRING;   Gpdf :TExportar2PDFSyn ;
-    IDFOMAPAO:LONGINT;TIPOMOVIMIENTO:LONGINT;
+    IDFOMAPAO:LONGINT;TIPOMOVIMIENTO,I:LONGINT;
 begin
    frmTicket58.QRPQuickrep1.Page.Length:=129;
 
@@ -1546,8 +1810,9 @@ begin
 
    fechaqr:=copy(TRIM(Form1.FDQuery3.FieldByName('FECHA').ASSTRING),7,4)+'-'+copy(TRIM(Form1.FDQuery3.FieldByName('FECHA').ASSTRING),4,2)+'-'+copy(TRIM(Form1.FDQuery3.FieldByName('FECHA').ASSTRING),1,2);
 
-
-
+   frmTicket58.QRLabel26.Caption:='TIKECT';
+    if TIPOMOVIMIENTO=7 then
+        frmTicket58.QRLabel26.Caption:='DEVOLUCION';
 
 
 
@@ -1600,6 +1865,45 @@ begin
      // frmTicket58.RxMemoryData1.Post;
   Form1.FDQuery3.NEXT;
   END;
+
+
+    //fomra de pago
+  for i:=1 to 5 do
+   begin
+       frmTicket58.RxMemoryData1.Append;
+       frmTicket58.RxMemoryData1DESCRIPCION.Value:='';
+       frmTicket58.RxMemoryData1PUNITARIO.Value:='';
+       frmTicket58.RxMemoryData1IVA.Value:='';
+       frmTicket58.RxMemoryData1TOTAL.Value:= '';
+       frmTicket58.RxMemoryData1.Post;
+       frmTicket58.QRPQuickrep1.Page.Length:= frmTicket58.QRPQuickrep1.Page.Length + 20;
+   end;
+      frmTicket58.RxMemoryData1.Append;
+       frmTicket58.RxMemoryData1DESCRIPCION.Value:='FORMAS DE PAGOS';
+       frmTicket58.RxMemoryData1PUNITARIO.Value:='';
+       frmTicket58.RxMemoryData1IVA.Value:='';
+       frmTicket58.RxMemoryData1TOTAL.Value:= '';
+       frmTicket58.RxMemoryData1.Post;
+       frmTicket58.QRPQuickrep1.Page.Length:= frmTicket58.QRPQuickrep1.Page.Length + 20;
+
+     Form1.FDQuery3.Close;
+     Form1.FDQuery3.SQL.Clear;
+     Form1.FDQuery3.SQL.Add('SELECT  * FROM TFORMAPAGOS_FACTURAS WHERE IDMOVIMIENTO='+INTTOSTR(idmovi));
+     Form1.FDQuery3.Open;
+     while NOT Form1.FDQuery3.Eof do
+     BEGIN
+         frmTicket58.RxMemoryData1.Append;
+         frmTicket58.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.FieldByName('DESCRIPCION').AsString);
+         frmTicket58.RxMemoryData1PUNITARIO.Value:='';
+         frmTicket58.RxMemoryData1IVA.Value:='';
+         frmTicket58.RxMemoryData1TOTAL.Value:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.FieldByName('IMPORTE').AsString)),FFFIXED,8,2);
+         frmTicket58.RxMemoryData1.Post;
+         frmTicket58.QRPQuickrep1.Page.Length:= frmTicket58.QRPQuickrep1.Page.Length + 20;
+
+
+     Form1.FDQuery3.Next;
+     END;
+
 
 
 
