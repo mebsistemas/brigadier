@@ -1683,7 +1683,7 @@ demo:=true;
 
 if demo=true then
 begin
-FEFINALIZA:='31/12/2022';
+FEFINALIZA:='15/08/2022';
  if (date > STRTODATE(FEFINALIZA)) then
     begin
      showmessage('VERSION DEMO TERMINADA');
