@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Buttons,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Buttons,  CLASS_DECIMALES,
   Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet,
@@ -24,11 +24,16 @@ type
     BitBtn5: TBitBtn;
     Label1: TLabel;
     FDQuery4: TFDQuery;
+    FDQuery5: TFDQuery;
+    FDQuery6: TFDQuery;
+    FDQuery7: TFDQuery;
+    FDQuery8: TFDQuery;
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn5Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
   private
     { Private declarations }
     IDCLIENTE:LONGINT;
@@ -235,6 +240,174 @@ SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
 
 
 END;
+
+end;
+
+procedure Tcuentascorrientesclientes.BitBtn4Click(Sender: TObject);
+VAR SQL:STRING;  tmidmovimiento,idarticulo,item:LONGINT;
+     puni:real;       precioventa,unitario,precioventaTotal,ivatotal:real;
+     ptotal:real;
+     iva,cantidad,sumatotal:real;
+     td:tdecimales;    t:real;
+p:real;
+s:real;
+begin
+if FDQuery1.RecordCount=0 then
+exit;
+
+td:=tdecimales.Create;
+form1.FDConnection1.StartTransaction;
+try
+
+SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
+' TM.TOTAL as tmtotal,TM.PAGO as tmpago,TM.NROFACTURA as tmnro,TC.APENOM as tmcliente,'+
+' CASE TM.TIPOMOVIMIENTO  '+
+' WHEN 0 THEN ''TICKET''  '+
+' WHEN 1 THEN ''FACTURA A'' '+
+' WHEN 2 THEN ''FACTURA B'' '+
+' WHEN 3 THEN ''FACTURA C'' '+
+' WHEN 4 THEN ''NC A'' '+
+' WHEN 5 THEN ''NC B'' '+
+' WHEN 6 THEN ''NC C'' '+
+' WHEN 7 THEN ''NC TKT'' '+
+' ELSE    '+
+' ''ERROR'' '+
+' END  AS TICK , (tm.total - tm.pago) as saldo '+
+' FROM TMOVIMIENTOS  TM,TCLIENTES TC  '+
+' WHERE TM.IDCLIENTE='+inttostr(idcliente)+
+' AND TM.IDFORMAPAGO=5  '+
+' AND TM.TOTAL<>TM.PAGO  '+
+' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
+' AND CODNC IS NULL   '+
+' AND TM.TIPOMOVIMIENTO IN (0,1,2,3,4,5,6,7) ORDER BY TM.IDMOVIMIENTO ASC ';
+FDQuery4.Close;
+FDQuery4.SQL.Clear;
+FDQuery4.SQL.Add(SQL);
+FDQuery4.Open;
+while NOT FDQuery4.EOF do
+BEGIN
+   tmidmovimiento:=FDQuery4.FieldByName('tmidmovimiento').AsInteger;
+  sumatotal:=0;
+
+      FDQuery5.Close;
+      FDQuery5.SQL.Clear;
+      FDQuery5.SQL.Add('select * from titem_factura where idfactura='+inttostr(tmidmovimiento));
+      FDQuery5.Open;
+      while not FDQuery5.Eof do
+       begin
+            item:=FDQuery5.FieldByName('iditem').AsInteger;
+            idarticulo:=FDQuery5.FieldByName('idarticulo').AsInteger;
+            puni:=FDQuery5.FieldByName('puni').asfloat;
+            ptotal:=FDQuery5.FieldByName('ptotal').asfloat;
+            iva:=FDQuery5.FieldByName('iva').asfloat;
+            cantidad:=FDQuery5.FieldByName('cantidad').asfloat;
+
+            FDQuery6.Close;
+            FDQuery6.SQL.Clear;
+            FDQuery6.SQL.Add('select  precioventa,iva from tarticulos where idarticulo='+inttostr(idarticulo));
+            FDQuery6.Open;
+            precioventa:=FDQuery6.FieldByName('precioventa').asfloat;
+            iva:=FDQuery6.FieldByName('iva').asfloat;
+
+            precioventaTotal:=precioventa*cantidad;
+            iva:=iva/100;
+            iva:=1+iva;
+            unitario:=(precioventaTotal/iva);
+            ivatotal:=precioventaTotal - unitario;
+
+             sumatotal:=sumatotal +    precioventaTotal;
+
+
+            FDQuery7.Close;
+            FDQuery7.SQL.Clear;
+            FDQuery7.SQL.Add('update titem_factura set puni='+td.arma_importe_para_mostrar(unitario)+', iva='+td.arma_importe_para_mostrar(ivatotal)+', ptotal='+td.arma_importe_para_mostrar(precioventaTotal)+' where idarticulo='+inttostr(idarticulo)+' and idfactura='+inttostr(tmidmovimiento)+' and iditem='+inttostr(item));
+            FDQuery7.ExecSQL;
+
+
+            FDQuery5.Next;
+       end;
+            if sumatotal >0 then
+            begin
+            FDQuery8.Close;
+            FDQuery8.SQL.Clear;
+            FDQuery8.SQL.Add('update TMOVIMIENTOS set subtotal='+td.arma_importe_para_mostrar(sumatotal)+', total='+td.arma_importe_para_mostrar(sumatotal)+' where idmovimiento='+inttostr(tmidmovimiento));
+            FDQuery8.ExecSQL;
+            end;
+
+FDQuery4.Next;
+END;
+
+
+
+ form1.FDConnection1.Commit;
+ showmessage('ACTUALIZACION CORRECTA');
+except
+
+   form1.FDConnection1.Rollback;
+   showmessage('SE PRODUJO UN ERROR EN LA ACTUALIZACION');
+end;
+   td.Free;
+
+
+
+
+t:=0;
+p:=0 ;
+s:=0;
+SQL:='SELECT sum(tm.total),sum(tm.pago) '+
+' FROM TMOVIMIENTOS  TM,TCLIENTES TC  '+
+' WHERE TM.IDCLIENTE='+inttostr(idcliente)+
+' AND TM.IDFORMAPAGO=5  '+
+' AND TM.TOTAL<>TM.PAGO  '+
+' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
+' AND CODNC IS NULL   '+
+' AND TM.TIPOMOVIMIENTO IN (0,1,2,3,4,5,6,7) ORDER BY TM.IDMOVIMIENTO ASC ';
+ self.FDQuery1.Close;
+ self.FDQuery1.SQL.Clear;
+ self.FDQuery1.SQL.Add(SQL);
+ self.FDQuery1.Open;
+ if TRIM(FDQuery1.Fields[0].AsSTRING)='' then
+    T:=0
+    ELSE
+ t:=FDQuery1.Fields[0].AsFloat;
+
+  if TRIM(FDQuery1.Fields[1].AsSTRING)='' then
+  P:=0
+  ELSE
+    p:=FDQuery1.Fields[1].AsFloat;
+
+ s:=t-p;
+ if S=0 then
+   LABEL1.Caption:=''
+   ELSE
+LABEL1.Caption:='SALDO  $'+FLOATTOSTR(S);
+
+
+SQL:='SELECT  TM.IDMOVIMIENTO as tmidmovimiento,TM.FECHA as tmfecha, '+
+' TM.TOTAL as tmtotal,TM.PAGO as tmpago,TM.NROFACTURA as tmnro,TC.APENOM as tmcliente,'+
+' CASE TM.TIPOMOVIMIENTO  '+
+' WHEN 0 THEN ''TICKET''  '+
+' WHEN 1 THEN ''FACTURA A'' '+
+' WHEN 2 THEN ''FACTURA B'' '+
+' WHEN 3 THEN ''FACTURA C'' '+
+' WHEN 4 THEN ''NC A'' '+
+' WHEN 5 THEN ''NC B'' '+
+' WHEN 6 THEN ''NC C'' '+
+' WHEN 7 THEN ''NC TKT'' '+
+' ELSE    '+
+' ''ERROR'' '+
+' END  AS TICK , (tm.total - tm.pago) as saldo '+
+' FROM TMOVIMIENTOS  TM,TCLIENTES TC  '+
+' WHERE TM.IDCLIENTE='+inttostr(idcliente)+
+' AND TM.IDFORMAPAGO=5  '+
+' AND TM.TOTAL<>TM.PAGO  '+
+' AND TM.IDCLIENTE=TC.IDCLIENTE   '+
+' AND CODNC IS NULL   '+
+' AND TM.TIPOMOVIMIENTO IN (0,1,2,3,4,5,6,7) ORDER BY TM.IDMOVIMIENTO ASC ';
+ self.FDQuery1.Close;
+ self.FDQuery1.SQL.Clear;
+ self.FDQuery1.SQL.Add(SQL);
+ self.FDQuery1.Open;
 
 end;
 

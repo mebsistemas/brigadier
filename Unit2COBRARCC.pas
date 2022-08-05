@@ -60,6 +60,12 @@ begin
      modalresult:=mrnone;
 exit;
 end;
+  if Application.MessageBox( PCHAR(' EL IMPORTE A PAGAR ES: '+trim(edit4.Text)+' ¿Desea continuar?'), 'PROCESAR PAGO',
+  MB_ICONQUESTION OR MB_YESNO ) = ID_YES then
+  BEGIN
+       modalresult:=mrOK;
+  END ELSE
+   modalresult:=mrnone;
 
 end;
 

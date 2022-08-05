@@ -62,6 +62,8 @@ type
     Label9: TLabel;
     Edit5: TEdit;
     FDQuery7: TFDQuery;
+    FDQuery8: TFDQuery;
+    FDQuery9: TFDQuery;
     procedure SpeedButton2Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure ComboBox1KeyPress(Sender: TObject; var Key: Char);
@@ -301,10 +303,10 @@ TD:=TDECIMALES.Create;
 
         FDQuery2.Close;
         FDQuery2.SQL.Clear;
-        FDQuery2.SQL.Add('INSERT INTO TITEM_FACTURA (IDFACTURA, IDARTICULO,CANTIDAD,PUNI,IVA,PTOTAL,POR_IVA) VALUES ('+INTTOSTR(IDMOVI)+','+INTTOSTR(FORM1.RxMemoryData1idarticulo.Value)+','+FLOATTOSTR(STRTOFLOAT(FORM1.RxMemoryData1cantidad.Value))+
+        FDQuery2.SQL.Add('INSERT INTO TITEM_FACTURA (IDFACTURA, IDARTICULO,CANTIDAD,PUNI,IVA,PTOTAL,POR_IVA,PROMOCION) VALUES ('+INTTOSTR(IDMOVI)+','+INTTOSTR(FORM1.RxMemoryData1idarticulo.Value)+','+FLOATTOSTR(STRTOFLOAT(FORM1.RxMemoryData1cantidad.Value))+
                                                      ','+FLOATTOSTR(STRTOFLOAT(PUNI_s))+','+FLOATTOSTR(STRTOFLOAT(PRECIOIVA_s))+
                                                      ','+FLOATTOSTR(STRTOFLOAT(PTOTAL_s))+
-                                                     ','+FLOATTOSTR(IVAART)+') ');
+                                                     ','+FLOATTOSTR(IVAART)+','+#39+TRIM(FORM1.RxMemoryData1PROMOCION.Value)+#39+') ');
         FDQuery2.ExecSQL;
 
 
@@ -318,9 +320,8 @@ TD:=TDECIMALES.Create;
        OR (TIPOMOVIMIENTO = 2) OR  (TIPOMOVIMIENTO = 3) THEN
        BEGIN
 
-
-
-
+         if FORM1.RxMemoryData1PROMOCION.Value='N' then
+          BEGIN
            FDQuery5.Close;
            FDQuery5.SQL.Clear;
            FDQuery5.SQL.Add('SELECT DESCUENTAPOR  FROM tarticulos where idarticulo='+inttostr(FORM1.RxMemoryData1idarticulo.Value));
@@ -342,6 +343,33 @@ TD:=TDECIMALES.Create;
               FDQuery4.SQL.Add('UPDATE TARTICULOS SET STOCKVENTA = STOCKVENTA + '+FLOATTOSTR(CANT)+
                       ',  STOCK=STOCK - '+FLOATTOSTR(CANT)+'  WHERE IDARTICULO='+INTTOSTR(FORM1.RxMemoryData1idarticulo.Value));
               FDQuery4.ExecSQL;
+           END;
+          END
+           ELSE BEGIN
+                 FDQuery4.Close;
+                 FDQuery4.SQL.Clear;
+                 FDQuery4.SQL.Add('UPDATE TPROMOCIONES SET STOCK = STOCK - '+FLOATTOSTR(CANT)+
+                      '  WHERE IDPROMOCION='+INTTOSTR(FORM1.RxMemoryData1idarticulo.Value));
+                FDQuery4.ExecSQL;
+
+                FDQuery8.Close;
+                 FDQuery8.SQL.Clear;
+                 FDQuery8.SQL.Add('SELECT IDARTICULO, CANTIDAD FROM TDETALLES_PROMOCIONES   WHERE IDPROMOCION='+INTTOSTR(FORM1.RxMemoryData1idarticulo.Value));
+                FDQuery8.Open;
+                while NOT FDQuery8.Eof do
+                BEGIN
+                     FDQuery9.Close;
+                     FDQuery9.SQL.Clear;
+                     FDQuery9.SQL.Add('UPDATE TARTICULOS SET STOCKVENTA = STOCKVENTA + '+FLOATTOSTR(FDQuery8.FieldByName('CANTIDAD').ASFLOAT)+
+                      ',  STOCK=STOCK - '+FLOATTOSTR(FDQuery8.FieldByName('CANTIDAD').ASFLOAT)+'  WHERE IDARTICULO='+INTTOSTR(FDQuery8.FieldByName('IDARTICULO').AsInteger));
+                     FDQuery9.ExecSQL;
+
+                   FDQuery8.Next;
+                END;
+
+
+
+
            END;
       END;
 
@@ -1080,6 +1108,42 @@ begin
   END;
 
 
+          ///PROMOCIONES
+  Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT TA.NOMBRE, TI.CANTIDAD,TI.PUNI,TI.PTOTAL,  '+
+ '  TA.PRECIO,TI.IVA,TI.POR_IVA FROM TITEM_FACTURA TI,TPROMOCIONES TA   '+
+                      '    WHERE TI.IDARTICULO=TA.IDPROMOCION AND TI.PROMOCION=''S'' '+
+                         ' AND TI.IDFACTURA='+INTTOSTR(idmovi));
+    Form1.FDQuery3.Open;
+     while NOT FORM1.FDQuery3.EOF do
+  BEGIN
+      frmpdf.RxMemoryData1.Append;
+
+
+      if trim(letra)='A' then
+      BEGIN
+      frmpdf.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+      frmpdf.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[2].AsString)),FFFIXED,8,2);
+      frmpdf.RxMemoryData1IVA.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString))-STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[2].AsString)),FFFIXED,8,2);
+      frmpdf.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+      frmpdf.RxMemoryData1CANTIDAD.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+      END ELSE BEGIN
+            frmpdf.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+            frmpdf.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+            frmpdf.RxMemoryData1IVA.Value:='';
+            frmpdf.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+            frmpdf.RxMemoryData1CANTIDAD.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+
+      END;
+      frmpdf.RxMemoryData1.Post;
+
+       frmpdf.QRPQuickrep1.Page.Length:= frmpdf.QRPQuickrep1.Page.Length + 20;
+
+
+  Form1.FDQuery3.NEXT;
+  END;
+
 
   //fomra de pago
   for i:=1 to 5 do
@@ -1372,7 +1436,7 @@ begin
   Form1.FDQuery3.SQL.Clear;
   Form1.FDQuery3.SQL.Add('SELECT TA.DESCRIPCION, TI.CANTIDAD,TI.PUNI,TI.PTOTAL,'+
   ' TA.PRECIOVENTA,TI.IVA,TI.POR_IVA FROM TITEM_FACTURA TI,TARTICULOS TA '+
-                         ' WHERE TI.IDARTICULO=TA.IDARTICULO '+
+                         ' WHERE TI.IDARTICULO=TA.IDARTICULO AND TI.PROMOCION=''N'' '+
                          ' AND TI.IDFACTURA='+INTTOSTR(idmovi));
   Form1.FDQuery3.Open;
   while NOT FORM1.FDQuery3.EOF do
@@ -1419,6 +1483,57 @@ begin
 
   Form1.FDQuery3.NEXT;
   END;
+
+  ///PROMOCIONES
+    Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT TA.NOMBRE, TI.CANTIDAD,TI.PUNI,TI.PTOTAL,  '+
+ '  TA.PRECIO,TI.IVA,TI.POR_IVA FROM TITEM_FACTURA TI,TPROMOCIONES TA   '+
+                      '    WHERE TI.IDARTICULO=TA.IDPROMOCION AND TI.PROMOCION=''S'' '+
+                         ' AND TI.IDFACTURA='+INTTOSTR(idmovi));
+  Form1.FDQuery3.Open;
+  while NOT FORM1.FDQuery3.EOF do
+  BEGIN
+
+
+
+      if trim(letra)='A' then
+      BEGIN
+
+        disenioimprimirFactura58.RxMemoryData1.Append;
+       disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+       disenioimprimirFactura58.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[2].AsString)),FFFIXED,8,2);
+       disenioimprimirFactura58.RxMemoryData1IVA.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString))-STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[2].AsString)),FFFIXED,8,2);
+       disenioimprimirFactura58.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+      // disenioimprimirFactura58.RxMemoryData1CANTIDAD.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+
+       disenioimprimirFactura58.RxMemoryData1.Post;
+
+       disenioimprimirFactura58.RxMemoryData1.Append;
+       disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+       disenioimprimirFactura58.RxMemoryData1.Post;
+      END ELSE BEGIN
+            disenioimprimirFactura58.RxMemoryData1.Append;
+            disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+            disenioimprimirFactura58.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+            disenioimprimirFactura58.RxMemoryData1IVA.Value:='';
+            disenioimprimirFactura58.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+          // disenioimprimirFactura58.RxMemoryData1CANTIDAD.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+            disenioimprimirFactura58.RxMemoryData1.Post;
+           disenioimprimirFactura58.RxMemoryData1.Append;
+           disenioimprimirFactura58.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+            disenioimprimirFactura58.RxMemoryData1.Post;
+      END;
+     // disenioimprimirFactura58.RxMemoryData1.Post;
+
+       disenioimprimirFactura58.QRPQuickrep1.Page.Length:= disenioimprimirFactura58.QRPQuickrep1.Page.Length + 20;
+
+
+  Form1.FDQuery3.NEXT;
+  END;
+
+
+
 
   //fomra de pago
   for i:=1 to 5 do
@@ -1643,7 +1758,34 @@ begin
   Form1.FDQuery3.NEXT;
   END;
 
+        ///PROMOCIONES
+  Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT TA.NOMBRE, TI.CANTIDAD,TI.PUNI,TI.PTOTAL,  '+
+ '  TA.PRECIO,TI.IVA,TI.POR_IVA FROM TITEM_FACTURA TI,TPROMOCIONES TA   '+
+                      '    WHERE TI.IDARTICULO=TA.IDPROMOCION AND TI.PROMOCION=''S'' '+
+                         ' AND TI.IDFACTURA='+INTTOSTR(idmovi));
+    Form1.FDQuery3.Open;
+    while NOT FORM1.FDQuery3.EOF do
+  BEGIN
+      FRMDISENIOTICKET.RxMemoryData1.Append;
 
+
+
+            FRMDISENIOTICKET.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+            FRMDISENIOTICKET.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF((STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString))/STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString))),FFFIXED,8,2);
+            FRMDISENIOTICKET.RxMemoryData1IVA.Value:='';
+            FRMDISENIOTICKET.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+            FRMDISENIOTICKET.RxMemoryData1CANTIDAD.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+
+
+      FRMDISENIOTICKET.RxMemoryData1.Post;
+
+        FRMDISENIOTICKET.QRPQuickrep1.Page.Length:= FRMDISENIOTICKET.QRPQuickrep1.Page.Length + 20;
+
+
+  Form1.FDQuery3.NEXT;
+  END;
 
   //fomra de pago
   for i:=1 to 5 do
@@ -1832,6 +1974,46 @@ begin
   Form1.FDQuery3.SQL.Add('SELECT TA.DESCRIPCION, TI.CANTIDAD,TI.PUNI,TI.PTOTAL,'+
   ' TA.PRECIOVENTA,TI.IVA,TI.POR_IVA FROM TITEM_FACTURA TI,TARTICULOS TA '+
                          ' WHERE TI.IDARTICULO=TA.IDARTICULO '+
+                         ' AND TI.IDFACTURA='+INTTOSTR(idmovi));
+  Form1.FDQuery3.Open;
+  while NOT FORM1.FDQuery3.EOF do
+  BEGIN
+      frmTicket58.RxMemoryData1.Append;
+       frmTicket58.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF((STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString))/STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString))),FFFIXED,8,2);
+        frmTicket58.RxMemoryData1DESCRIPCION.Value:=FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+
+         frmTicket58.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+        frmTicket58.RxMemoryData1.Post;
+
+        frmTicket58.RxMemoryData1.Append;
+
+        frmTicket58.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+        frmTicket58.RxMemoryData1.Post;
+       { frmTicket58.RxMemoryData1.Append;
+            frmTicket58.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF((STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString))/STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString))),FFFIXED,8,2);
+            frmTicket58.RxMemoryData1IVA.Value:='';
+            frmTicket58.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+            frmTicket58.RxMemoryData1CANTIDAD.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+            frmTicket58.RxMemoryData1.Post;
+
+         frmTicket58.RxMemoryData1.Append;
+          frmTicket58.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+           frmTicket58.RxMemoryData1.Post;  }
+
+     //  if  frmTicket58.RxMemoryData1.RecordCount > 15 then
+        frmTicket58.QRPQuickrep1.Page.Length:= frmTicket58.QRPQuickrep1.Page.Length + 20;
+
+
+     // frmTicket58.RxMemoryData1.Post;
+  Form1.FDQuery3.NEXT;
+  END;
+
+    ///PROMOCIONES
+  Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT TA.NOMBRE, TI.CANTIDAD,TI.PUNI,TI.PTOTAL,  '+
+ '  TA.PRECIO,TI.IVA,TI.POR_IVA FROM TITEM_FACTURA TI,TPROMOCIONES TA   '+
+                      '    WHERE TI.IDARTICULO=TA.IDPROMOCION AND TI.PROMOCION=''S'' '+
                          ' AND TI.IDFACTURA='+INTTOSTR(idmovi));
   Form1.FDQuery3.Open;
   while NOT FORM1.FDQuery3.EOF do
@@ -2086,6 +2268,30 @@ begin
   Form1.FDQuery3.NEXT;
   END;
 
+      ///PROMOCIONES
+  Form1.FDQuery3.Close;
+  Form1.FDQuery3.SQL.Clear;
+  Form1.FDQuery3.SQL.Add('SELECT TA.NOMBRE, TI.CANTIDAD,TI.PUNI,TI.PTOTAL,  '+
+ '  TA.PRECIO,TI.IVA,TI.POR_IVA FROM TITEM_FACTURA TI,TPROMOCIONES TA   '+
+                      '    WHERE TI.IDARTICULO=TA.IDPROMOCION AND TI.PROMOCION=''S'' '+
+                         ' AND TI.IDFACTURA='+INTTOSTR(idmovi));
+    Form1.FDQuery3.Open;
+   while NOT FORM1.FDQuery3.EOF do
+  BEGIN
+      frmDisenioTicketA4.RxMemoryData1.Append;
+
+       sumacantidad:=sumacantidad +  STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString));
+
+            frmDisenioTicketA4.RxMemoryData1DESCRIPCION.Value:=TRIM(Form1.FDQuery3.Fields[0].AsString);
+            frmDisenioTicketA4.RxMemoryData1PUNITARIO.Value:= FLOATTOSTRF((STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString))/STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString))),FFFIXED,8,2);
+            frmDisenioTicketA4.RxMemoryData1IVA.Value:='';
+            frmDisenioTicketA4.RxMemoryData1TOTAL.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[3].AsString)),FFFIXED,8,2);
+            frmDisenioTicketA4.RxMemoryData1CANTIDAD.Value:= FLOATTOSTRF(STRTOFLOAT(TRIM(Form1.FDQuery3.Fields[1].AsString)),FFFIXED,8,2);
+
+
+      frmDisenioTicketA4.RxMemoryData1.Post;
+  Form1.FDQuery3.NEXT;
+  END;
 
      frmDisenioTicketA4.QRLabel5.Caption:='CANT. ARTICULOS: '+floatTOSTR(sumacantidad);
 

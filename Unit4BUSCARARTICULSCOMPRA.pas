@@ -48,6 +48,7 @@ END;
  pidecantidadyprecio.Edit1.Clear;
  pidecantidadyprecio.Edit2.Clear;
  pidecantidadyprecio.Edit3.Clear;
+ pidecantidadyprecio.Edit2.Text:=self.DataSource1.DataSet.FieldByName('acosto').AsString;
 pidecantidadyprecio.showmodal;
 if pidecantidadyprecio.ModalResult=MROK then
  BEGIN
@@ -83,7 +84,7 @@ BEGIN
     FDQuery1.SQL.Clear;
     FDQuery1.SQL.Add('SELECT    '+
    '  A.DESCRIPCION AS ARTICULOS,R.DESCRIPCION AS RUBRO,     '+
-   '  M.DESCRIPCION AS MARCA, P.RAZONSOCIAL AS RAZON  , A.IDARTICULO AS AIDARTI   '+
+   '  M.DESCRIPCION AS MARCA, P.RAZONSOCIAL AS RAZON  , A.IDARTICULO AS AIDARTI  , a.costo as acosto '+
    '  FROM    TARTICULOS A    '+
    '  LEFT JOIN TRUBROS R ON R.IDRUBRO=A.IDRUBRO    '+
    '  LEFT JOIN TPROVEEDORES P ON P.IDPROVEEDOR=A.IDPROVEEDOR     '+
@@ -97,7 +98,7 @@ BEGIN
     FDQuery1.SQL.Clear;
     FDQuery1.SQL.Add('SELECT    '+
    '  A.DESCRIPCION AS ARTICULOS,R.DESCRIPCION AS RUBRO,     '+
-   '  M.DESCRIPCION AS MARCA, P.RAZONSOCIAL AS RAZON     , A.IDARTICULO AS AIDARTI   '+
+   '  M.DESCRIPCION AS MARCA, P.RAZONSOCIAL AS RAZON     , A.IDARTICULO AS AIDARTI    , a.costo as acosto '+
    '  FROM    TARTICULOS A    '+
    '  LEFT JOIN TRUBROS R ON R.IDRUBRO=A.IDRUBRO    '+
    '  LEFT JOIN TPROVEEDORES P ON P.IDPROVEEDOR=A.IDPROVEEDOR     '+

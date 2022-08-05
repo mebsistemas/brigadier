@@ -101,6 +101,11 @@ object frmBuscarARticulos: TfrmBuscarARticulos
         Title.Font.Style = [fsBold]
         Width = 123
         Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'aidarticulo'
+        Visible = False
       end>
   end
   object Edit1: TEdit

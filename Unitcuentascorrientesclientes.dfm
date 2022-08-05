@@ -764,4 +764,24 @@ object cuentascorrientesclientes: Tcuentascorrientesclientes
     Left = 528
     Top = 112
   end
+  object FDQuery5: TFDQuery
+    Connection = Form1.FDConnection1
+    Left = 472
+    Top = 192
+  end
+  object FDQuery6: TFDQuery
+    Connection = Form1.FDConnection1
+    Left = 568
+    Top = 192
+  end
+  object FDQuery7: TFDQuery
+    Connection = Form1.FDConnection1
+    Left = 608
+    Top = 96
+  end
+  object FDQuery8: TFDQuery
+    Connection = Form1.FDConnection1
+    Left = 672
+    Top = 200
+  end
 end

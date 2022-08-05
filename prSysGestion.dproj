@@ -58,6 +58,7 @@
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <SanitizedProjectName>prSysGestion</SanitizedProjectName>
+        <Custom_Styles>&quot;Golden Graphite|VCLSTYLE|$(BDSCOMMONDIR)\Styles\GoldenGraphite.vsf&quot;</Custom_Styles>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>DBXSqliteDriver;dxFlowChartRS26;dxPSdxMapControlLnkRS26;DBXDb2Driver;vclactnband;dxBarRS26;vclFireDAC;dxFireDACEMFRS26;tethering;FireDACADSDriver;dxPSdxSpreadSheetLnkRS26;dxRichEditCoreRS26;FireDACMSSQLDriver;vcltouch;vcldb;svn;dxPSTeeChartRS26;dxGDIPlusRS26;dxPSdxFCLnkRS26;vclib;frxTee26;dxCloudServiceLibraryRS26;dxPSLnksRS26;FireDACDBXDriver;cxGridRS26;dxPDFViewerRS26;dxPsPrVwAdvRS26;vclx;dxPScxTLLnkRS26;RESTBackendComponents;uSynEdit_R2022;VCLRESTComponents;fsTee26;dclExcelExportPackD103;vclie;bindengine;CloudService;ExcelExportPackD103;DPComponents;FireDACMySQLDriver;dxmdsRS26;fsIBX26;frx26;dxdborRS26;DataSnapClient;dxFireDACServerModeRS26;bindcompdbx;DBXSybaseASEDriver;IndyIPServer;odac260;cxPivotGridRS26;IndySystem;fsADO26;frxDBX26;cxTreeListdxBarPopupMenuRS26;dsnapcon;cxTreeListRS26;dxPScxPivotGridLnkRS26;cxSchedulerRibbonStyleEventEditorRS26;dxPSCoreRS26;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;dxSpreadSheetRS26;dxBarExtItemsRS26;dxPSdxGaugeControlLnkRS26;emshosting;DBXOdbcDriver;FireDACTDataDriver;FMXTee;crcontrols260;dxdbtrRS26;soaprtl;DbxCommonDriver;dxRichEditControlCoreRS26;dxFlowChartAdvancedCustomizeFormRS26;dxDockingRS26;xmlrtl;soapmidas;DataSnapNativeClient;fmxobj;cxLibraryRS26;rtl;emsserverresource;DbxClientDriver;DBXSybaseASADriver;dxPScxSchedulerLnkRS26;dxSpreadSheetConditionalFormattingDialogsRS26;appanalytics;dxRibbonCustomizationFormRS26;cxSchedulerGridRS26;IndyIPClient;bindcompvcl;dxFlowChartLayoutsRS26;TeeUI;dxADOEMFRS26;VclSmp;FireDACODBCDriver;RtmRxDB260;dxRibbonRS26;DataSnapIndy10ServerTransport;dxPScxCommonRS26;dxRichEditDocumentModelRS26;DataSnapProviderClient;FireDACMongoDBDriver;WindowsMediaPlayer;dxFlowChartDesignerRS26;dxGanttControlRS26;dxPScxGridLnkRS26;dxSpreadSheetCoreRS26;DataSnapServerMidas;RESTComponents;DBXInterBaseDriver;dxPScxExtCommonRS26;emsclientfiredac;dacfmx260;DataSnapFireDAC;svnui;DBXMSSQLDriver;dxRichEditControlRS26;DatasnapConnectorsFreePascal;dxPScxVGridLnkRS26;dxorgcRS26;dxGaugeControlRS26;oraprov260;bindcompfmx;DBXOracleDriver;dxOrgChartAdvancedCustomizeFormRS26;inetdb;dxBarDBNavRS26;dxDBXServerModeRS26;FmxTeeUI;emsedge;FireDACIBDriver;fmx;fmxdae;QRWRunDXE10_3_w64;dxServerModeRS26;dxWizardControlRS26;dacvcl260;dxTabbedMDIRS26;fs26;dxEMFRS26;dbexpress;IndyCore;dxComnRS26;frxIntIO26;dsnap;DataSnapCommon;emsclient;uniGUI26Chart;FireDACCommon;uniGUI26m;cxGridEMFRS26;frxcs26;DataSnapConnectors;cxSchedulerTreeBrowserRS26;dxADOServerModeRS26;soapserver;cxPivotGridOLAPRS26;cxVerticalGridRS26;odacvcl260;dxtrmdRS26;FireDACOracleDriver;DBXMySQLDriver;cxSchedulerRS26;cxSchedulerWebServiceStorageRS26;dxPSdxLCLnkRS26;DBXFirebirdDriver;FireDACCommonODBC;FireDACCommonDriver;dxMapControlRS26;frxIntIOIndy26;inet;dxSpellCheckerRS26;IndyIPCommon;dxSpreadSheetCoreConditionalFormattingDialogsRS26;vcl;dxPSdxDBOCLnkRS26;frxDB26;FireDACDb2Driver;dxSpreadSheetReportDesignerRS26;dxPScxPCProdRS26;dxNavBarRS26;uniGUI26VCL;fsDB26;dxCoreRS26;cxExportRS26;TeeDB;FireDAC;odacfmx260;dxHttpIndyRequestRS26;dxPSPrVwRibbonRS26;frxe26;FireDACSqliteDriver;FireDACPgDriver;ibmonitor;FireDACASADriver;dxPSRichEditControlLnkRS26;cxPivotGridChartRS26;frxIBX26;dxPSDBTeeChartRS26;ibxpress;Tee;DataSnapServer;ibxbindings;dxPSdxDBTVLnkRS26;dac260;vclwinx;FireDACDSDriver;frxADO26;dxTileControlRS26;dxSkinsCoreRS26;CustomIPTransport;vcldsnap;bindcomp;dxPSdxOCLnkRS26;DBXInformixDriver;IcsCommonD103Run;RtmRxCtl260;dbxcds;adortl;dxBarExtDBItemsRS26;dsnapxml;dbrtl;inetdbxpress;IndyProtocols;dxPSdxPDFViewerLnkRS26;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
@@ -484,6 +485,18 @@
             <Form>frmPermisosUsuarios</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="UnitfrmPromociones2.pas">
+            <Form>frmPromociones</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Unit2frmCrearPromociones.pas">
+            <Form>frmCrearPromociones</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Unit2frmPideCantidadPromocion.pas">
+            <Form>frmPideCantidadPromocion</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -505,6 +518,7 @@
                     <Source Name="MainSource">prSysGestion.dpr</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclDataSnapNativeServer260.bpl">Embarcadero DBExpress DataSnap Native Server Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>

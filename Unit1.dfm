@@ -95,7 +95,9 @@ object Form1: TForm1
             Width = 768
             Height = 322
             Align = alClient
+            BorderStyle = bsNone
             DataSource = DataSource1
+            DrawingStyle = gdsGradient
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
             PopupMenu = PopupMenu1
             TabOrder = 0
@@ -237,6 +239,7 @@ object Form1: TForm1
             Width = 400
             Height = 39
             Align = alLeft
+            CharCase = ecUpperCase
             Color = clWhite
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
@@ -245,7 +248,7 @@ object Form1: TForm1
             Font.Style = [fsBold]
             ParentFont = False
             TabOrder = 0
-            Text = 'Edit1'
+            Text = 'EDIT1'
             OnKeyPress = Edit1KeyPress
             ExplicitHeight = 31
           end
@@ -1635,6 +1638,10 @@ object Form1: TForm1
         Caption = 'Articulos'
         OnClick = Articulos1Click
       end
+      object Promociones1: TMenuItem
+        Caption = 'Promociones'
+        OnClick = Promociones1Click
+      end
       object ActualizarPrecios1: TMenuItem
         Tag = 2000
         Caption = 'Actualizar Precios'
@@ -1902,6 +1909,13 @@ object Form1: TForm1
     object RxMemoryData1IVA: TStringField
       FieldName = 'IVA'
       Size = 10
+    end
+    object RxMemoryData1PROMOCION: TStringField
+      FieldName = 'PROMOCION'
+      Size = 1
+    end
+    object RxMemoryData1ITEM: TIntegerField
+      FieldName = 'ITEM'
     end
   end
   object DataSource1: TDataSource

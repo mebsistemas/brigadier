@@ -69,7 +69,7 @@ b:=trim(edit1.Text)+'%';
 form1.FDQuery2.Close;
 form1.FDQuery2.sql.Clear;
 form1.FDQuery2.SQL.Add('SELECT   a.codigobarra as CODIGOBARRA,a.precioventa as PRECIOVENTA,'+
-                   '   A.DESCRIPCION AS DESCRIPCION,   '+
+                   '   A.DESCRIPCION AS DESCRIPCION, a.idarticulo as aidarticulo ,  '+
                    '  M.DESCRIPCION AS MARCA  '+
                    '   FROM  TARTICULOS A   '+
                    '   LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA  '+

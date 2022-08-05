@@ -135,6 +135,9 @@ type
     PorProveedor1: TMenuItem;
     Panel13: TPanel;
     Edit3: TEdit;
+    Promociones1: TMenuItem;
+    RxMemoryData1PROMOCION: TStringField;
+    RxMemoryData1ITEM: TIntegerField;
     procedure SpeedButton1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
@@ -185,6 +188,7 @@ type
     procedure AdministrarListasdePrecios1Click(Sender: TObject);
     procedure BitBtn5Click(Sender: TObject);
     procedure PorProveedor1Click(Sender: TObject);
+    procedure Promociones1Click(Sender: TObject);
   private
     { Private declarations }
     cantidad:string;
@@ -231,7 +235,7 @@ uses Uterminar, UnifrmBuscarARticulos, UnifrmabmArticulos, UnPRPRECIOVARIABLE,
   Unit4ventaporvendedor, Unitbuscaryverfacturas4, UnilistarClientesDeudorest4,
   UnitREALIZARDEVOLUCIONES4, Unit2FRMDEVOLCUIONESTOTT, Unit2listadeprecio,
   Unit2CONSULTARPRECIO, UnifrmActualizaPrecioporProveedor, ufimformex80,
-  Ufrmcierrex58mm2;
+  Ufrmcierrex58mm2, UnitfrmPromociones2;
 
 procedure TForm1.ABMVendedores1Click(Sender: TObject);
 begin
@@ -1446,7 +1450,7 @@ end;
 procedure TForm1.Edit1KeyPress(Sender: TObject; var Key: Char);
 var busca,busca_precio,CODIGO_BARRA:string;     ES_ENVASADO:BOOLEAN; barra_hasta:longint;
 td:tdecimales;    precioTotal,precioUnit:real;   idartibuaca:longint;
-
+  ES_PROMOCION:BOOLEAN;
 begin
 
 form1.FDQuery2.Close;
@@ -1460,7 +1464,7 @@ begin
 end;
 
 
-if key in ['0','1','2','3','4','5','6','7','8','9','+','.','*',#8,#13] then
+if key in ['0','1','2','3','4','5','6','7','8','9','+','.','*',#8,#13,'P'] then
     edit1.readonly:=false
     else
      edit1.readonly:=true;
@@ -1520,7 +1524,14 @@ td:=tdecimales.Create;
              busca_precio:=COPY(CODIGO_BARRA,1,barra_hasta);
             precioUnit:=strtofloat(busca_precio)/100;
          END;
+        ES_PROMOCION:=FALSE;
+         if COPY(BUSCA,1,1)='P' then
+         BEGIN
+          ES_PROMOCION:=TRUE;
+         END;
 
+       if ES_PROMOCION=FALSE then
+        BEGIN
          self.FDQuery1.Close;
          self.FDQuery1.SQL.Clear;
          self.FDQuery1.SQL.Add('select * from tarticulos where codigobarra='+#39+trim(busca)+#39);
@@ -1607,15 +1618,51 @@ td:=tdecimales.Create;
 
            SUMA:=SUMA + precioTotal;
 
+      END ELSE
+      BEGIN
+           //PROMOCION
+               if self.RxMemoryData1.Active=false then
+                begin
+                    self.RxMemoryData1.Close;
+                    self.RxMemoryData1.Open;
+               end;
 
+           if (trim(cantidad)='') or (trim(cantidad)='0') then
+             cantidad:='1';
+
+
+             self.FDQuery1.Close;
+             self.FDQuery1.SQL.Clear;
+             self.FDQuery1.SQL.Add('select * from TPROMOCIONES where codigo='+#39+trim(busca)+#39);
+             self.FDQuery1.Open;
+             precioUnit:=FDQuery1.FieldByName('PRECIO').AsFloat;
+
+             precioTotal:=precioUnit * strtofloat(cantidad);
+
+             SUMA:=SUMA + precioTotal;
+      END;
 
          self.RxMemoryData1.Append;
+         SELF.RxMemoryData1ITEM.Value:=SELF.RxMemoryData1.RecordCount + 1;
+         if  ES_PROMOCION=FALSE then
+         BEGIN
          SELF.RxMemoryData1IVA.Value:=TRIM(FDQuery1.FieldByName('IVA').AsSTRING);
          self.RxMemoryData1idarticulo.Value:=FDQuery1.FieldByName('IDARTICULO').ASINTEGER;
          self.RxMemoryData1cantidad.Value:=trim(cantidad);
          self.RxMemoryData1descripcion.Value:=TRIM(FDQuery1.FieldByName('DESCRIPCION').AsSTRING);
          self.RxMemoryData1preciounit.Value:=td.arma_importe_para_mostrar(precioUnit);
          self.RxMemoryData1preciototal.Value:=td.arma_importe_para_mostrar(precioTotal);
+         SELF.RxMemoryData1PROMOCION.Value:='N';
+         END
+          ELSE BEGIN
+                 SELF.RxMemoryData1IVA.Value:='21';
+                 self.RxMemoryData1idarticulo.Value:=FDQuery1.FieldByName('IDPROMOCION').ASINTEGER;
+                 self.RxMemoryData1cantidad.Value:=trim(cantidad);
+                 self.RxMemoryData1descripcion.Value:=TRIM(FDQuery1.FieldByName('NOMBRE').AsSTRING);
+                 self.RxMemoryData1preciounit.Value:=td.arma_importe_para_mostrar(precioUnit);
+                 self.RxMemoryData1preciototal.Value:=td.arma_importe_para_mostrar(precioTotal);
+                 SELF.RxMemoryData1PROMOCION.Value:='S';
+          END;
          self.RxMemoryData1.Post;
 
          sumaCantidad:=sumaCantidad + STRTOFLOAT(TRIM(cantidad));
@@ -1679,7 +1726,7 @@ var m:string;
     PATHBD,FEFINALIZA:sTRING;
   Ini: TIniFile;
 begin
-demo:=true;
+demo:=false;
 
 if demo=true then
 begin
@@ -2175,6 +2222,15 @@ frmActualizaPrecioporProveedor.RxMemoryData1.Open;
 frmActualizaPrecioporProveedor.Edit1.Clear;
 frmActualizaPrecioporProveedor.FDQuery1.Close;
 frmActualizaPrecioporProveedor.showmodal;
+end;
+
+procedure TForm1.Promociones1Click(Sender: TObject);
+begin
+frmPromociones.FDQuery1.Close;
+frmPromociones.FDQuery1.SQL.Clear;
+frmPromociones.FDQuery1.SQL.Add('SELECT IDPROMOCION, CODIGO,FECHA,NOMBRE,ACTIVA,PRECIO, STOCK FROM TPROMOCIONES ORDER BY NOMBRE ASC');
+frmPromociones.FDQuery1.Open;
+frmPromociones.showmodal;
 end;
 
 procedure TForm1.Proveedores2Click(Sender: TObject);
