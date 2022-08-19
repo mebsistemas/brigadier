@@ -128,7 +128,10 @@ uses
   Unit2frmCrearPromociones in 'Unit2frmCrearPromociones.pas' {frmCrearPromociones},
   Unit2frmPideCantidadPromocion in 'Unit2frmPideCantidadPromocion.pas' {frmPideCantidadPromocion},
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  UnitimprimirEtiquetas in 'UnitimprimirEtiquetas.pas' {frmimprimirEtiquetas},
+  udisenioetuiqeita in 'udisenioetuiqeita.pas' {disenioEtiqeuta},
+  UniFRMTESTIMPRESION in 'UniFRMTESTIMPRESION.pas' {FRMTESTIMPRESION};
 
 {$R *.res}
 
@@ -240,5 +243,8 @@ begin
   Application.CreateForm(TfrmPromociones, frmPromociones);
   Application.CreateForm(TfrmCrearPromociones, frmCrearPromociones);
   Application.CreateForm(TfrmPideCantidadPromocion, frmPideCantidadPromocion);
+  Application.CreateForm(TfrmimprimirEtiquetas, frmimprimirEtiquetas);
+  Application.CreateForm(TdisenioEtiqeuta, disenioEtiqeuta);
+  Application.CreateForm(TFRMTESTIMPRESION, FRMTESTIMPRESION);
   Application.Run;
 end.

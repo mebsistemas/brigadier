@@ -1,0 +1,32 @@
+unit UniFRMTESTIMPRESION;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, QuickRpt, QRCtrls, Vcl.ExtCtrls,
+  qrpBaseCtrls;
+
+type
+  TFRMTESTIMPRESION = class(TForm)
+    QRPQuickrep1: TQRPQuickrep;
+    DetailBand1: TQRBand;
+    PageHeaderBand1: TQRBand;
+    QRLabel7: TQRLabel;
+    PageFooterBand1: TQRBand;
+    QRLabel1: TQRLabel;
+    TitleBand1: TQRBand;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FRMTESTIMPRESION: TFRMTESTIMPRESION;
+
+implementation
+
+{$R *.dfm}
+
+end.

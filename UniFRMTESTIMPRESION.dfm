@@ -1,0 +1,202 @@
+object FRMTESTIMPRESION: TFRMTESTIMPRESION
+  Left = 0
+  Top = 0
+  Caption = 'FRMTESTIMPRESION'
+  ClientHeight = 419
+  ClientWidth = 447
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Scaled = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object QRPQuickrep1: TQRPQuickrep
+    AlignWithMargins = True
+    Left = 0
+    Top = 2
+    Width = 218
+    Height = 409
+    ShowingPreview = False
+    BeforePrint = QRPQuickrep1BeforePrint
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = []
+    Functions.Strings = (
+      'PAGENUMBER'
+      'COLUMNNUMBER'
+      'REPORTTITLE')
+    Functions.DATA = (
+      '0'
+      '0'
+      #39#39)
+    Options = [FirstPageHeader, LastPageFooter]
+    Page.Columns = 1
+    Page.Orientation = poPortrait
+    Page.PaperSize = Custom
+    Page.Continuous = False
+    Page.Values = (
+      100.000000000000000000
+      1082.145833333333000000
+      10.000000000000000000
+      576.791666666666700000
+      0.000000000000000000
+      0.000000000000000000
+      0.000000000000000000)
+    PrinterSettings.Copies = 1
+    PrinterSettings.OutputBin = Auto
+    PrinterSettings.Duplex = False
+    PrinterSettings.FirstPage = 0
+    PrinterSettings.LastPage = 0
+    PrinterSettings.UseStandardprinter = False
+    PrinterSettings.UseCustomBinCode = True
+    PrinterSettings.CustomBinCode = 15
+    PrinterSettings.ExtendedDuplex = 1
+    PrinterSettings.UseCustomPaperCode = False
+    PrinterSettings.CustomPaperCode = 257
+    PrinterSettings.PrintMetaFile = False
+    PrinterSettings.MemoryLimit = 1000000
+    PrinterSettings.PrintQuality = 203
+    PrinterSettings.Collate = 0
+    PrinterSettings.ColorOption = 1
+    PrintIfEmpty = True
+    SnapToGrid = True
+    Units = MM
+    Zoom = 100
+    PrevFormStyle = fsNormal
+    PreviewInitialState = wsNormal
+    PreviewWidth = 500
+    PreviewHeight = 500
+    PrevInitialZoom = qrZoomToFit
+    PreviewDefaultSaveType = stPDF
+    PreviewLeft = 0
+    PreviewTop = 0
+    LabelSettings.FirstLabel = 0
+    LabelSettings.LabelCount = 0
+    PrepareAutomatically = False
+    object DetailBand1: TQRBand
+      Left = 0
+      Top = 161
+      Width = 218
+      Height = 13
+      AlignToBottom = False
+      TransparentBand = False
+      ForceNewColumn = False
+      ForceNewPage = False
+      Size.Values = (
+        34.395833333333330000
+        576.791666666666700000)
+      PreCaluculateBandHeight = False
+      KeepOnOnePage = False
+      BandType = rbDetail
+    end
+    object PageHeaderBand1: TQRBand
+      Left = 0
+      Top = 4
+      Width = 218
+      Height = 85
+      Frame.DrawBottom = True
+      AlignToBottom = False
+      TransparentBand = False
+      ForceNewColumn = False
+      ForceNewPage = False
+      Size.Values = (
+        224.895833333333300000
+        576.791666666666700000)
+      PreCaluculateBandHeight = False
+      KeepOnOnePage = False
+      BandType = rbPageHeader
+      object QRLabel7: TQRLabel
+        Left = 8
+        Top = 3
+        Width = 90
+        Height = 17
+        Size.Values = (
+          44.979166666666670000
+          21.166666666666670000
+          7.937500000000000000
+          238.125000000000000000)
+        XLColumn = 0
+        XLNumFormat = nfGeneral
+        ActiveInPreview = False
+        Alignment = taLeftJustify
+        AlignToBand = False
+        Caption = 'TEST IMPRESION'
+        Color = clWhite
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = []
+        ParentFont = False
+        Transparent = False
+        ExportAs = exptText
+        WrapStyle = BreakOnSpaces
+        VerticalAlignment = tlTop
+        FontSize = 10
+      end
+    end
+    object PageFooterBand1: TQRBand
+      Left = 0
+      Top = 180
+      Width = 218
+      Height = 190
+      Frame.DrawTop = True
+      AlignToBottom = False
+      TransparentBand = False
+      ForceNewColumn = False
+      ForceNewPage = False
+      Size.Values = (
+        502.708333333333300000
+        576.791666666666700000)
+      PreCaluculateBandHeight = False
+      KeepOnOnePage = False
+      BandType = rbPageFooter
+      object QRLabel1: TQRLabel
+        Left = 8
+        Top = 133
+        Width = 237
+        Height = 17
+        Size.Values = (
+          44.979166666666670000
+          21.166666666666670000
+          351.895833333333300000
+          627.062500000000000000)
+        XLColumn = 0
+        XLNumFormat = nfGeneral
+        ActiveInPreview = False
+        Alignment = taLeftJustify
+        AlignToBand = False
+        Caption = '-----------------------------------------------------------'
+        Color = clWhite
+        Transparent = False
+        ExportAs = exptText
+        WrapStyle = BreakOnSpaces
+        VerticalAlignment = tlTop
+        FontSize = 10
+      end
+    end
+    object TitleBand1: TQRBand
+      Left = 0
+      Top = 89
+      Width = 218
+      Height = 72
+      Frame.DrawTop = True
+      AlignToBottom = False
+      TransparentBand = False
+      ForceNewColumn = False
+      ForceNewPage = False
+      Size.Values = (
+        190.500000000000000000
+        576.791666666666700000)
+      PreCaluculateBandHeight = False
+      KeepOnOnePage = False
+      BandType = rbTitle
+    end
+  end
+end

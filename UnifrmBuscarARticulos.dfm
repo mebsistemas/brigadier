@@ -271,6 +271,20 @@ object frmBuscarARticulos: TfrmBuscarARticulos
     TabOrder = 2
     OnClick = BitBtn1Click
   end
+  object CheckBox1: TCheckBox
+    Left = 48
+    Top = 269
+    Width = 233
+    Height = 17
+    Caption = 'BUSCAR PROMOCIONES'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 3
+  end
   object DataSource1: TDataSource
     Left = 272
     Top = 104

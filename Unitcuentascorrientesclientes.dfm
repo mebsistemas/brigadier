@@ -4,8 +4,8 @@ object cuentascorrientesclientes: Tcuentascorrientesclientes
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Cuenta Corrientes de Clientes'
-  ClientHeight = 392
-  ClientWidth = 793
+  ClientHeight = 469
+  ClientWidth = 858
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object cuentascorrientesclientes: Tcuentascorrientesclientes
   TextHeight = 13
   object Label1: TLabel
     Left = 24
-    Top = 360
+    Top = 424
     Width = 43
     Height = 16
     Caption = 'SALDO'
@@ -33,10 +33,11 @@ object cuentascorrientesclientes: Tcuentascorrientesclientes
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 793
+    Width = 858
     Height = 41
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 793
     object BitBtn2: TBitBtn
       Left = 0
       Top = 0
@@ -479,8 +480,8 @@ object cuentascorrientesclientes: Tcuentascorrientesclientes
   object DBGrid1: TDBGrid
     Left = 0
     Top = 47
-    Width = 777
-    Height = 290
+    Width = 801
+    Height = 338
     DataSource = DataSource1
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
     TabOrder = 1
@@ -594,8 +595,8 @@ object cuentascorrientesclientes: Tcuentascorrientesclientes
       end>
   end
   object BitBtn1: TBitBtn
-    Left = 672
-    Top = 345
+    Left = 688
+    Top = 401
     Width = 105
     Height = 39
     Caption = 'SALIR'

@@ -1,0 +1,43 @@
+unit UniFRMTESTIMPRESION;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, QuickRpt, QRCtrls, Vcl.ExtCtrls,PRINTERS,
+  qrpBaseCtrls;
+
+type
+  TFRMTESTIMPRESION = class(TForm)
+    QRPQuickrep1: TQRPQuickrep;
+    DetailBand1: TQRBand;
+    PageHeaderBand1: TQRBand;
+    QRLabel7: TQRLabel;
+    PageFooterBand1: TQRBand;
+    QRLabel1: TQRLabel;
+    TitleBand1: TQRBand;
+    procedure QRPQuickrep1BeforePrint(Sender: TCustomQuickRep;
+      var PrintReport: Boolean);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    IMPRESORA:STRING;
+  end;
+
+var
+  FRMTESTIMPRESION: TFRMTESTIMPRESION;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFRMTESTIMPRESION.QRPQuickrep1BeforePrint(Sender: TCustomQuickRep;
+  var PrintReport: Boolean);
+begin
+ QRPQuickrep1.PrinterSettings.PrinterIndex:=Printer.Printers.IndexOf(trim(IMPRESORA));
+ QRPQuickrep1.Page.LeftMargin := 1;
+ QRPQuickrep1.Page.TopMargin := 1;
+end;
+
+end.

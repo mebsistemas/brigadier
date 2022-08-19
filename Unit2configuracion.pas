@@ -73,6 +73,7 @@ type
     RadioButton3: TRadioButton;
     RadioButton4: TRadioButton;
     RadioButton5: TRadioButton;
+    BitBtn7: TBitBtn;
     procedure FormShow(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
@@ -81,6 +82,7 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
     procedure BitBtn6Click(Sender: TObject);
+    procedure BitBtn7Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -94,7 +96,7 @@ implementation
 
 {$R *.dfm}
 
-uses Unitseleccioneimprsora;
+uses Unitseleccioneimprsora, UudisenioTicket58, UniFRMTESTIMPRESION;
 
 procedure Tconfiguracion.BitBtn1Click(Sender: TObject);
 begin
@@ -277,6 +279,13 @@ SELF.FDQuery1.ExecSQL;
 end;
 
 
+end;
+
+procedure Tconfiguracion.BitBtn7Click(Sender: TObject);
+begin
+FRMTESTIMPRESION.IMPRESORA:=TRIM(EDIT1.Text);
+FRMTESTIMPRESION.QRPQuickrep1.Prepare;
+FRMTESTIMPRESION.QRPQuickrep1.Print;
 end;
 
 procedure Tconfiguracion.ComboBox1Change(Sender: TObject);

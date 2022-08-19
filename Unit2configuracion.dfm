@@ -22,7 +22,7 @@ object configuracion: Tconfiguracion
     Top = 0
     Width = 628
     Height = 312
-    ActivePage = TabSheet4
+    ActivePage = TabSheet1
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -12
@@ -293,6 +293,15 @@ object configuracion: Tconfiguracion
           Caption = 'A4'
           TabOrder = 2
         end
+      end
+      object BitBtn7: TBitBtn
+        Left = 464
+        Top = 56
+        Width = 133
+        Height = 25
+        Caption = 'PROBAR IMPRESORA'
+        TabOrder = 9
+        OnClick = BitBtn7Click
       end
     end
     object TabSheet2: TTabSheet
@@ -1162,8 +1171,8 @@ object configuracion: Tconfiguracion
     OnClick = BitBtn3Click
   end
   object OpenDialog1: TOpenDialog
-    Left = 524
-    Top = 65
+    Left = 300
+    Top = 41
   end
   object FDQuery1: TFDQuery
     Connection = Form1.FDConnection1

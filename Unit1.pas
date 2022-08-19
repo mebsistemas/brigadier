@@ -138,6 +138,7 @@ type
     Promociones1: TMenuItem;
     RxMemoryData1PROMOCION: TStringField;
     RxMemoryData1ITEM: TIntegerField;
+    ImprimirEtiquetas1: TMenuItem;
     procedure SpeedButton1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
@@ -189,6 +190,7 @@ type
     procedure BitBtn5Click(Sender: TObject);
     procedure PorProveedor1Click(Sender: TObject);
     procedure Promociones1Click(Sender: TObject);
+    procedure ImprimirEtiquetas1Click(Sender: TObject);
   private
     { Private declarations }
     cantidad:string;
@@ -235,7 +237,7 @@ uses Uterminar, UnifrmBuscarARticulos, UnifrmabmArticulos, UnPRPRECIOVARIABLE,
   Unit4ventaporvendedor, Unitbuscaryverfacturas4, UnilistarClientesDeudorest4,
   UnitREALIZARDEVOLUCIONES4, Unit2FRMDEVOLCUIONESTOTT, Unit2listadeprecio,
   Unit2CONSULTARPRECIO, UnifrmActualizaPrecioporProveedor, ufimformex80,
-  Ufrmcierrex58mm2, UnitfrmPromociones2;
+  Ufrmcierrex58mm2, UnitfrmPromociones2, UnitimprimirEtiquetas;
 
 procedure TForm1.ABMVendedores1Click(Sender: TObject);
 begin
@@ -292,7 +294,7 @@ begin
 
 SELF.FDQuery2.Close;
 SELF.FDQuery2.SQL.Clear;
-SELF.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE ESTADO=1');
+SELF.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE ESTADO=1 AND PC='+INTTOSTR(FORM1.PUESTO_PC));
 SELF.FDQuery2.Open;
 if SELF.FDQuery2.IsEmpty=FALSE then
 BEGIN
@@ -1455,7 +1457,7 @@ begin
 
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1');
+form1.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 AND PC='+INTTOSTR(FORM1.PUESTO_PC));
 form1.FDQuery2.Open;
 if form1.FDQuery2.RecordCount=0 then
 begin
@@ -1464,9 +1466,11 @@ begin
 end;
 
 
-if key in ['0','1','2','3','4','5','6','7','8','9','+','.','*',#8,#13,'P'] then
-    edit1.readonly:=false
-    else
+if key in ['0','1','2','3','4','5','6','7','8','9','+','.','*',#8,#13,'P','p'] then
+  begin
+    edit1.readonly:=false;
+
+   end  else
      edit1.readonly:=true;
 
      if key=#27 then
@@ -1485,7 +1489,7 @@ begin
 
 td:=tdecimales.Create;
      busca:=copy(trim(edit1.Text),1,1);
-
+      busca:=uppercase(busca);
   if (trim(busca)='*')then
   begin
     esPorPrecio:=true;
@@ -1505,7 +1509,7 @@ td:=tdecimales.Create;
          PANEL9.Caption:='<<<< INGRESE ARTICULO';
       end else begin
          busca:=trim(edit1.Text) ;
-
+         busca:=uppercase(busca);
          ES_ENVASADO:=FALSE;
          if COPY(BUSCA,1,1)=TRIM(TCONFI.GET_FDIGITOCODIGOBARRA) then
          BEGIN
@@ -1858,6 +1862,15 @@ EDIT1.SetFocus;
 
 end;
 
+procedure TForm1.ImprimirEtiquetas1Click(Sender: TObject);
+begin
+frmimprimirEtiquetas.RxMemoryData1.Close;
+frmimprimirEtiquetas.RxMemoryData1.Open;
+frmimprimirEtiquetas.Edit1.Clear;
+frmimprimirEtiquetas.CheckBox1.Checked:=FALSE;
+frmimprimirEtiquetas.showmodal;
+end;
+
 procedure TForm1.IngresosaCaja1Click(Sender: TObject);
 begin
    if FORM1.revisaPermisoTAG(IngresosaCaja1.Tag)=true then
@@ -1870,7 +1883,7 @@ begin
 
 SELF.FDQuery2.Close;
 SELF.FDQuery2.SQL.Clear;
-SELF.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE ESTADO=0');
+SELF.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE ESTADO=0 AND PC='+INTTOSTR(FORM1.PUESTO_PC));
 SELF.FDQuery2.Open;
 if  SELF.FDQuery2.IsEmpty=true then
 BEGIN
@@ -2290,7 +2303,7 @@ end;
 
 SELF.FDQuery2.Close;
 SELF.FDQuery2.SQL.Clear;
-SELF.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE ESTADO=1');
+SELF.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE ESTADO=1 AND PC='+INTTOSTR(FORM1.PUESTO_PC));
 SELF.FDQuery2.Open;
 if SELF.FDQuery2.IsEmpty=TRUE then
 BEGIN
@@ -2396,6 +2409,7 @@ end;
 
 procedure TForm1.SpeedButton2Click(Sender: TObject);
 begin
+frmBuscarARticulos.CheckBox1.Checked:=FALSe;
 frmBuscarARticulos.Edit1.Clear;
 frmBuscarARticulos.showmodal;
 if frmBuscarARticulos.ModalResult=MROK then
@@ -2419,7 +2433,7 @@ td:tdecimales;    precioTotal,precioUnit:real;   idartibuaca:longint;
 begin
 form1.FDQuery2.Close;
 form1.FDQuery2.SQL.Clear;
-form1.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1');
+form1.FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 AND PC='+INTTOSTR(FORM1.PUESTO_PC));
 form1.FDQuery2.Open;
 if form1.FDQuery2.RecordCount=0 then
 begin

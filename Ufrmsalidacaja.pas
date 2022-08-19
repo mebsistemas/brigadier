@@ -42,7 +42,7 @@ var fecha:String;
 begin
   FDQuery2.Close;
    FDQuery2.SQL.Clear;
-   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1 order by idcaja desc');
+   FDQuery2.SQL.Add('SELECT * FROM TCAJA WHERE estado=1  AND PC='+INTTOSTR(FORM1.PUESTO_PC) +' order by idcaja desc');
    FDQuery2.Open;
    fecha:= FDQuery2.FieldByName('fecha').AsString;
    if trim(fecha)='' then

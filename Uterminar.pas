@@ -2050,7 +2050,7 @@ begin
 
 
     //fomra de pago
-  for i:=1 to 5 do
+  for i:=1 to 3 do
    begin
        frmTicket58.RxMemoryData1.Append;
        frmTicket58.RxMemoryData1DESCRIPCION.Value:='';

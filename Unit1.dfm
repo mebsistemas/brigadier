@@ -1642,6 +1642,10 @@ object Form1: TForm1
         Caption = 'Promociones'
         OnClick = Promociones1Click
       end
+      object ImprimirEtiquetas1: TMenuItem
+        Caption = 'Imprimir Etiquetas'
+        OnClick = ImprimirEtiquetas1Click
+      end
       object ActualizarPrecios1: TMenuItem
         Tag = 2000
         Caption = 'Actualizar Precios'

@@ -13,6 +13,7 @@ type
     Edit1: TEdit;
     DataSource1: TDataSource;
     BitBtn1: TBitBtn;
+    CheckBox1: TCheckBox;
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormShow(Sender: TObject);
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
@@ -66,6 +67,8 @@ if KEY=#13 then
 DBGRID1.SetFocus;
 
 b:=trim(edit1.Text)+'%';
+if self.CheckBox1.Checked=false then
+begin
 form1.FDQuery2.Close;
 form1.FDQuery2.sql.Clear;
 form1.FDQuery2.SQL.Add('SELECT   a.codigobarra as CODIGOBARRA,a.precioventa as PRECIOVENTA,'+
@@ -75,6 +78,16 @@ form1.FDQuery2.SQL.Add('SELECT   a.codigobarra as CODIGOBARRA,a.precioventa as P
                    '   LEFT JOIN TMARCAS M ON M.IDMARCA = A.IDMARCA  '+
                   '   WHERE  A.descripcion  like '+#39+trim(b)+#39);
 form1.FDQuery2.open;
+end else
+begin
+   form1.FDQuery2.Close;
+form1.FDQuery2.sql.Clear;
+form1.FDQuery2.SQL.Add('SELECT   codigo as CODIGOBARRA,precio as PRECIOVENTA,'+
+                   '   nombre AS DESCRIPCION  '+
+                  '   FROM  TPROMOCIONES   '+
+                  '   WHERE  nombre  like '+#39+trim(b)+#39);
+form1.FDQuery2.open;
+end;
 self.DataSource1.DataSet:=form1.FDQuery2;
 
 end;
